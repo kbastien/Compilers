@@ -19,8 +19,8 @@ syntaxtree
 *
 ;
 public class MJGrammarParseTable implements wrangLR.runtime.ParseTable {
-public int getEofSym() { return 86; }
-public int getNttSym() { return 87; }
+public int getEofSym() { return 112; }
+public int getNttSym() { return 113; }
 private String[] symNameTable = {
 "$$start",
 "<start>",
@@ -55,24 +55,38 @@ private String[] symNameTable = {
 "<exp5>",
 "`+",
 "<exp6>",
+"`-",
 "`*",
 "<exp7>",
+"`/",
+"`%",
 "<cast exp>",
 "<unary exp>",
 "<exp8>",
-"`-",
 "INTLIT",
+"STRINGLIT",
+"CHARLIT",
+"`false",
+"`this",
+"`true",
+"`null",
+"`.",
 "letter",
+"\"a\"",
 "\"p\"",
 "\"v\"",
-"\"b\"",
-"{\"A\"..\"Z\" \"a\" \"d\"..\"h\" \"j\"..\"k\" \"m\"..\"n\" \"q\"..\"s\" \"w\"..\"z\"}",
-"\"t\"",
 "\"c\"",
+"\"f\"",
 "\"i\"",
 "\"l\"",
 "\"o\"",
+"\"r\"",
 "\"u\"",
+"{\"A\"..\"Z\" \"d\"..\"e\" \"g\" \"j\"..\"k\" \"m\" \"q\" \"s\" \"w\"..\"z\"}",
+"\"b\"",
+"\"h\"",
+"\"n\"",
+"\"t\"",
 "letter128",
 "{199..218 231..250}",
 "{193..198 225..230}",
@@ -81,31 +95,43 @@ private String[] symNameTable = {
 "\"0\"",
 "digit128",
 "{176..185}",
-"ws",
-"\" \"",
-"10",
-"\"#\"",
-"\"*\"",
-"\"(\"",
-"\")\"",
-"\"{\"",
-"\"}\"",
-"\"-\"",
-"\"+\"",
-"\"=\"",
+"any",
 "\"[\"",
+"\"-\"",
+"{0..9 11..31 \"!\" \"$\" \"&\" \",\" \":\" \"<\" \">\"..\"?\" \"\\\" \"^\" \"`\" \"|\" \"~\"..127}",
+"\" \"",
+"\"#\"",
+"\")\"",
 "\"]\"",
+"\"/\"",
 "\";\"",
+"\"{\"",
+"\"%\"",
+"\"(\"",
+"\"+\"",
+"\".\"",
+"\"_\"",
+"\"=\"",
+"\"@\"",
+"10",
+"\"}\"",
+"\"\'\"",
+"\'\"\'",
+"\"*\"",
+"any128",
+"{223}",
+"{128..175 186..192 219..222 224 251..255}",
+"ws",
 "idChar*",
 "$$0",
 "digit*",
 "$$1",
 "hexDigit*",
 "$$2",
+"any*",
+"$$3",
 "idChar",
-"\"_\"",
 "idChar128",
-"223",
 "hexDigit",
 "hexDigit128",
 "$",
@@ -116,8 +142,8 @@ public String symName(int n) {
 }
 private MJGrammar actionObject;
 public int[][] getParseTable() { return parseTable; }
-public int numSymbols() { return 88;}
-private static final int MIN_REDUCTION = 234;
+public int numSymbols() { return 114;}
+private static final int MIN_REDUCTION = 320;
 public int minReduction() { return MIN_REDUCTION;}
 private static final int MAX_ACCEPT_REDUCTION = MIN_REDUCTION+0;
 public int maxAcceptReduction() { return MAX_ACCEPT_REDUCTION; }
@@ -149,1871 +175,3197 @@ public int doInit(int startIdx) {
 }
 private final int[][] myParseTable = {
 { // state 0
-1,151, // <start>
-2,226, // ws*
-3,79, // <program>
-4,94, // <class decl>+
-5,232, // <class decl>
-6,137, // `class
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-62,175, // "#"
+1,202, // <start>
+2,306, // ws*
+3,19, // <program>
+4,285, // <class decl>+
+5,318, // <class decl>
+6,150, // `class
+77,159, // " "
+78,8, // "#"
+91,51, // {10}
+99,267, // ws
   }
 ,
 { // state 1
-0x80000000|183, // match move
-0x80000000|92, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
+0x80000000|241, // match move
+0x80000000|123, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
   }
 ,
 { // state 2
-29,76, // `=
-70,125, // "="
   }
 ,
 { // state 3
-  }
-,
-{ // state 4
-MIN_REDUCTION+72, // (default reduction)
-  }
-,
-{ // state 5
-MIN_REDUCTION+38, // (default reduction)
-  }
-,
-{ // state 6
-MIN_REDUCTION+87, // (default reduction)
-  }
-,
-{ // state 7
-MIN_REDUCTION+35, // (default reduction)
-  }
-,
-{ // state 8
-7,201, // ID
-15,198, // `(
-34,142, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-68,114, // "-"
-  }
-,
-{ // state 9
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+72, // (default reduction)
-  }
-,
-{ // state 10
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+56, // (default reduction)
-  }
-,
-{ // state 11
-0x80000000|3, // match move
-0x80000000|111, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 12
-9,136, // <decl in class>*
-10,154, // `}
-11,87, // <decl in class>
-12,135, // <method decl>
-13,57, // `public
-62,127, // "#"
-67,49, // "}"
-  }
-,
-{ // state 13
-0x80000000|215, // match move
-0x80000000|126, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 14
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+54, // (default reduction)
-  }
-,
-{ // state 15
-MIN_REDUCTION+94, // (default reduction)
-  }
-,
-{ // state 16
-MIN_REDUCTION+15, // (default reduction)
-  }
-,
-{ // state 17
-7,121, // ID
-8,211, // `{
-10,172, // `}
-15,198, // `(
-17,73, // <stmt>*
-18,124, // <type>
-19,28, // `int
-20,164, // `boolean
-24,221, // <stmt>
-25,25, // <assign>
-27,23, // <local var decl>
-28,184, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-62,194, // "#"
-64,131, // "("
-66,193, // "{"
-67,49, // "}"
-68,114, // "-"
-  }
-,
-{ // state 18
-MIN_REDUCTION+83, // (default reduction)
-  }
-,
-{ // state 19
-87,MIN_REDUCTION+13, // $NT
-MIN_REDUCTION+13, // (default reduction)
-  }
-,
-{ // state 20
-2,162, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+49, // (default reduction)
-  }
-,
-{ // state 21
-22,MIN_REDUCTION+104, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+104, // "["
-MIN_REDUCTION+104, // (default reduction)
-  }
-,
-{ // state 22
-MIN_REDUCTION+37, // (default reduction)
-  }
-,
-{ // state 23
-26,227, // `;
-73,195, // ";"
-  }
-,
-{ // state 24
-22,MIN_REDUCTION+31, // `[
-29,MIN_REDUCTION+31, // `=
-31,MIN_REDUCTION+31, // `+
-33,MIN_REDUCTION+31, // `*
-63,MIN_REDUCTION+31, // "*"
-69,MIN_REDUCTION+31, // "+"
-70,MIN_REDUCTION+31, // "="
-71,MIN_REDUCTION+31, // "["
-MIN_REDUCTION+11, // (default reduction)
-  }
-,
-{ // state 25
-26,155, // `;
-73,195, // ";"
-  }
-,
-{ // state 26
-7,201, // ID
-15,198, // `(
-35,78, // <cast exp>
-37,113, // <exp8>
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-  }
-,
-{ // state 27
-0x80000000|3, // match move
-0x80000000|100, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 28
-MIN_REDUCTION+9, // (default reduction)
-  }
-,
-{ // state 29
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+42, // (default reduction)
-  }
-,
-{ // state 30
-0x80000000|4, // match move
-0x80000000|38, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 31
-22,MIN_REDUCTION+89, // `[
-71,MIN_REDUCTION+89, // "["
-MIN_REDUCTION+89, // (default reduction)
-  }
-,
-{ // state 32
-MIN_REDUCTION+88, // (default reduction)
-  }
-,
-{ // state 33
-2,48, // ws*
-22,MIN_REDUCTION+69, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+69, // "["
-MIN_REDUCTION+69, // (default reduction)
-  }
-,
-{ // state 34
-MIN_REDUCTION+36, // (default reduction)
-  }
-,
-{ // state 35
-2,14, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+55, // (default reduction)
-  }
-,
-{ // state 36
-MIN_REDUCTION+26, // (default reduction)
-  }
-,
-{ // state 37
-45,104, // "t"
-  }
-,
-{ // state 38
-22,MIN_REDUCTION+72, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+72, // "["
-MIN_REDUCTION+72, // (default reduction)
-  }
-,
-{ // state 39
-22,MIN_REDUCTION+35, // `[
-71,MIN_REDUCTION+35, // "["
-MIN_REDUCTION+35, // (default reduction)
-  }
-,
-{ // state 40
-2,11, // ws*
-22,MIN_REDUCTION+109, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+109, // "["
-MIN_REDUCTION+109, // (default reduction)
-  }
-,
-{ // state 41
-MIN_REDUCTION+25, // (default reduction)
-  }
-,
-{ // state 42
-0x80000000|128, // match move
-0x80000000|90, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 43
-0x80000000|75, // match move
-0x80000000|166, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 44
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+58, // (default reduction)
-  }
-,
-{ // state 45
-22,MIN_REDUCTION+94, // `[
-71,MIN_REDUCTION+94, // "["
-MIN_REDUCTION+94, // (default reduction)
-  }
-,
-{ // state 46
-22,MIN_REDUCTION+74, // `[
-71,MIN_REDUCTION+74, // "["
-MIN_REDUCTION+74, // (default reduction)
-  }
-,
-{ // state 47
-2,30, // ws*
-MIN_REDUCTION+73, // (default reduction)
-  }
-,
-{ // state 48
-0x80000000|3, // match move
-0x80000000|160, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 49
-2,44, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+59, // (default reduction)
-  }
-,
-{ // state 50
-22,168, // `[
-71,66, // "["
-MIN_REDUCTION+30, // (default reduction)
-  }
-,
-{ // state 51
-22,MIN_REDUCTION+87, // `[
-71,MIN_REDUCTION+87, // "["
-MIN_REDUCTION+87, // (default reduction)
-  }
-,
-{ // state 52
-22,168, // `[
-71,66, // "["
-MIN_REDUCTION+28, // (default reduction)
-  }
-,
-{ // state 53
-MIN_REDUCTION+16, // (default reduction)
-  }
-,
-{ // state 54
-MIN_REDUCTION+86, // (default reduction)
-  }
-,
-{ // state 55
-MIN_REDUCTION+87, // (default reduction)
-  }
-,
-{ // state 56
-54,141, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,70, // digit128
-58,1, // {176..185}
-77,196, // $$1
-  }
-,
-{ // state 57
-14,99, // `void
-62,145, // "#"
-  }
-,
-{ // state 58
-87,MIN_REDUCTION+94, // $NT
-MIN_REDUCTION+94, // (default reduction)
-  }
-,
-{ // state 59
-22,MIN_REDUCTION+38, // `[
-71,MIN_REDUCTION+38, // "["
-MIN_REDUCTION+38, // (default reduction)
-  }
-,
-{ // state 60
-41,32, // "p"
-42,32, // "v"
-43,32, // "b"
-44,32, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,32, // "t"
-46,32, // "c"
-47,32, // "i"
-48,32, // "l"
-49,32, // "o"
-50,32, // "u"
-53,69, // {193..198 225..230}
-55,32, // {"1".."9"}
-56,32, // "0"
-58,69, // {176..185}
-79,27, // $$2
-84,62, // hexDigit
-85,102, // hexDigit128
-  }
-,
-{ // state 61
-2,30, // ws*
-22,MIN_REDUCTION+73, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+73, // "["
-MIN_REDUCTION+73, // (default reduction)
-  }
-,
-{ // state 62
+2,113, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
 MIN_REDUCTION+98, // (default reduction)
   }
 ,
-{ // state 63
-54,171, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,70, // digit128
-58,1, // {176..185}
-76,56, // digit*
-77,191, // $$1
+{ // state 4
+0x80000000|124, // match move
+0x80000000|223, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
   }
 ,
-{ // state 64
-7,201, // ID
-36,101, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-68,114, // "-"
-  }
-,
-{ // state 65
-33,8, // `*
-63,180, // "*"
-MIN_REDUCTION+21, // (default reduction)
-  }
-,
-{ // state 66
-2,179, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+67, // (default reduction)
-  }
-,
-{ // state 67
-22,MIN_REDUCTION+76, // `[
-71,MIN_REDUCTION+76, // "["
-MIN_REDUCTION+76, // (default reduction)
-  }
-,
-{ // state 68
-0x80000000|133, // match move
-0x80000000|143, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 69
-0x80000000|190, // match move
-0x80000000|31, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 70
-0x80000000|231, // match move
-0x80000000|139, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 71
-22,MIN_REDUCTION+77, // `[
-71,MIN_REDUCTION+77, // "["
-MIN_REDUCTION+77, // (default reduction)
-  }
-,
-{ // state 72
-MIN_REDUCTION+7, // (default reduction)
-  }
-,
-{ // state 73
-7,121, // ID
-8,211, // `{
-10,72, // `}
-15,198, // `(
-18,124, // <type>
-19,28, // `int
-20,164, // `boolean
-24,103, // <stmt>
-25,25, // <assign>
-27,23, // <local var decl>
-28,184, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-62,194, // "#"
-64,131, // "("
-66,193, // "{"
-67,49, // "}"
-68,114, // "-"
-  }
-,
-{ // state 74
-MIN_REDUCTION+19, // (default reduction)
-  }
-,
-{ // state 75
-MIN_REDUCTION+85, // (default reduction)
-  }
-,
-{ // state 76
-7,201, // ID
-15,198, // `(
-28,74, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-68,114, // "-"
-  }
-,
-{ // state 77
-16,26, // `)
-21,218, // <empty bracket pair>
-22,186, // `[
-65,35, // ")"
-71,66, // "["
-  }
-,
-{ // state 78
-MIN_REDUCTION+27, // (default reduction)
-  }
-,
-{ // state 79
-MIN_REDUCTION+2, // (default reduction)
-  }
-,
-{ // state 80
-2,197, // ws*
-22,MIN_REDUCTION+79, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+79, // "["
-MIN_REDUCTION+79, // (default reduction)
-  }
-,
-{ // state 81
-MIN_REDUCTION+18, // (default reduction)
-  }
-,
-{ // state 82
-15,83, // `(
-64,131, // "("
-  }
-,
-{ // state 83
-16,214, // `)
-65,35, // ")"
-  }
-,
-{ // state 84
-0x80000000|149, // match move
-0x80000000|21, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 85
-MIN_REDUCTION+74, // (default reduction)
-  }
-,
-{ // state 86
-31,182, // `+
-69,108, // "+"
-MIN_REDUCTION+20, // (default reduction)
-  }
-,
-{ // state 87
-MIN_REDUCTION+93, // (default reduction)
-  }
-,
-{ // state 88
-0x80000000|3, // match move
-0x80000000|165, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 89
-2,93, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+105, // (default reduction)
-  }
-,
-{ // state 90
-2,84, // ws*
-22,MIN_REDUCTION+105, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+105, // "["
-MIN_REDUCTION+105, // (default reduction)
-  }
-,
-{ // state 91
-87,MIN_REDUCTION+95, // $NT
-MIN_REDUCTION+95, // (default reduction)
-  }
-,
-{ // state 92
-22,MIN_REDUCTION+37, // `[
-71,MIN_REDUCTION+37, // "["
-MIN_REDUCTION+37, // (default reduction)
-  }
-,
-{ // state 93
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+104, // (default reduction)
-  }
-,
-{ // state 94
-5,163, // <class decl>
-6,137, // `class
-62,175, // "#"
-MIN_REDUCTION+3, // (default reduction)
-  }
-,
-{ // state 95
-22,MIN_REDUCTION+32, // `[
-71,MIN_REDUCTION+32, // "["
-MIN_REDUCTION+32, // (default reduction)
-  }
-,
-{ // state 96
-0x80000000|47, // match move
-0x80000000|61, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 97
-0x80000000|123, // match move
-0x80000000|46, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 98
-0x80000000|3, // match move
-0x80000000|50, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 99
-7,82, // ID
-40,178, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,116, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-  }
-,
-{ // state 100
-22,MIN_REDUCTION+80, // `[
-71,MIN_REDUCTION+80, // "["
-MIN_REDUCTION+80, // (default reduction)
-  }
-,
-{ // state 101
-MIN_REDUCTION+29, // (default reduction)
-  }
-,
-{ // state 102
-0x80000000|230, // match move
-0x80000000|40, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 103
-MIN_REDUCTION+90, // (default reduction)
-  }
-,
-{ // state 104
-2,140, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+47, // (default reduction)
-  }
-,
-{ // state 105
-33,8, // `*
-63,180, // "*"
-MIN_REDUCTION+22, // (default reduction)
-  }
-,
-{ // state 106
-22,MIN_REDUCTION+106, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+106, // "["
-MIN_REDUCTION+106, // (default reduction)
-  }
-,
-{ // state 107
-0x80000000|3, // match move
-0x80000000|189, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 108
-2,228, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+63, // (default reduction)
-  }
-,
-{ // state 109
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+40, // (default reduction)
-  }
-,
-{ // state 110
-40,129, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,43, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-54,18, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,185, // digit128
-58,1, // {176..185}
-74,200, // idChar*
-75,68, // $$0
-80,224, // idChar
-81,169, // "_"
-82,42, // idChar128
-83,134, // {223}
-  }
-,
-{ // state 111
-22,MIN_REDUCTION+108, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+108, // "["
-MIN_REDUCTION+108, // (default reduction)
-  }
-,
-{ // state 112
-87,MIN_REDUCTION+39, // $NT
-MIN_REDUCTION+39, // (default reduction)
-  }
-,
-{ // state 113
-0x80000000|3, // match move
-0x80000000|52, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 114
-2,217, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+61, // (default reduction)
-  }
-,
-{ // state 115
-87,MIN_REDUCTION+38, // $NT
-MIN_REDUCTION+38, // (default reduction)
-  }
-,
-{ // state 116
-2,9, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+73, // (default reduction)
-  }
-,
-{ // state 117
-22,186, // `[
-71,66, // "["
-  }
-,
-{ // state 118
-48,220, // "l"
-  }
-,
-{ // state 119
-22,MIN_REDUCTION+78, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+78, // "["
-MIN_REDUCTION+78, // (default reduction)
-  }
-,
-{ // state 120
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+44, // (default reduction)
-  }
-,
-{ // state 121
-0x80000000|122, // match move
-0x80000000|24, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 122
-MIN_REDUCTION+11, // (default reduction)
-  }
-,
-{ // state 123
-MIN_REDUCTION+74, // (default reduction)
-  }
-,
-{ // state 124
-7,2, // ID
-21,218, // <empty bracket pair>
-22,186, // `[
-40,178, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,116, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-71,66, // "["
-  }
-,
-{ // state 125
-2,153, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+65, // (default reduction)
-  }
-,
-{ // state 126
-22,MIN_REDUCTION+39, // `[
-71,MIN_REDUCTION+39, // "["
-MIN_REDUCTION+39, // (default reduction)
-  }
-,
-{ // state 127
-41,170, // "p"
-  }
-,
-{ // state 128
-2,84, // ws*
-MIN_REDUCTION+105, // (default reduction)
-  }
-,
-{ // state 129
-MIN_REDUCTION+82, // (default reduction)
-  }
-,
-{ // state 130
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+50, // (default reduction)
-  }
-,
-{ // state 131
-2,161, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+53, // (default reduction)
-  }
-,
-{ // state 132
-MIN_REDUCTION+34, // (default reduction)
-  }
-,
-{ // state 133
-MIN_REDUCTION+75, // (default reduction)
-  }
-,
-{ // state 134
-0x80000000|55, // match move
-0x80000000|51, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 135
-MIN_REDUCTION+6, // (default reduction)
-  }
-,
-{ // state 136
-10,199, // `}
-11,213, // <decl in class>
-12,135, // <method decl>
-13,57, // `public
-62,127, // "#"
-67,49, // "}"
-  }
-,
-{ // state 137
-7,229, // ID
-40,178, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,116, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-  }
-,
-{ // state 138
-MIN_REDUCTION+35, // (default reduction)
-  }
-,
-{ // state 139
-2,208, // ws*
-22,MIN_REDUCTION+107, // `[
-59,202, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+107, // "["
-MIN_REDUCTION+107, // (default reduction)
-  }
-,
-{ // state 140
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+46, // (default reduction)
-  }
-,
-{ // state 141
-MIN_REDUCTION+96, // (default reduction)
-  }
-,
-{ // state 142
-MIN_REDUCTION+23, // (default reduction)
-  }
-,
-{ // state 143
-22,MIN_REDUCTION+75, // `[
-71,MIN_REDUCTION+75, // "["
-MIN_REDUCTION+75, // (default reduction)
-  }
-,
-{ // state 144
-7,201, // ID
-15,198, // `(
-28,81, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-68,114, // "-"
-  }
-,
-{ // state 145
-42,174, // "v"
-  }
-,
-{ // state 146
-23,212, // `]
-72,209, // "]"
-  }
-,
-{ // state 147
-7,121, // ID
-8,211, // `{
-10,16, // `}
-15,198, // `(
-18,124, // <type>
-19,28, // `int
-20,164, // `boolean
-24,103, // <stmt>
-25,25, // <assign>
-27,23, // <local var decl>
-28,184, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-62,194, // "#"
-64,131, // "("
-66,193, // "{"
-67,49, // "}"
-68,114, // "-"
-  }
-,
-{ // state 148
-40,129, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,167, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-54,18, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,54, // digit128
-58,22, // {176..185}
-75,85, // $$0
-80,157, // idChar
-81,169, // "_"
-82,89, // idChar128
-83,6, // {223}
-  }
-,
-{ // state 149
-MIN_REDUCTION+104, // (default reduction)
-  }
-,
-{ // state 150
-0x80000000|5, // match move
-0x80000000|59, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 151
-86,MIN_REDUCTION+0, // $
-  }
-,
-{ // state 152
-2,48, // ws*
-  }
-,
-{ // state 153
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+64, // (default reduction)
-  }
-,
-{ // state 154
-MIN_REDUCTION+5, // (default reduction)
-  }
-,
-{ // state 155
-MIN_REDUCTION+14, // (default reduction)
-  }
-,
-{ // state 156
-22,MIN_REDUCTION+31, // `[
-71,MIN_REDUCTION+31, // "["
-MIN_REDUCTION+31, // (default reduction)
-  }
-,
-{ // state 157
-MIN_REDUCTION+100, // (default reduction)
-  }
-,
-{ // state 158
-0x80000000|207, // match move
-0x80000000|80, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 159
-MIN_REDUCTION+24, // (default reduction)
-  }
-,
-{ // state 160
-22,MIN_REDUCTION+68, // `[
-59,225, // ws
-60,150, // " "
-61,13, // {10}
-71,MIN_REDUCTION+68, // "["
-MIN_REDUCTION+68, // (default reduction)
-  }
-,
-{ // state 161
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+52, // (default reduction)
-  }
-,
-{ // state 162
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+48, // (default reduction)
-  }
-,
-{ // state 163
-MIN_REDUCTION+103, // (default reduction)
-  }
-,
-{ // state 164
-MIN_REDUCTION+10, // (default reduction)
-  }
-,
-{ // state 165
-22,MIN_REDUCTION+81, // `[
-71,MIN_REDUCTION+81, // "["
-MIN_REDUCTION+81, // (default reduction)
-  }
-,
-{ // state 166
-22,MIN_REDUCTION+85, // `[
-71,MIN_REDUCTION+85, // "["
-MIN_REDUCTION+85, // (default reduction)
-  }
-,
-{ // state 167
-MIN_REDUCTION+85, // (default reduction)
-  }
-,
-{ // state 168
-7,201, // ID
-15,198, // `(
-28,146, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-68,114, // "-"
-  }
-,
-{ // state 169
-MIN_REDUCTION+84, // (default reduction)
-  }
-,
-{ // state 170
-50,20, // "u"
-  }
-,
-{ // state 171
-MIN_REDUCTION+97, // (default reduction)
-  }
-,
-{ // state 172
-MIN_REDUCTION+8, // (default reduction)
-  }
-,
-{ // state 173
-2,120, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+45, // (default reduction)
-  }
-,
-{ // state 174
-49,173, // "o"
-  }
-,
-{ // state 175
-46,118, // "c"
-  }
-,
-{ // state 176
-MIN_REDUCTION+11, // (default reduction)
-  }
-,
-{ // state 177
-22,MIN_REDUCTION+86, // `[
-71,MIN_REDUCTION+86, // "["
-MIN_REDUCTION+86, // (default reduction)
-  }
-,
-{ // state 178
-40,129, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,167, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-54,18, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,54, // digit128
-58,22, // {176..185}
-74,148, // idChar*
-75,181, // $$0
-80,224, // idChar
-81,169, // "_"
-82,89, // idChar128
-83,6, // {223}
-  }
-,
-{ // state 179
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+66, // (default reduction)
-  }
-,
-{ // state 180
-2,130, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+51, // (default reduction)
-  }
-,
-{ // state 181
-MIN_REDUCTION+75, // (default reduction)
-  }
-,
-{ // state 182
-7,201, // ID
-15,198, // `(
-32,65, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-64,131, // "("
-68,114, // "-"
-  }
-,
-{ // state 183
-MIN_REDUCTION+37, // (default reduction)
-  }
-,
-{ // state 184
-29,144, // `=
-70,125, // "="
-  }
-,
-{ // state 185
-0x80000000|222, // match move
-0x80000000|177, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 186
-23,19, // `]
-72,187, // "]"
-  }
-,
-{ // state 187
-2,219, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-87,MIN_REDUCTION+69, // $NT
-MIN_REDUCTION+69, // (default reduction)
-  }
-,
-{ // state 188
-49,210, // "o"
-  }
-,
-{ // state 189
-22,MIN_REDUCTION+33, // `[
-71,MIN_REDUCTION+33, // "["
-MIN_REDUCTION+33, // (default reduction)
-  }
-,
-{ // state 190
-MIN_REDUCTION+89, // (default reduction)
-  }
-,
-{ // state 191
-0x80000000|3, // match move
-0x80000000|71, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 192
-MIN_REDUCTION+95, // (default reduction)
-  }
-,
-{ // state 193
-2,10, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+57, // (default reduction)
-  }
-,
-{ // state 194
-43,188, // "b"
-47,37, // "i"
-  }
-,
-{ // state 195
-2,204, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+71, // (default reduction)
-  }
-,
-{ // state 196
-0x80000000|3, // match move
-0x80000000|67, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 197
-0x80000000|3, // match move
-0x80000000|119, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 198
-7,176, // ID
-18,77, // <type>
-19,28, // `int
-20,164, // `boolean
-40,178, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,116, // letter128
-52,7, // {199..218 231..250}
-53,7, // {193..198 225..230}
-62,194, // "#"
-  }
-,
-{ // state 199
-MIN_REDUCTION+4, // (default reduction)
-  }
-,
-{ // state 200
-40,129, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,43, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-54,18, // digit
-55,34, // {"1".."9"}
-56,34, // "0"
-57,185, // digit128
-58,1, // {176..185}
-75,97, // $$0
-80,157, // idChar
-81,169, // "_"
-82,42, // idChar128
-83,134, // {223}
-  }
-,
-{ // state 201
-0x80000000|3, // match move
-0x80000000|156, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 202
-0x80000000|192, // match move
-0x80000000|205, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 203
-MIN_REDUCTION+1, // (default reduction)
-  }
-,
-{ // state 204
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+70, // (default reduction)
-  }
-,
-{ // state 205
-22,MIN_REDUCTION+95, // `[
-71,MIN_REDUCTION+95, // "["
-MIN_REDUCTION+95, // (default reduction)
-  }
-,
-{ // state 206
-0x80000000|138, // match move
-0x80000000|39, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 207
-2,197, // ws*
-  }
-,
-{ // state 208
-0x80000000|3, // match move
-0x80000000|106, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 209
-0x80000000|152, // match move
-0x80000000|33, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 210
-2,109, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+41, // (default reduction)
-  }
-,
-{ // state 211
-7,121, // ID
-8,211, // `{
-10,53, // `}
-15,198, // `(
-17,147, // <stmt>*
-18,124, // <type>
-19,28, // `int
-20,164, // `boolean
-24,221, // <stmt>
-25,25, // <assign>
-27,23, // <local var decl>
-28,184, // <exp>
-30,86, // <exp5>
-32,105, // <exp6>
-34,159, // <exp7>
-35,41, // <cast exp>
-36,36, // <unary exp>
-37,98, // <exp8>
-38,64, // `-
-39,107, // INTLIT
-40,110, // letter
-41,132, // "p"
-42,132, // "v"
-43,132, // "b"
-44,132, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,132, // "t"
-46,132, // "c"
-47,132, // "i"
-48,132, // "l"
-49,132, // "o"
-50,132, // "u"
-51,96, // letter128
-52,206, // {199..218 231..250}
-53,206, // {193..198 225..230}
-55,63, // {"1".."9"}
-56,223, // "0"
-57,158, // digit128
-58,1, // {176..185}
-62,194, // "#"
-64,131, // "("
-66,193, // "{"
-67,49, // "}"
-68,114, // "-"
-  }
-,
-{ // state 212
-0x80000000|3, // match move
-0x80000000|95, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
-  }
-,
-{ // state 213
-MIN_REDUCTION+92, // (default reduction)
-  }
-,
-{ // state 214
-8,17, // `{
-66,193, // "{"
-  }
-,
-{ // state 215
-MIN_REDUCTION+39, // (default reduction)
-  }
-,
-{ // state 216
+{ // state 5
 MIN_REDUCTION+99, // (default reduction)
   }
 ,
-{ // state 217
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+60, // (default reduction)
+{ // state 6
+2,69, // ws*
+22,MIN_REDUCTION+92, // `[
+74,MIN_REDUCTION+92, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+92, // (default reduction)
   }
 ,
-{ // state 218
-MIN_REDUCTION+12, // (default reduction)
+{ // state 7
+MIN_REDUCTION+51, // (default reduction)
   }
 ,
-{ // state 219
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-87,MIN_REDUCTION+68, // $NT
-MIN_REDUCTION+68, // (default reduction)
+{ // state 8
+53,227, // "c"
   }
 ,
-{ // state 220
-2,29, // ws*
-59,91, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+43, // (default reduction)
+{ // state 9
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+71, // (default reduction)
   }
 ,
-{ // state 221
-MIN_REDUCTION+91, // (default reduction)
+{ // state 10
+7,80, // ID
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
   }
 ,
-{ // state 222
-MIN_REDUCTION+86, // (default reduction)
+{ // state 11
+MIN_REDUCTION+120, // (default reduction)
   }
 ,
-{ // state 223
-41,32, // "p"
-42,32, // "v"
-43,32, // "b"
-44,32, // {"A".."Z" "a" "d".."h" "j".."k" "m".."n" "q".."s" "w".."z"}
-45,32, // "t"
-46,32, // "c"
-47,32, // "i"
-48,32, // "l"
-49,32, // "o"
-50,32, // "u"
-53,69, // {193..198 225..230}
-55,32, // {"1".."9"}
-56,32, // "0"
-58,69, // {176..185}
-78,60, // hexDigit*
-79,88, // $$2
-84,216, // hexDigit
-85,102, // hexDigit128
+{ // state 12
+54,37, // "f"
+63,232, // "n"
+64,194, // "t"
   }
 ,
-{ // state 224
+{ // state 13
+57,265, // "o"
+  }
+,
+{ // state 14
+MIN_REDUCTION+46, // (default reduction)
+  }
+,
+{ // state 15
+22,MIN_REDUCTION+44, // `[
+74,MIN_REDUCTION+44, // "["
+MIN_REDUCTION+44, // (default reduction)
+  }
+,
+{ // state 16
+0x80000000|2, // match move
+0x80000000|135, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 17
+2,246, // ws*
+  }
+,
+{ // state 18
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+99, // (default reduction)
+  }
+,
+{ // state 19
+MIN_REDUCTION+2, // (default reduction)
+  }
+,
+{ // state 20
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+79, // (default reduction)
+  }
+,
+{ // state 21
+0x80000000|2, // match move
+0x80000000|149, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 22
+0x80000000|2, // match move
+0x80000000|48, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 23
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+77, // (default reduction)
+  }
+,
+{ // state 24
+MIN_REDUCTION+129, // (default reduction)
+  }
+,
+{ // state 25
+7,248, // ID
+15,144, // `(
+31,114, // `+
+33,30, // `-
+35,52, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 26
+MIN_REDUCTION+116, // (default reduction)
+  }
+,
+{ // state 27
+0x80000000|2, // match move
+0x80000000|157, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 28
+MIN_REDUCTION+32, // (default reduction)
+  }
+,
+{ // state 29
+113,MIN_REDUCTION+13, // $NT
+MIN_REDUCTION+13, // (default reduction)
+  }
+,
+{ // state 30
+7,248, // ID
+31,114, // `+
+33,30, // `-
+39,28, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 31
+0x80000000|2, // match move
+0x80000000|72, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 32
+22,MIN_REDUCTION+139, // `[
+74,MIN_REDUCTION+139, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+139, // (default reduction)
+  }
+,
+{ // state 33
+2,128, // ws*
+  }
+,
+{ // state 34
+MIN_REDUCTION+49, // (default reduction)
+  }
+,
+{ // state 35
+22,MIN_REDUCTION+63, // `[
+74,MIN_REDUCTION+63, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+63, // (default reduction)
+  }
+,
+{ // state 36
+MIN_REDUCTION+48, // (default reduction)
+  }
+,
+{ // state 37
+50,121, // "a"
+  }
+,
+{ // state 38
+8,171, // `{
+83,238, // "{"
+  }
+,
+{ // state 39
+26,308, // `;
+82,50, // ";"
+  }
+,
+{ // state 40
+26,205, // `;
+82,50, // ";"
+  }
+,
+{ // state 41
+0x80000000|2, // match move
+0x80000000|133, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 42
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+55, // (default reduction)
+  }
+,
+{ // state 43
+0x80000000|5, // match move
+0x80000000|58, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 44
+2,236, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+90, // (default reduction)
+  }
+,
+{ // state 45
+22,MIN_REDUCTION+122, // `[
+74,MIN_REDUCTION+122, // "["
+MIN_REDUCTION+122, // (default reduction)
+  }
+,
+{ // state 46
+MIN_REDUCTION+121, // (default reduction)
+  }
+,
+{ // state 47
+MIN_REDUCTION+16, // (default reduction)
+  }
+,
+{ // state 48
+22,MIN_REDUCTION+37, // `[
+74,MIN_REDUCTION+37, // "["
+MIN_REDUCTION+37, // (default reduction)
+  }
+,
+{ // state 49
+MIN_REDUCTION+52, // (default reduction)
+  }
+,
+{ // state 50
+2,269, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+96, // (default reduction)
+  }
+,
+{ // state 51
+113,MIN_REDUCTION+52, // $NT
+MIN_REDUCTION+52, // (default reduction)
+  }
+,
+{ // state 52
+MIN_REDUCTION+25, // (default reduction)
+  }
+,
+{ // state 53
+MIN_REDUCTION+47, // (default reduction)
+  }
+,
+{ // state 54
+22,261, // `[
+48,10, // `.
+74,44, // "["
+87,154, // "."
+MIN_REDUCTION+34, // (default reduction)
+  }
+,
+{ // state 55
+MIN_REDUCTION+30, // (default reduction)
+  }
+,
+{ // state 56
+MIN_REDUCTION+29, // (default reduction)
+  }
+,
+{ // state 57
+0x80000000|139, // match move
+0x80000000|109, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 58
+22,MIN_REDUCTION+99, // `[
+74,MIN_REDUCTION+99, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+99, // (default reduction)
+  }
+,
+{ // state 59
+22,MIN_REDUCTION+46, // `[
+74,MIN_REDUCTION+46, // "["
+MIN_REDUCTION+46, // (default reduction)
+  }
+,
+{ // state 60
+MIN_REDUCTION+28, // (default reduction)
+  }
+,
+{ // state 61
+0x80000000|102, // match move
+0x80000000|222, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 62
+34,206, // `*
+36,25, // `/
+37,127, // `%
+81,3, // "/"
+84,170, // "%"
+95,312, // "*"
+MIN_REDUCTION+21, // (default reduction)
+  }
+,
+{ // state 63
+2,64, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+82, // (default reduction)
+  }
+,
+{ // state 64
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+81, // (default reduction)
+  }
+,
+{ // state 65
+7,248, // ID
+15,144, // `(
+31,114, // `+
+32,169, // <exp6>
+33,30, // `-
+35,210, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 66
+22,MIN_REDUCTION+65, // `[
+74,MIN_REDUCTION+65, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+65, // (default reduction)
+  }
+,
+{ // state 67
+22,MIN_REDUCTION+101, // `[
+74,MIN_REDUCTION+101, // "["
 MIN_REDUCTION+101, // (default reduction)
   }
 ,
-{ // state 225
-0x80000000|15, // match move
+{ // state 68
+22,MIN_REDUCTION+129, // `[
+74,MIN_REDUCTION+129, // "["
+MIN_REDUCTION+129, // (default reduction)
+  }
+,
+{ // state 69
+0x80000000|2, // match move
+0x80000000|212, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 70
+22,MIN_REDUCTION+52, // `[
+74,MIN_REDUCTION+52, // "["
+MIN_REDUCTION+52, // (default reduction)
+  }
+,
+{ // state 71
+2,147, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+54, // (default reduction)
+  }
+,
+{ // state 72
+22,MIN_REDUCTION+42, // `[
+74,MIN_REDUCTION+42, // "["
+MIN_REDUCTION+42, // (default reduction)
+  }
+,
+{ // state 73
+MIN_REDUCTION+9, // (default reduction)
+  }
+,
+{ // state 74
+22,MIN_REDUCTION+120, // `[
+74,MIN_REDUCTION+120, // "["
+MIN_REDUCTION+120, // (default reduction)
+  }
+,
+{ // state 75
+54,37, // "f"
+55,224, // "i"
+61,293, // "b"
+63,232, // "n"
+64,194, // "t"
+  }
+,
+{ // state 76
+2,203, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+88, // (default reduction)
+  }
+,
+{ // state 77
+MIN_REDUCTION+126, // (default reduction)
+  }
+,
+{ // state 78
+MIN_REDUCTION+49, // (default reduction)
+  }
+,
+{ // state 79
+MIN_REDUCTION+119, // (default reduction)
+  }
+,
+{ // state 80
+0x80000000|2, // match move
+0x80000000|15, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 81
+7,316, // ID
+21,138, // <empty bracket pair>
+22,243, // `[
+49,234, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,213, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+74,44, // "["
+  }
+,
+{ // state 82
+MIN_REDUCTION+120, // (default reduction)
+  }
+,
+{ // state 83
+68,193, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,160, // digit128
+72,1, // {176..185}
+103,256, // $$1
+  }
+,
+{ // state 84
+113,MIN_REDUCTION+129, // $NT
+MIN_REDUCTION+129, // (default reduction)
+  }
+,
+{ // state 85
+22,MIN_REDUCTION+51, // `[
+74,MIN_REDUCTION+51, // "["
+MIN_REDUCTION+51, // (default reduction)
+  }
+,
+{ // state 86
+50,46, // "a"
+51,46, // "p"
+52,46, // "v"
+53,46, // "c"
+54,46, // "f"
+55,46, // "i"
+56,46, // "l"
+57,46, // "o"
+58,46, // "r"
+59,46, // "u"
+60,46, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,46, // "b"
+62,46, // "h"
+63,46, // "n"
+64,46, // "t"
+67,92, // {193..198 225..230}
+69,46, // {"1".."9"}
+70,46, // "0"
+72,92, // {176..185}
+105,41, // $$2
+110,87, // hexDigit
+111,143, // hexDigit128
+  }
+,
+{ // state 87
+MIN_REDUCTION+133, // (default reduction)
+  }
+,
+{ // state 88
+68,226, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,160, // digit128
+72,1, // {176..185}
+102,83, // digit*
+103,249, // $$1
+  }
+,
+{ // state 89
+0x80000000|2, // match move
+0x80000000|296, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 90
+7,248, // ID
+15,144, // `(
+31,114, // `+
+32,62, // <exp6>
+33,30, // `-
+35,210, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 91
+22,MIN_REDUCTION+103, // `[
+74,MIN_REDUCTION+103, // "["
+MIN_REDUCTION+103, // (default reduction)
+  }
+,
+{ // state 92
+0x80000000|245, // match move
 0x80000000|45, // no-match move
-0x80000000|117, // NT-test-match state for <empty bracket pair>
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 93
+0x80000000|180, // match move
+0x80000000|195, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 94
+22,MIN_REDUCTION+104, // `[
+74,MIN_REDUCTION+104, // "["
+MIN_REDUCTION+104, // (default reduction)
+  }
+,
+{ // state 95
+MIN_REDUCTION+10, // (default reduction)
+  }
+,
+{ // state 96
+2,274, // ws*
+22,MIN_REDUCTION+142, // `[
+74,MIN_REDUCTION+142, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+142, // (default reduction)
+  }
+,
+{ // state 97
+14,130, // `void
+78,276, // "#"
+  }
+,
+{ // state 98
+31,90, // `+
+33,65, // `-
+75,254, // "-"
+86,250, // "+"
+MIN_REDUCTION+20, // (default reduction)
+  }
+,
+{ // state 99
+2,42, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+56, // (default reduction)
+  }
+,
+{ // state 100
+51,118, // "p"
+  }
+,
+{ // state 101
+0x80000000|2, // match move
+0x80000000|179, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 102
+MIN_REDUCTION+118, // (default reduction)
+  }
+,
+{ // state 103
+0x80000000|2, // match move
+0x80000000|209, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 104
+2,167, // ws*
+  }
+,
+{ // state 105
+8,174, // `{
+83,238, // "{"
+  }
+,
+{ // state 106
+16,38, // `)
+79,190, // ")"
+  }
+,
+{ // state 107
+0x80000000|2, // match move
+0x80000000|54, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 108
+50,198, // "a"
+51,198, // "p"
+52,198, // "v"
+53,198, // "c"
+54,198, // "f"
+55,198, // "i"
+56,198, // "l"
+57,198, // "o"
+58,198, // "r"
+59,198, // "u"
+60,198, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,198, // "b"
+62,198, // "h"
+63,198, // "n"
+64,198, // "t"
+69,198, // {"1".."9"}
+70,198, // "0"
+73,268, // any
+74,198, // "["
+75,198, // "-"
+76,198, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+77,198, // " "
+78,198, // "#"
+79,198, // ")"
+80,198, // "]"
+81,198, // "/"
+82,198, // ";"
+83,198, // "{"
+84,198, // "%"
+85,198, // "("
+86,198, // "+"
+87,198, // "."
+88,198, // "_"
+89,198, // "="
+90,198, // "@"
+91,198, // {10}
+92,198, // "}"
+93,198, // "'"
+94,198, // '"'
+95,198, // "*"
+  }
+,
+{ // state 109
+22,MIN_REDUCTION+130, // `[
+74,MIN_REDUCTION+130, // "["
+MIN_REDUCTION+130, // (default reduction)
+  }
+,
+{ // state 110
+MIN_REDUCTION+7, // (default reduction)
+  }
+,
+{ // state 111
+0x80000000|199, // match move
+0x80000000|32, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 112
+MIN_REDUCTION+101, // (default reduction)
+  }
+,
+{ // state 113
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+97, // (default reduction)
+  }
+,
+{ // state 114
+7,248, // ID
+31,114, // `+
+33,30, // `-
+39,309, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 115
+0x80000000|2, // match move
+0x80000000|35, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 116
+34,206, // `*
+36,25, // `/
+37,127, // `%
+81,3, // "/"
+84,170, // "%"
+95,312, // "*"
+MIN_REDUCTION+23, // (default reduction)
+  }
+,
+{ // state 117
+2,216, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+70, // (default reduction)
+  }
+,
+{ // state 118
+59,117, // "u"
+  }
+,
+{ // state 119
+0x80000000|2, // match move
+0x80000000|221, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 120
+-1, // $$start
+-1, // <start>
+-1, // ws*
+-1, // <program>
+-1, // <class decl>+
+-1, // <class decl>
+-1, // `class
+4, // ID
+220, // `{
+-1, // <decl in class>*
+110, // `}
+-1, // <decl in class>
+-1, // <method decl>
+-1, // `public
+-1, // `void
+144, // `(
+-1, // `)
+-1, // <stmt>*
+81, // <type>
+73, // `int
+95, // `boolean
+-1, // <empty bracket pair>
+-1, // `[
+-1, // `]
+134, // <stmt>
+40, // <assign>
+-1, // `;
+39, // <local var decl>
+200, // <exp>
+-1, // `=
+98, // <exp5>
+114, // `+
+116, // <exp6>
+30, // `-
+-1, // `*
+210, // <exp7>
+-1, // `/
+-1, // `%
+60, // <cast exp>
+56, // <unary exp>
+107, // <exp8>
+22, // INTLIT
+255, // STRINGLIT
+242, // CHARLIT
+313, // `false
+89, // `this
+31, // `true
+103, // `null
+-1, // `.
+148, // letter
+178, // "a"
+178, // "p"
+178, // "v"
+178, // "c"
+178, // "f"
+178, // "i"
+178, // "l"
+178, // "o"
+178, // "r"
+178, // "u"
+178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+178, // "b"
+178, // "h"
+178, // "n"
+178, // "t"
+175, // letter128
+272, // {199..218 231..250}
+272, // {193..198 225..230}
+-1, // digit
+88, // {"1".."9"}
+302, // "0"
+235, // digit128
+1, // {176..185}
+-1, // any
+-1, // "["
+254, // "-"
+-1, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+-1, // " "
+75, // "#"
+-1, // ")"
+-1, // "]"
+-1, // "/"
+-1, // ";"
+238, // "{"
+-1, // "%"
+184, // "("
+250, // "+"
+-1, // "."
+-1, // "_"
+-1, // "="
+183, // "@"
+-1, // {10}
+63, // "}"
+108, // "'"
+303, // '"'
+-1, // "*"
+-1, // any128
+-1, // {223}
+-1, // {128..175 186..192 219..222 224 251..255}
+-1, // ws
+-1, // idChar*
+-1, // $$0
+-1, // digit*
+-1, // $$1
+-1, // hexDigit*
+-1, // $$2
+-1, // any*
+-1, // $$3
+-1, // idChar
+-1, // idChar128
+-1, // hexDigit
+-1, // hexDigit128
+-1, // $
+-1, // $NT
+  }
+,
+{ // state 121
+0x80000000|271, // match move
+0x80000000|260, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 122
+7,248, // ID
+15,144, // `(
+38,55, // <cast exp>
+40,27, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+78,12, // "#"
+85,184, // "("
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 123
+22,MIN_REDUCTION+48, // `[
+74,MIN_REDUCTION+48, // "["
+MIN_REDUCTION+48, // (default reduction)
+  }
+,
+{ // state 124
+MIN_REDUCTION+11, // (default reduction)
+  }
+,
+{ // state 125
+22,MIN_REDUCTION+50, // `[
+74,MIN_REDUCTION+50, // "["
+MIN_REDUCTION+50, // (default reduction)
+  }
+,
+{ // state 126
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+139, // (default reduction)
+  }
+,
+{ // state 127
+7,248, // ID
+15,144, // `(
+31,114, // `+
+33,30, // `-
+35,291, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 128
+0x80000000|2, // match move
+0x80000000|275, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 129
+0x80000000|168, // match move
+0x80000000|67, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 130
+7,136, // ID
+49,234, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,213, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+  }
+,
+{ // state 131
+MIN_REDUCTION+4, // (default reduction)
+  }
+,
+{ // state 132
+22,MIN_REDUCTION+61, // `[
+74,MIN_REDUCTION+61, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+61, // (default reduction)
+  }
+,
+{ // state 133
+22,MIN_REDUCTION+107, // `[
+74,MIN_REDUCTION+107, // "["
+MIN_REDUCTION+107, // (default reduction)
+  }
+,
+{ // state 134
+MIN_REDUCTION+123, // (default reduction)
+  }
+,
+{ // state 135
+22,MIN_REDUCTION+112, // `[
+74,MIN_REDUCTION+112, // "["
+MIN_REDUCTION+112, // (default reduction)
+  }
+,
+{ // state 136
+15,106, // `(
+85,184, // "("
+  }
+,
+{ // state 137
+0x80000000|2, // match move
+0x80000000|298, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 138
+MIN_REDUCTION+12, // (default reduction)
+  }
+,
+{ // state 139
+MIN_REDUCTION+130, // (default reduction)
+  }
+,
+{ // state 140
+22,MIN_REDUCTION+141, // `[
+74,MIN_REDUCTION+141, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+141, // (default reduction)
+  }
+,
+{ // state 141
+MIN_REDUCTION+19, // (default reduction)
+  }
+,
+{ // state 142
+0x80000000|2, // match move
+0x80000000|229, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 143
+0x80000000|315, // match move
+0x80000000|208, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 144
+7,153, // ID
+18,284, // <type>
+19,73, // `int
+20,95, // `boolean
+49,234, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,213, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+78,173, // "#"
+  }
+,
+{ // state 145
+0x80000000|189, // match move
+0x80000000|125, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 146
+2,126, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+140, // (default reduction)
+  }
+,
+{ // state 147
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+53, // (default reduction)
+  }
+,
+{ // state 148
+49,176, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,61, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+68,26, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,244, // digit128
+72,1, // {176..185}
+88,225, // "_"
+97,181, // {223}
+100,259, // idChar*
+101,93, // $$0
+108,304, // idChar
+109,162, // idChar128
+  }
+,
+{ // state 149
+22,MIN_REDUCTION+143, // `[
+74,MIN_REDUCTION+143, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+143, // (default reduction)
+  }
+,
+{ // state 150
+7,105, // ID
+49,234, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,213, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+  }
+,
+{ // state 151
+2,111, // ws*
+22,MIN_REDUCTION+140, // `[
+74,MIN_REDUCTION+140, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+140, // (default reduction)
+  }
+,
+{ // state 152
+22,MIN_REDUCTION+38, // `[
+74,MIN_REDUCTION+38, // "["
+MIN_REDUCTION+38, // (default reduction)
+  }
+,
+{ // state 153
+MIN_REDUCTION+11, // (default reduction)
+  }
+,
+{ // state 154
+2,266, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+94, // (default reduction)
+  }
+,
+{ // state 155
+2,167, // ws*
+22,MIN_REDUCTION+146, // `[
+74,MIN_REDUCTION+146, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+146, // (default reduction)
+  }
+,
+{ // state 156
+MIN_REDUCTION+15, // (default reduction)
+  }
+,
+{ // state 157
+22,261, // `[
+48,10, // `.
+74,44, // "["
+87,154, // "."
+MIN_REDUCTION+31, // (default reduction)
+  }
+,
+{ // state 158
+22,MIN_REDUCTION+35, // `[
+74,MIN_REDUCTION+35, // "["
+MIN_REDUCTION+35, // (default reduction)
+  }
+,
+{ // state 159
+113,MIN_REDUCTION+51, // $NT
+MIN_REDUCTION+51, // (default reduction)
+  }
+,
+{ // state 160
+0x80000000|317, // match move
+0x80000000|96, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 161
+22,243, // `[
+74,44, // "["
+  }
+,
+{ // state 162
+0x80000000|279, // match move
+0x80000000|151, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 163
+2,314, // ws*
+  }
+,
+{ // state 164
+22,MIN_REDUCTION+105, // `[
+74,MIN_REDUCTION+105, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+105, // (default reduction)
+  }
+,
+{ // state 165
+0x80000000|204, // match move
+0x80000000|6, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 166
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+57, // (default reduction)
+  }
+,
+{ // state 167
+0x80000000|2, // match move
+0x80000000|253, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 168
+MIN_REDUCTION+101, // (default reduction)
+  }
+,
+{ // state 169
+34,206, // `*
+36,25, // `/
+37,127, // `%
+81,3, // "/"
+84,170, // "%"
+95,312, // "*"
+MIN_REDUCTION+22, // (default reduction)
+  }
+,
+{ // state 170
+2,9, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+72, // (default reduction)
+  }
+,
+{ // state 171
+-1, // $$start
+-1, // <start>
+-1, // ws*
+-1, // <program>
+-1, // <class decl>+
+-1, // <class decl>
+-1, // `class
+4, // ID
+220, // `{
+-1, // <decl in class>*
+263, // `}
+-1, // <decl in class>
+-1, // <method decl>
+-1, // `public
+-1, // `void
+144, // `(
+-1, // `)
+120, // <stmt>*
+81, // <type>
+73, // `int
+95, // `boolean
+-1, // <empty bracket pair>
+-1, // `[
+-1, // `]
+299, // <stmt>
+40, // <assign>
+-1, // `;
+39, // <local var decl>
+200, // <exp>
+-1, // `=
+98, // <exp5>
+114, // `+
+116, // <exp6>
+30, // `-
+-1, // `*
+210, // <exp7>
+-1, // `/
+-1, // `%
+60, // <cast exp>
+56, // <unary exp>
+107, // <exp8>
+22, // INTLIT
+255, // STRINGLIT
+242, // CHARLIT
+313, // `false
+89, // `this
+31, // `true
+103, // `null
+-1, // `.
+148, // letter
+178, // "a"
+178, // "p"
+178, // "v"
+178, // "c"
+178, // "f"
+178, // "i"
+178, // "l"
+178, // "o"
+178, // "r"
+178, // "u"
+178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+178, // "b"
+178, // "h"
+178, // "n"
+178, // "t"
+175, // letter128
+272, // {199..218 231..250}
+272, // {193..198 225..230}
+-1, // digit
+88, // {"1".."9"}
+302, // "0"
+235, // digit128
+1, // {176..185}
+-1, // any
+-1, // "["
+254, // "-"
+-1, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+-1, // " "
+75, // "#"
+-1, // ")"
+-1, // "]"
+-1, // "/"
+-1, // ";"
+238, // "{"
+-1, // "%"
+184, // "("
+250, // "+"
+-1, // "."
+-1, // "_"
+-1, // "="
+183, // "@"
+-1, // {10}
+63, // "}"
+108, // "'"
+303, // '"'
+-1, // "*"
+-1, // any128
+-1, // {223}
+-1, // {128..175 186..192 219..222 224 251..255}
+-1, // ws
+-1, // idChar*
+-1, // $$0
+-1, // digit*
+-1, // $$1
+-1, // hexDigit*
+-1, // $$2
+-1, // any*
+-1, // $$3
+-1, // idChar
+-1, // idChar128
+-1, // hexDigit
+-1, // hexDigit128
+-1, // $
+-1, // $NT
+  }
+,
+{ // state 172
+0x80000000|2, // match move
+0x80000000|132, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 173
+55,224, // "i"
+61,293, // "b"
+  }
+,
+{ // state 174
+9,294, // <decl in class>*
+10,297, // `}
+11,77, // <decl in class>
+12,182, // <method decl>
+13,97, // `public
+78,100, // "#"
+92,63, // "}"
+  }
+,
+{ // state 175
+0x80000000|292, // match move
+0x80000000|240, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 176
+MIN_REDUCTION+115, // (default reduction)
+  }
+,
+{ // state 177
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+73, // (default reduction)
+  }
+,
+{ // state 178
+MIN_REDUCTION+45, // (default reduction)
+  }
+,
+{ // state 179
+22,MIN_REDUCTION+36, // `[
+74,MIN_REDUCTION+36, // "["
+MIN_REDUCTION+36, // (default reduction)
+  }
+,
+{ // state 180
+MIN_REDUCTION+102, // (default reduction)
+  }
+,
+{ // state 181
+0x80000000|82, // match move
+0x80000000|74, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 182
+MIN_REDUCTION+6, // (default reduction)
+  }
+,
+{ // state 183
+94,247, // '"'
+  }
+,
+{ // state 184
+2,214, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+76, // (default reduction)
+  }
+,
+{ // state 185
+22,MIN_REDUCTION+39, // `[
+74,MIN_REDUCTION+39, // "["
+MIN_REDUCTION+39, // (default reduction)
+  }
+,
+{ // state 186
+-1, // $$start
+-1, // <start>
+-1, // ws*
+-1, // <program>
+-1, // <class decl>+
+-1, // <class decl>
+-1, // `class
+4, // ID
+220, // `{
+-1, // <decl in class>*
+156, // `}
+-1, // <decl in class>
+-1, // <method decl>
+-1, // `public
+-1, // `void
+144, // `(
+-1, // `)
+-1, // <stmt>*
+81, // <type>
+73, // `int
+95, // `boolean
+-1, // <empty bracket pair>
+-1, // `[
+-1, // `]
+134, // <stmt>
+40, // <assign>
+-1, // `;
+39, // <local var decl>
+200, // <exp>
+-1, // `=
+98, // <exp5>
+114, // `+
+116, // <exp6>
+30, // `-
+-1, // `*
+210, // <exp7>
+-1, // `/
+-1, // `%
+60, // <cast exp>
+56, // <unary exp>
+107, // <exp8>
+22, // INTLIT
+255, // STRINGLIT
+242, // CHARLIT
+313, // `false
+89, // `this
+31, // `true
+103, // `null
+-1, // `.
+148, // letter
+178, // "a"
+178, // "p"
+178, // "v"
+178, // "c"
+178, // "f"
+178, // "i"
+178, // "l"
+178, // "o"
+178, // "r"
+178, // "u"
+178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+178, // "b"
+178, // "h"
+178, // "n"
+178, // "t"
+175, // letter128
+272, // {199..218 231..250}
+272, // {193..198 225..230}
+-1, // digit
+88, // {"1".."9"}
+302, // "0"
+235, // digit128
+1, // {176..185}
+-1, // any
+-1, // "["
+254, // "-"
+-1, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+-1, // " "
+75, // "#"
+-1, // ")"
+-1, // "]"
+-1, // "/"
+-1, // ";"
+238, // "{"
+-1, // "%"
+184, // "("
+250, // "+"
+-1, // "."
+-1, // "_"
+-1, // "="
+183, // "@"
+-1, // {10}
+63, // "}"
+108, // "'"
+303, // '"'
+-1, // "*"
+-1, // any128
+-1, // {223}
+-1, // {128..175 186..192 219..222 224 251..255}
+-1, // ws
+-1, // idChar*
+-1, // $$0
+-1, // digit*
+-1, // $$1
+-1, // hexDigit*
+-1, // $$2
+-1, // any*
+-1, // $$3
+-1, // idChar
+-1, // idChar128
+-1, // hexDigit
+-1, // hexDigit128
+-1, // $
+-1, // $NT
+  }
+,
+{ // state 187
+0x80000000|270, // match move
+0x80000000|197, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 188
+2,290, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+113,MIN_REDUCTION+92, // $NT
+MIN_REDUCTION+92, // (default reduction)
+  }
+,
+{ // state 189
+MIN_REDUCTION+50, // (default reduction)
+  }
+,
+{ // state 190
+2,23, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+78, // (default reduction)
+  }
+,
+{ // state 191
+MIN_REDUCTION+46, // (default reduction)
+  }
+,
+{ // state 192
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+59, // (default reduction)
+  }
+,
+{ // state 193
+MIN_REDUCTION+131, // (default reduction)
+  }
+,
+{ // state 194
+58,231, // "r"
+62,230, // "h"
+  }
+,
+{ // state 195
+22,MIN_REDUCTION+102, // `[
+74,MIN_REDUCTION+102, // "["
+MIN_REDUCTION+102, // (default reduction)
+  }
+,
+{ // state 196
+49,176, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,219, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+68,26, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,79, // digit128
+72,36, // {176..185}
+88,225, // "_"
+97,11, // {223}
+101,112, // $$0
+108,207, // idChar
+109,146, // idChar128
+  }
+,
+{ // state 197
+2,137, // ws*
+22,MIN_REDUCTION+68, // `[
+74,MIN_REDUCTION+68, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+68, // (default reduction)
+  }
+,
+{ // state 198
+0x80000000|78, // match move
+0x80000000|228, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 199
+MIN_REDUCTION+139, // (default reduction)
+  }
+,
+{ // state 200
+29,287, // `=
+89,76, // "="
+  }
+,
+{ // state 201
+0x80000000|7, // match move
+0x80000000|85, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 202
+112,MIN_REDUCTION+0, // $
+  }
+,
+{ // state 203
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+87, // (default reduction)
+  }
+,
+{ // state 204
+2,69, // ws*
+  }
+,
+{ // state 205
+MIN_REDUCTION+14, // (default reduction)
+  }
+,
+{ // state 206
+7,248, // ID
+15,144, // `(
+31,114, // `+
+33,30, // `-
+35,283, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 207
+MIN_REDUCTION+135, // (default reduction)
+  }
+,
+{ // state 208
+2,21, // ws*
+22,MIN_REDUCTION+144, // `[
+74,MIN_REDUCTION+144, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+144, // (default reduction)
+  }
+,
+{ // state 209
+22,MIN_REDUCTION+43, // `[
+74,MIN_REDUCTION+43, // "["
+MIN_REDUCTION+43, // (default reduction)
+  }
+,
+{ // state 210
+MIN_REDUCTION+27, // (default reduction)
+  }
+,
+{ // state 211
+23,101, // `]
+80,165, // "]"
+  }
+,
+{ // state 212
+22,MIN_REDUCTION+91, // `[
+74,MIN_REDUCTION+91, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+91, // (default reduction)
+  }
+,
+{ // state 213
+2,18, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+100, // (default reduction)
+  }
+,
+{ // state 214
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+75, // (default reduction)
+  }
+,
+{ // state 215
+MIN_REDUCTION+127, // (default reduction)
+  }
+,
+{ // state 216
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+69, // (default reduction)
+  }
+,
+{ // state 217
+MIN_REDUCTION+138, // (default reduction)
+  }
+,
+{ // state 218
+22,MIN_REDUCTION+109, // `[
+74,MIN_REDUCTION+109, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+109, // (default reduction)
+  }
+,
+{ // state 219
+MIN_REDUCTION+118, // (default reduction)
+  }
+,
+{ // state 220
+-1, // $$start
+-1, // <start>
+-1, // ws*
+-1, // <program>
+-1, // <class decl>+
+-1, // <class decl>
+-1, // `class
+4, // ID
+220, // `{
+-1, // <decl in class>*
+47, // `}
+-1, // <decl in class>
+-1, // <method decl>
+-1, // `public
+-1, // `void
+144, // `(
+-1, // `)
+186, // <stmt>*
+81, // <type>
+73, // `int
+95, // `boolean
+-1, // <empty bracket pair>
+-1, // `[
+-1, // `]
+299, // <stmt>
+40, // <assign>
+-1, // `;
+39, // <local var decl>
+200, // <exp>
+-1, // `=
+98, // <exp5>
+114, // `+
+116, // <exp6>
+30, // `-
+-1, // `*
+210, // <exp7>
+-1, // `/
+-1, // `%
+60, // <cast exp>
+56, // <unary exp>
+107, // <exp8>
+22, // INTLIT
+255, // STRINGLIT
+242, // CHARLIT
+313, // `false
+89, // `this
+31, // `true
+103, // `null
+-1, // `.
+148, // letter
+178, // "a"
+178, // "p"
+178, // "v"
+178, // "c"
+178, // "f"
+178, // "i"
+178, // "l"
+178, // "o"
+178, // "r"
+178, // "u"
+178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+178, // "b"
+178, // "h"
+178, // "n"
+178, // "t"
+175, // letter128
+272, // {199..218 231..250}
+272, // {193..198 225..230}
+-1, // digit
+88, // {"1".."9"}
+302, // "0"
+235, // digit128
+1, // {176..185}
+-1, // any
+-1, // "["
+254, // "-"
+-1, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+-1, // " "
+75, // "#"
+-1, // ")"
+-1, // "]"
+-1, // "/"
+-1, // ";"
+238, // "{"
+-1, // "%"
+184, // "("
+250, // "+"
+-1, // "."
+-1, // "_"
+-1, // "="
+183, // "@"
+-1, // {10}
+63, // "}"
+108, // "'"
+303, // '"'
+-1, // "*"
+-1, // any128
+-1, // {223}
+-1, // {128..175 186..192 219..222 224 251..255}
+-1, // ws
+-1, // idChar*
+-1, // $$0
+-1, // digit*
+-1, // $$1
+-1, // hexDigit*
+-1, // $$2
+-1, // any*
+-1, // $$3
+-1, // idChar
+-1, // idChar128
+-1, // hexDigit
+-1, // hexDigit128
+-1, // $
+-1, // $NT
+  }
+,
+{ // state 221
+22,MIN_REDUCTION+108, // `[
+74,MIN_REDUCTION+108, // "["
+MIN_REDUCTION+108, // (default reduction)
+  }
+,
+{ // state 222
+22,MIN_REDUCTION+118, // `[
+74,MIN_REDUCTION+118, // "["
+MIN_REDUCTION+118, // (default reduction)
+  }
+,
+{ // state 223
+22,MIN_REDUCTION+35, // `[
+29,MIN_REDUCTION+35, // `=
+31,MIN_REDUCTION+35, // `+
+33,MIN_REDUCTION+35, // `-
+34,MIN_REDUCTION+35, // `*
+36,MIN_REDUCTION+35, // `/
+37,MIN_REDUCTION+35, // `%
+48,MIN_REDUCTION+35, // `.
+74,MIN_REDUCTION+35, // "["
+75,MIN_REDUCTION+35, // "-"
+81,MIN_REDUCTION+35, // "/"
+84,MIN_REDUCTION+35, // "%"
+86,MIN_REDUCTION+35, // "+"
+87,MIN_REDUCTION+35, // "."
+89,MIN_REDUCTION+35, // "="
+95,MIN_REDUCTION+35, // "*"
+MIN_REDUCTION+11, // (default reduction)
+  }
+,
+{ // state 224
+64,289, // "t"
+  }
+,
+{ // state 225
+MIN_REDUCTION+117, // (default reduction)
   }
 ,
 { // state 226
-3,203, // <program>
-4,94, // <class decl>+
-5,232, // <class decl>
-6,137, // `class
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-62,175, // "#"
+MIN_REDUCTION+132, // (default reduction)
   }
 ,
 { // state 227
-MIN_REDUCTION+17, // (default reduction)
+56,99, // "l"
   }
 ,
 { // state 228
-59,58, // ws
-60,115, // " "
-61,112, // {10}
-MIN_REDUCTION+62, // (default reduction)
+22,MIN_REDUCTION+49, // `[
+74,MIN_REDUCTION+49, // "["
+MIN_REDUCTION+49, // (default reduction)
   }
 ,
 { // state 229
-8,12, // `{
-66,193, // "{"
+22,MIN_REDUCTION+111, // `[
+74,MIN_REDUCTION+111, // "["
+MIN_REDUCTION+111, // (default reduction)
   }
 ,
 { // state 230
-2,11, // ws*
+0x80000000|251, // match move
+0x80000000|300, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
   }
 ,
 { // state 231
-2,208, // ws*
+0x80000000|17, // match move
+0x80000000|311, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
   }
 ,
 { // state 232
+59,187, // "u"
+  }
+,
+{ // state 233
+22,MIN_REDUCTION+119, // `[
+74,MIN_REDUCTION+119, // "["
+MIN_REDUCTION+119, // (default reduction)
+  }
+,
+{ // state 234
+49,176, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,219, // letter128
+66,14, // {199..218 231..250}
+67,14, // {193..198 225..230}
+68,26, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,79, // digit128
+72,36, // {176..185}
+88,225, // "_"
+97,11, // {223}
+100,196, // idChar*
+101,237, // $$0
+108,304, // idChar
+109,146, // idChar128
+  }
+,
+{ // state 235
+0x80000000|273, // match move
+0x80000000|278, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 236
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+89, // (default reduction)
+  }
+,
+{ // state 237
 MIN_REDUCTION+102, // (default reduction)
+  }
+,
+{ // state 238
+2,20, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+80, // (default reduction)
+  }
+,
+{ // state 239
+22,MIN_REDUCTION+40, // `[
+74,MIN_REDUCTION+40, // "["
+MIN_REDUCTION+40, // (default reduction)
+  }
+,
+{ // state 240
+2,43, // ws*
+22,MIN_REDUCTION+100, // `[
+74,MIN_REDUCTION+100, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+100, // (default reduction)
+  }
+,
+{ // state 241
+MIN_REDUCTION+48, // (default reduction)
+  }
+,
+{ // state 242
+0x80000000|2, // match move
+0x80000000|185, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 243
+23,29, // `]
+80,188, // "]"
+  }
+,
+{ // state 244
+0x80000000|301, // match move
+0x80000000|233, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 245
+MIN_REDUCTION+122, // (default reduction)
+  }
+,
+{ // state 246
+0x80000000|2, // match move
+0x80000000|66, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 247
+0x80000000|163, // match move
+0x80000000|252, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 248
+0x80000000|2, // match move
+0x80000000|158, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 249
+0x80000000|2, // match move
+0x80000000|94, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 250
+2,310, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+86, // (default reduction)
+  }
+,
+{ // state 251
+2,172, // ws*
+  }
+,
+{ // state 252
+2,314, // ws*
+22,MIN_REDUCTION+110, // `[
+74,MIN_REDUCTION+110, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+110, // (default reduction)
+  }
+,
+{ // state 253
+22,MIN_REDUCTION+145, // `[
+74,MIN_REDUCTION+145, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+145, // (default reduction)
+  }
+,
+{ // state 254
+2,286, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+84, // (default reduction)
+  }
+,
+{ // state 255
+0x80000000|2, // match move
+0x80000000|152, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 256
+0x80000000|2, // match move
+0x80000000|91, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 257
+0x80000000|2, // match move
+0x80000000|164, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 258
+7,248, // ID
+15,144, // `(
+28,141, // <exp>
+30,98, // <exp5>
+31,114, // `+
+32,116, // <exp6>
+33,30, // `-
+35,210, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 259
+49,176, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,61, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+68,26, // digit
+69,53, // {"1".."9"}
+70,53, // "0"
+71,244, // digit128
+72,1, // {176..185}
+88,225, // "_"
+97,181, // {223}
+101,129, // $$0
+108,207, // idChar
+109,162, // idChar128
+  }
+,
+{ // state 260
+2,115, // ws*
+22,MIN_REDUCTION+64, // `[
+74,MIN_REDUCTION+64, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+64, // (default reduction)
+  }
+,
+{ // state 261
+7,248, // ID
+15,144, // `(
+28,211, // <exp>
+30,98, // <exp5>
+31,114, // `+
+32,116, // <exp6>
+33,30, // `-
+35,210, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 262
+0x80000000|49, // match move
+0x80000000|70, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 263
+MIN_REDUCTION+8, // (default reduction)
+  }
+,
+{ // state 264
+MIN_REDUCTION+1, // (default reduction)
+  }
+,
+{ // state 265
+2,166, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+58, // (default reduction)
+  }
+,
+{ // state 266
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+93, // (default reduction)
+  }
+,
+{ // state 267
+113,MIN_REDUCTION+130, // $NT
+MIN_REDUCTION+130, // (default reduction)
+  }
+,
+{ // state 268
+0x80000000|33, // match move
+0x80000000|281, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 269
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+95, // (default reduction)
+  }
+,
+{ // state 270
+2,137, // ws*
+  }
+,
+{ // state 271
+2,115, // ws*
+  }
+,
+{ // state 272
+0x80000000|191, // match move
+0x80000000|59, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 273
+2,257, // ws*
+  }
+,
+{ // state 274
+0x80000000|2, // match move
+0x80000000|140, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 275
+22,MIN_REDUCTION+113, // `[
+74,MIN_REDUCTION+113, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+113, // (default reduction)
+  }
+,
+{ // state 276
+52,13, // "v"
+  }
+,
+{ // state 277
+50,34, // "a"
+51,34, // "p"
+52,34, // "v"
+53,34, // "c"
+54,34, // "f"
+55,34, // "i"
+56,34, // "l"
+57,34, // "o"
+58,34, // "r"
+59,34, // "u"
+60,34, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,34, // "b"
+62,34, // "h"
+63,34, // "n"
+64,34, // "t"
+66,145, // {199..218 231..250}
+67,145, // {193..198 225..230}
+69,34, // {"1".."9"}
+70,34, // "0"
+72,145, // {176..185}
+73,215, // any
+74,34, // "["
+75,34, // "-"
+76,34, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+77,34, // " "
+78,34, // "#"
+79,34, // ")"
+80,34, // "]"
+81,34, // "/"
+82,34, // ";"
+83,34, // "{"
+84,34, // "%"
+85,34, // "("
+86,34, // "+"
+87,34, // "."
+88,34, // "_"
+89,34, // "="
+90,34, // "@"
+91,34, // {10}
+92,34, // "}"
+93,34, // "'"
+94,34, // '"'
+95,34, // "*"
+96,295, // any128
+97,145, // {223}
+98,145, // {128..175 186..192 219..222 224 251..255}
+107,142, // $$3
+  }
+,
+{ // state 278
+2,257, // ws*
+22,MIN_REDUCTION+106, // `[
+74,MIN_REDUCTION+106, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+106, // (default reduction)
+  }
+,
+{ // state 279
+2,111, // ws*
+MIN_REDUCTION+140, // (default reduction)
+  }
+,
+{ // state 280
+MIN_REDUCTION+125, // (default reduction)
+  }
+,
+{ // state 281
+2,128, // ws*
+22,MIN_REDUCTION+114, // `[
+74,MIN_REDUCTION+114, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+114, // (default reduction)
+  }
+,
+{ // state 282
+MIN_REDUCTION+134, // (default reduction)
+  }
+,
+{ // state 283
+MIN_REDUCTION+24, // (default reduction)
+  }
+,
+{ // state 284
+16,122, // `)
+21,138, // <empty bracket pair>
+22,243, // `[
+74,44, // "["
+79,190, // ")"
+  }
+,
+{ // state 285
+5,217, // <class decl>
+6,150, // `class
+78,8, // "#"
+MIN_REDUCTION+3, // (default reduction)
+  }
+,
+{ // state 286
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+83, // (default reduction)
+  }
+,
+{ // state 287
+7,248, // ID
+15,144, // `(
+28,288, // <exp>
+30,98, // <exp5>
+31,114, // `+
+32,116, // <exp6>
+33,30, // `-
+35,210, // <exp7>
+38,60, // <cast exp>
+39,56, // <unary exp>
+40,107, // <exp8>
+41,22, // INTLIT
+42,255, // STRINGLIT
+43,242, // CHARLIT
+44,313, // `false
+45,89, // `this
+46,31, // `true
+47,103, // `null
+49,148, // letter
+50,178, // "a"
+51,178, // "p"
+52,178, // "v"
+53,178, // "c"
+54,178, // "f"
+55,178, // "i"
+56,178, // "l"
+57,178, // "o"
+58,178, // "r"
+59,178, // "u"
+60,178, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,178, // "b"
+62,178, // "h"
+63,178, // "n"
+64,178, // "t"
+65,175, // letter128
+66,272, // {199..218 231..250}
+67,272, // {193..198 225..230}
+69,88, // {"1".."9"}
+70,302, // "0"
+71,235, // digit128
+72,1, // {176..185}
+75,254, // "-"
+78,12, // "#"
+85,184, // "("
+86,250, // "+"
+90,183, // "@"
+93,108, // "'"
+94,303, // '"'
+  }
+,
+{ // state 288
+MIN_REDUCTION+18, // (default reduction)
+  }
+,
+{ // state 289
+2,192, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+60, // (default reduction)
+  }
+,
+{ // state 290
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+113,MIN_REDUCTION+91, // $NT
+MIN_REDUCTION+91, // (default reduction)
+  }
+,
+{ // state 291
+MIN_REDUCTION+26, // (default reduction)
+  }
+,
+{ // state 292
+2,43, // ws*
+MIN_REDUCTION+100, // (default reduction)
+  }
+,
+{ // state 293
+57,71, // "o"
+  }
+,
+{ // state 294
+10,131, // `}
+11,280, // <decl in class>
+12,182, // <method decl>
+13,97, // `public
+78,100, // "#"
+92,63, // "}"
+  }
+,
+{ // state 295
+0x80000000|104, // match move
+0x80000000|155, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 296
+22,MIN_REDUCTION+41, // `[
+74,MIN_REDUCTION+41, // "["
+MIN_REDUCTION+41, // (default reduction)
+  }
+,
+{ // state 297
+MIN_REDUCTION+5, // (default reduction)
+  }
+,
+{ // state 298
+22,MIN_REDUCTION+67, // `[
+74,MIN_REDUCTION+67, // "["
+77,201, // " "
+91,262, // {10}
+99,305, // ws
+MIN_REDUCTION+67, // (default reduction)
+  }
+,
+{ // state 299
+MIN_REDUCTION+124, // (default reduction)
+  }
+,
+{ // state 300
+2,172, // ws*
+22,MIN_REDUCTION+62, // `[
+74,MIN_REDUCTION+62, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+62, // (default reduction)
+  }
+,
+{ // state 301
+MIN_REDUCTION+119, // (default reduction)
+  }
+,
+{ // state 302
+50,46, // "a"
+51,46, // "p"
+52,46, // "v"
+53,46, // "c"
+54,46, // "f"
+55,46, // "i"
+56,46, // "l"
+57,46, // "o"
+58,46, // "r"
+59,46, // "u"
+60,46, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,46, // "b"
+62,46, // "h"
+63,46, // "n"
+64,46, // "t"
+67,92, // {193..198 225..230}
+69,46, // {"1".."9"}
+70,46, // "0"
+72,92, // {176..185}
+104,86, // hexDigit*
+105,119, // $$2
+110,282, // hexDigit
+111,143, // hexDigit128
+  }
+,
+{ // state 303
+50,34, // "a"
+51,34, // "p"
+52,34, // "v"
+53,34, // "c"
+54,34, // "f"
+55,34, // "i"
+56,34, // "l"
+57,34, // "o"
+58,34, // "r"
+59,34, // "u"
+60,34, // {"A".."Z" "d".."e" "g" "j".."k" "m" "q" "s" "w".."z"}
+61,34, // "b"
+62,34, // "h"
+63,34, // "n"
+64,34, // "t"
+66,145, // {199..218 231..250}
+67,145, // {193..198 225..230}
+69,34, // {"1".."9"}
+70,34, // "0"
+72,145, // {176..185}
+73,307, // any
+74,34, // "["
+75,34, // "-"
+76,34, // {0..9 11..31 "!" "$" "&" "," ":" "<" ">".."?" "\" "^" "`" "|" "~"..127}
+77,34, // " "
+78,34, // "#"
+79,34, // ")"
+80,34, // "]"
+81,34, // "/"
+82,34, // ";"
+83,34, // "{"
+84,34, // "%"
+85,34, // "("
+86,34, // "+"
+87,34, // "."
+88,34, // "_"
+89,34, // "="
+90,34, // "@"
+91,34, // {10}
+92,34, // "}"
+93,34, // "'"
+94,34, // '"'
+95,34, // "*"
+96,295, // any128
+97,145, // {223}
+98,145, // {128..175 186..192 219..222 224 251..255}
+106,277, // any*
+107,16, // $$3
+  }
+,
+{ // state 304
+MIN_REDUCTION+136, // (default reduction)
+  }
+,
+{ // state 305
+0x80000000|24, // match move
+0x80000000|68, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 306
+3,264, // <program>
+4,285, // <class decl>+
+5,318, // <class decl>
+6,150, // `class
+77,159, // " "
+78,8, // "#"
+91,51, // {10}
+99,84, // ws
+  }
+,
+{ // state 307
+MIN_REDUCTION+128, // (default reduction)
+  }
+,
+{ // state 308
+MIN_REDUCTION+17, // (default reduction)
+  }
+,
+{ // state 309
+MIN_REDUCTION+33, // (default reduction)
+  }
+,
+{ // state 310
+77,159, // " "
+91,51, // {10}
+99,84, // ws
+MIN_REDUCTION+85, // (default reduction)
+  }
+,
+{ // state 311
+2,246, // ws*
+22,MIN_REDUCTION+66, // `[
+74,MIN_REDUCTION+66, // "["
+77,201, // " "
+91,262, // {10}
+99,57, // ws
+MIN_REDUCTION+66, // (default reduction)
+  }
+,
+{ // state 312
+2,177, // ws*
+77,159, // " "
+91,51, // {10}
+99,267, // ws
+MIN_REDUCTION+74, // (default reduction)
+  }
+,
+{ // state 313
+0x80000000|2, // match move
+0x80000000|239, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 314
+0x80000000|2, // match move
+0x80000000|218, // no-match move
+0x80000000|161, // NT-test-match state for <empty bracket pair>
+  }
+,
+{ // state 315
+2,21, // ws*
+  }
+,
+{ // state 316
+29,258, // `=
+89,76, // "="
+  }
+,
+{ // state 317
+2,274, // ws*
+  }
+,
+{ // state 318
+MIN_REDUCTION+137, // (default reduction)
   }
 ,
 };
 }
 public MJGrammarParseTable(MJGrammar actionObj) {
   actionObject = actionObj;
-  parseTable = new int[233][];
+  parseTable = new int[319][];
   int doneSoFar = 0;
   doneSoFar += new Initter1().doInit(doneSoFar);
 }
@@ -2063,42 +3415,68 @@ private static int[] prodTable = {
 (28<<16)+1,
 // <exp5> ::= <exp5> `+ <exp6>
 (30<<16)+3,
+// <exp5> ::= <exp5> `- <exp6>
+(30<<16)+3,
 // <exp5> ::= <exp6>
 (30<<16)+1,
 // <exp6> ::= <exp6> `* <exp7>
 (32<<16)+3,
+// <exp6> ::= <exp6> `/ <exp7>
+(32<<16)+3,
+// <exp6> ::= <exp6> `% <exp7>
+(32<<16)+3,
 // <exp6> ::= <exp7>
 (32<<16)+1,
 // <exp7> ::= <cast exp>
-(34<<16)+1,
+(35<<16)+1,
 // <exp7> ::= <unary exp>
-(34<<16)+1,
+(35<<16)+1,
 // <cast exp> ::= `( <type> `) <cast exp>
-(35<<16)+4,
+(38<<16)+4,
 // <cast exp> ::= `( <type> `) <exp8>
-(35<<16)+4,
+(38<<16)+4,
 // <unary exp> ::= `- <unary exp>
-(36<<16)+2,
+(39<<16)+2,
+// <unary exp> ::= `+ <unary exp>
+(39<<16)+2,
 // <unary exp> ::= <exp8>
-(36<<16)+1,
+(39<<16)+1,
 // <exp8> ::= ID
-(37<<16)+1,
-// <exp8> ::= <exp8> !<empty bracket pair> `[ <exp> `]
-(37<<16)+4,
-// <exp8> ::= INTLIT
-(37<<16)+1,
-// letter ::= {"A".."Z" "a".."z"}
 (40<<16)+1,
+// <exp8> ::= <exp8> !<empty bracket pair> `[ <exp> `]
+(40<<16)+4,
+// <exp8> ::= INTLIT
+(40<<16)+1,
+// <exp8> ::= STRINGLIT
+(40<<16)+1,
+// <exp8> ::= CHARLIT
+(40<<16)+1,
+// <exp8> ::= `false
+(40<<16)+1,
+// <exp8> ::= `this
+(40<<16)+1,
+// <exp8> ::= `true
+(40<<16)+1,
+// <exp8> ::= `null
+(40<<16)+1,
+// <exp8> ::= <exp8> `. ID
+(40<<16)+3,
+// letter ::= {"A".."Z" "a".."z"}
+(49<<16)+1,
 // letter128 ::= {193..218 225..250}
-(51<<16)+1,
+(65<<16)+1,
 // digit ::= {"0".."9"}
-(54<<16)+1,
+(68<<16)+1,
 // digit128 ::= {176..185}
-(57<<16)+1,
+(71<<16)+1,
+// any ::= {0..127}
+(73<<16)+1,
+// any128 ::= {128..255}
+(96<<16)+1,
 // ws ::= " "
-(59<<16)+1,
+(99<<16)+1,
 // ws ::= {10}
-(59<<16)+1,
+(99<<16)+1,
 // `boolean ::= "#" "b" "o" ws*
 (20<<16)+4,
 // `boolean ::= "#" "b" "o"
@@ -2115,14 +3493,34 @@ private static int[] prodTable = {
 (19<<16)+4,
 // `int ::= "#" "i" "t"
 (19<<16)+3,
+// `this ::= "#" "t" "h" ws*
+(45<<16)+4,
+// `this ::= "#" "t" "h"
+(45<<16)+3,
+// `false ::= "#" "f" "a" ws*
+(44<<16)+4,
+// `false ::= "#" "f" "a"
+(44<<16)+3,
+// `true ::= "#" "t" "r" ws*
+(46<<16)+4,
+// `true ::= "#" "t" "r"
+(46<<16)+3,
+// `null ::= "#" "n" "u" ws*
+(47<<16)+4,
+// `null ::= "#" "n" "u"
+(47<<16)+3,
 // `public ::= "#" "p" "u" ws*
 (13<<16)+4,
 // `public ::= "#" "p" "u"
 (13<<16)+3,
+// `% ::= "%" ws*
+(37<<16)+2,
+// `% ::= "%"
+(37<<16)+1,
 // `* ::= "*" ws*
-(33<<16)+2,
+(34<<16)+2,
 // `* ::= "*"
-(33<<16)+1,
+(34<<16)+1,
 // `( ::= "(" ws*
 (15<<16)+2,
 // `( ::= "("
@@ -2140,9 +3538,9 @@ private static int[] prodTable = {
 // `} ::= "}"
 (10<<16)+1,
 // `- ::= "-" ws*
-(38<<16)+2,
+(33<<16)+2,
 // `- ::= "-"
-(38<<16)+1,
+(33<<16)+1,
 // `+ ::= "+" ws*
 (31<<16)+2,
 // `+ ::= "+"
@@ -2159,10 +3557,18 @@ private static int[] prodTable = {
 (23<<16)+2,
 // `] ::= "]"
 (23<<16)+1,
+// `. ::= "." ws*
+(48<<16)+2,
+// `. ::= "."
+(48<<16)+1,
 // `; ::= ";" ws*
 (26<<16)+2,
 // `; ::= ";"
 (26<<16)+1,
+// `/ ::= "/" ws*
+(36<<16)+2,
+// `/ ::= "/"
+(36<<16)+1,
 // ID ::= letter128 ws*
 (7<<16)+2,
 // ID ::= letter128
@@ -2172,33 +3578,45 @@ private static int[] prodTable = {
 // ID ::= letter $$0
 (7<<16)+2,
 // INTLIT ::= {"1".."9"} digit* $$1
-(39<<16)+3,
+(41<<16)+3,
 // INTLIT ::= {"1".."9"} $$1
-(39<<16)+2,
+(41<<16)+2,
 // INTLIT ::= digit128 ws*
-(39<<16)+2,
+(41<<16)+2,
 // INTLIT ::= digit128
-(39<<16)+1,
+(41<<16)+1,
 // INTLIT ::= "0" hexDigit* $$2
-(39<<16)+3,
+(41<<16)+3,
 // INTLIT ::= "0" $$2
-(39<<16)+2,
+(41<<16)+2,
+// STRINGLIT ::= "@" '"' ws*
+(42<<16)+3,
+// STRINGLIT ::= "@" '"'
+(42<<16)+2,
+// STRINGLIT ::= '"' any* $$3
+(42<<16)+3,
+// STRINGLIT ::= '"' $$3
+(42<<16)+2,
+// CHARLIT ::= "'" any ws*
+(43<<16)+3,
+// CHARLIT ::= "'" any
+(43<<16)+2,
 // idChar ::= letter
-(80<<16)+1,
+(108<<16)+1,
 // idChar ::= digit
-(80<<16)+1,
+(108<<16)+1,
 // idChar ::= "_"
-(80<<16)+1,
+(108<<16)+1,
 // idChar128 ::= letter128
-(82<<16)+1,
+(109<<16)+1,
 // idChar128 ::= digit128
-(82<<16)+1,
+(109<<16)+1,
 // idChar128 ::= {223}
-(82<<16)+1,
+(109<<16)+1,
 // hexDigit ::= {"0".."9" "A".."Z" "a".."z"}
-(84<<16)+1,
+(110<<16)+1,
 // hexDigit128 ::= {176..185 193..198 225..230}
-(85<<16)+1,
+(111<<16)+1,
 // <stmt>* ::= <stmt>* <stmt>
 (17<<16)+2,
 // <stmt>* ::= <stmt>
@@ -2207,297 +3625,305 @@ private static int[] prodTable = {
 (9<<16)+2,
 // <decl in class>* ::= <decl in class>
 (9<<16)+1,
+// any* ::= any* any
+(106<<16)+2,
+// any* ::= any
+(106<<16)+1,
 // ws* ::= ws* ws
 (2<<16)+2,
 // ws* ::= ws
 (2<<16)+1,
 // digit* ::= digit* digit
-(76<<16)+2,
+(102<<16)+2,
 // digit* ::= digit
-(76<<16)+1,
+(102<<16)+1,
 // hexDigit* ::= hexDigit* hexDigit
-(78<<16)+2,
+(104<<16)+2,
 // hexDigit* ::= hexDigit
-(78<<16)+1,
+(104<<16)+1,
 // idChar* ::= idChar* idChar
-(74<<16)+2,
+(100<<16)+2,
 // idChar* ::= idChar
-(74<<16)+1,
+(100<<16)+1,
 // <class decl>+ ::= <class decl>
 (4<<16)+1,
 // <class decl>+ ::= <class decl>+ <class decl>
 (4<<16)+2,
 // $$0 ::= idChar128 ws*
-(75<<16)+2,
+(101<<16)+2,
 // $$0 ::= idChar128
-(75<<16)+1,
+(101<<16)+1,
 // $$1 ::= digit128 ws*
-(77<<16)+2,
+(103<<16)+2,
 // $$1 ::= digit128
-(77<<16)+1,
+(103<<16)+1,
 // $$2 ::= hexDigit128 ws*
-(79<<16)+2,
+(105<<16)+2,
 // $$2 ::= hexDigit128
-(79<<16)+1,
+(105<<16)+1,
+// $$3 ::= any128 ws*
+(107<<16)+2,
+// $$3 ::= any128
+(107<<16)+1,
 };
 public int[] getCharMapTable() { return charMapTable; }
 private static int[] charMapTable = {
--1, // 0
--1, // 1
--1, // 2
--1, // 3
--1, // 4
--1, // 5
--1, // 6
--1, // 7
--1, // 8
--1, // 9
-61, // 10
--1, // 11
--1, // 12
--1, // 13
--1, // 14
--1, // 15
--1, // 16
--1, // 17
--1, // 18
--1, // 19
--1, // 20
--1, // 21
--1, // 22
--1, // 23
--1, // 24
--1, // 25
--1, // 26
--1, // 27
--1, // 28
--1, // 29
--1, // 30
--1, // 31
-60, // " "
--1, // "!"
--1, // '"'
-62, // "#"
--1, // "$"
--1, // "%"
--1, // "&"
--1, // "'"
-64, // "("
-65, // ")"
-63, // "*"
-69, // "+"
--1, // ","
-68, // "-"
--1, // "."
--1, // "/"
-56, // "0"
-55, // "1"
-55, // "2"
-55, // "3"
-55, // "4"
-55, // "5"
-55, // "6"
-55, // "7"
-55, // "8"
-55, // "9"
--1, // ":"
-73, // ";"
--1, // "<"
-70, // "="
--1, // ">"
--1, // "?"
--1, // "@"
-44, // "A"
-44, // "B"
-44, // "C"
-44, // "D"
-44, // "E"
-44, // "F"
-44, // "G"
-44, // "H"
-44, // "I"
-44, // "J"
-44, // "K"
-44, // "L"
-44, // "M"
-44, // "N"
-44, // "O"
-44, // "P"
-44, // "Q"
-44, // "R"
-44, // "S"
-44, // "T"
-44, // "U"
-44, // "V"
-44, // "W"
-44, // "X"
-44, // "Y"
-44, // "Z"
-71, // "["
--1, // "\"
-72, // "]"
--1, // "^"
-81, // "_"
--1, // "`"
-44, // "a"
-43, // "b"
-46, // "c"
-44, // "d"
-44, // "e"
-44, // "f"
-44, // "g"
-44, // "h"
-47, // "i"
-44, // "j"
-44, // "k"
-48, // "l"
-44, // "m"
-44, // "n"
-49, // "o"
-41, // "p"
-44, // "q"
-44, // "r"
-44, // "s"
-45, // "t"
-50, // "u"
-42, // "v"
-44, // "w"
-44, // "x"
-44, // "y"
-44, // "z"
-66, // "{"
--1, // "|"
-67, // "}"
--1, // "~"
--1, // 127
--1, // 128
--1, // 129
--1, // 130
--1, // 131
--1, // 132
--1, // 133
--1, // 134
--1, // 135
--1, // 136
--1, // 137
--1, // 138
--1, // 139
--1, // 140
--1, // 141
--1, // 142
--1, // 143
--1, // 144
--1, // 145
--1, // 146
--1, // 147
--1, // 148
--1, // 149
--1, // 150
--1, // 151
--1, // 152
--1, // 153
--1, // 154
--1, // 155
--1, // 156
--1, // 157
--1, // 158
--1, // 159
--1, // 160
--1, // 161
--1, // 162
--1, // 163
--1, // 164
--1, // 165
--1, // 166
--1, // 167
--1, // 168
--1, // 169
--1, // 170
--1, // 171
--1, // 172
--1, // 173
--1, // 174
--1, // 175
-58, // 176
-58, // 177
-58, // 178
-58, // 179
-58, // 180
-58, // 181
-58, // 182
-58, // 183
-58, // 184
-58, // 185
--1, // 186
--1, // 187
--1, // 188
--1, // 189
--1, // 190
--1, // 191
--1, // 192
-53, // 193
-53, // 194
-53, // 195
-53, // 196
-53, // 197
-53, // 198
-52, // 199
-52, // 200
-52, // 201
-52, // 202
-52, // 203
-52, // 204
-52, // 205
-52, // 206
-52, // 207
-52, // 208
-52, // 209
-52, // 210
-52, // 211
-52, // 212
-52, // 213
-52, // 214
-52, // 215
-52, // 216
-52, // 217
-52, // 218
--1, // 219
--1, // 220
--1, // 221
--1, // 222
-83, // 223
--1, // 224
-53, // 225
-53, // 226
-53, // 227
-53, // 228
-53, // 229
-53, // 230
-52, // 231
-52, // 232
-52, // 233
-52, // 234
-52, // 235
-52, // 236
-52, // 237
-52, // 238
-52, // 239
-52, // 240
-52, // 241
-52, // 242
-52, // 243
-52, // 244
-52, // 245
-52, // 246
-52, // 247
-52, // 248
-52, // 249
-52, // 250
--1, // 251
--1, // 252
--1, // 253
--1, // 254
--1, // 255
+76, // 0
+76, // 1
+76, // 2
+76, // 3
+76, // 4
+76, // 5
+76, // 6
+76, // 7
+76, // 8
+76, // 9
+91, // 10
+76, // 11
+76, // 12
+76, // 13
+76, // 14
+76, // 15
+76, // 16
+76, // 17
+76, // 18
+76, // 19
+76, // 20
+76, // 21
+76, // 22
+76, // 23
+76, // 24
+76, // 25
+76, // 26
+76, // 27
+76, // 28
+76, // 29
+76, // 30
+76, // 31
+77, // " "
+76, // "!"
+94, // '"'
+78, // "#"
+76, // "$"
+84, // "%"
+76, // "&"
+93, // "'"
+85, // "("
+79, // ")"
+95, // "*"
+86, // "+"
+76, // ","
+75, // "-"
+87, // "."
+81, // "/"
+70, // "0"
+69, // "1"
+69, // "2"
+69, // "3"
+69, // "4"
+69, // "5"
+69, // "6"
+69, // "7"
+69, // "8"
+69, // "9"
+76, // ":"
+82, // ";"
+76, // "<"
+89, // "="
+76, // ">"
+76, // "?"
+90, // "@"
+60, // "A"
+60, // "B"
+60, // "C"
+60, // "D"
+60, // "E"
+60, // "F"
+60, // "G"
+60, // "H"
+60, // "I"
+60, // "J"
+60, // "K"
+60, // "L"
+60, // "M"
+60, // "N"
+60, // "O"
+60, // "P"
+60, // "Q"
+60, // "R"
+60, // "S"
+60, // "T"
+60, // "U"
+60, // "V"
+60, // "W"
+60, // "X"
+60, // "Y"
+60, // "Z"
+74, // "["
+76, // "\"
+80, // "]"
+76, // "^"
+88, // "_"
+76, // "`"
+50, // "a"
+61, // "b"
+53, // "c"
+60, // "d"
+60, // "e"
+54, // "f"
+60, // "g"
+62, // "h"
+55, // "i"
+60, // "j"
+60, // "k"
+56, // "l"
+60, // "m"
+63, // "n"
+57, // "o"
+51, // "p"
+60, // "q"
+58, // "r"
+60, // "s"
+64, // "t"
+59, // "u"
+52, // "v"
+60, // "w"
+60, // "x"
+60, // "y"
+60, // "z"
+83, // "{"
+76, // "|"
+92, // "}"
+76, // "~"
+76, // 127
+98, // 128
+98, // 129
+98, // 130
+98, // 131
+98, // 132
+98, // 133
+98, // 134
+98, // 135
+98, // 136
+98, // 137
+98, // 138
+98, // 139
+98, // 140
+98, // 141
+98, // 142
+98, // 143
+98, // 144
+98, // 145
+98, // 146
+98, // 147
+98, // 148
+98, // 149
+98, // 150
+98, // 151
+98, // 152
+98, // 153
+98, // 154
+98, // 155
+98, // 156
+98, // 157
+98, // 158
+98, // 159
+98, // 160
+98, // 161
+98, // 162
+98, // 163
+98, // 164
+98, // 165
+98, // 166
+98, // 167
+98, // 168
+98, // 169
+98, // 170
+98, // 171
+98, // 172
+98, // 173
+98, // 174
+98, // 175
+72, // 176
+72, // 177
+72, // 178
+72, // 179
+72, // 180
+72, // 181
+72, // 182
+72, // 183
+72, // 184
+72, // 185
+98, // 186
+98, // 187
+98, // 188
+98, // 189
+98, // 190
+98, // 191
+98, // 192
+67, // 193
+67, // 194
+67, // 195
+67, // 196
+67, // 197
+67, // 198
+66, // 199
+66, // 200
+66, // 201
+66, // 202
+66, // 203
+66, // 204
+66, // 205
+66, // 206
+66, // 207
+66, // 208
+66, // 209
+66, // 210
+66, // 211
+66, // 212
+66, // 213
+66, // 214
+66, // 215
+66, // 216
+66, // 217
+66, // 218
+98, // 219
+98, // 220
+98, // 221
+98, // 222
+97, // 223
+98, // 224
+67, // 225
+67, // 226
+67, // 227
+67, // 228
+67, // 229
+67, // 230
+66, // 231
+66, // 232
+66, // 233
+66, // 234
+66, // 235
+66, // 236
+66, // 237
+66, // 238
+66, // 239
+66, // 240
+66, // 241
+66, // 242
+66, // 243
+66, // 244
+66, // 245
+66, // 246
+66, // 247
+66, // 248
+66, // 249
+66, // 250
+98, // 251
+98, // 252
+98, // 253
+98, // 254
+98, // 255
 };
 public String[] getActionProdNameTable() { return actionProdNameTable; }
 private String[] actionProdNameTable = {
@@ -2523,94 +3949,131 @@ private String[] actionProdNameTable = {
 "<local var decl> ::= <type> # ID `= <exp>", // 19
 "<exp> ::= <exp5>", // 20
 "<exp5> ::= <exp5> # `+ <exp6>", // 21
-"<exp5> ::= <exp6>", // 22
-"<exp6> ::= <exp6> # `* <exp7>", // 23
-"<exp6> ::= <exp7>", // 24
-"<exp7> ::= <cast exp>", // 25
-"<exp7> ::= <unary exp>", // 26
-"<cast exp> ::= # `( <type> `) <cast exp>", // 27
-"<cast exp> ::= # `( <type> `) <exp8>", // 28
-"<unary exp> ::= # `- <unary exp>", // 29
-"<unary exp> ::= <exp8>", // 30
-"<exp8> ::= # ID", // 31
-"<exp8> ::= <exp8> !<empty bracket pair> # `[ <exp> `]", // 32
-"<exp8> ::= # INTLIT", // 33
-"letter ::= {\"A\"..\"Z\" \"a\"..\"z\"}", // 34
-"letter128 ::= {193..218 225..250}", // 35
-"digit ::= {\"0\"..\"9\"}", // 36
-"digit128 ::= {176..185}", // 37
-"ws ::= \" \"", // 38
-"ws ::= {10} registerNewline", // 39
-"`boolean ::= \"#\" \"b\" \"o\" ws*", // 40
-"`boolean ::= \"#\" \"b\" \"o\" ws*", // 41
-"`class ::= \"#\" \"c\" \"l\" ws*", // 42
-"`class ::= \"#\" \"c\" \"l\" ws*", // 43
-"`void ::= \"#\" \"v\" \"o\" ws*", // 44
-"`void ::= \"#\" \"v\" \"o\" ws*", // 45
-"`int ::= \"#\" \"i\" \"t\" ws*", // 46
-"`int ::= \"#\" \"i\" \"t\" ws*", // 47
-"`public ::= \"#\" \"p\" \"u\" ws*", // 48
-"`public ::= \"#\" \"p\" \"u\" ws*", // 49
-"`* ::= \"*\" ws*", // 50
-"`* ::= \"*\" ws*", // 51
-"`( ::= \"(\" ws*", // 52
-"`( ::= \"(\" ws*", // 53
-"`) ::= \")\" ws*", // 54
-"`) ::= \")\" ws*", // 55
-"`{ ::= \"{\" ws*", // 56
-"`{ ::= \"{\" ws*", // 57
-"`} ::= \"}\" ws*", // 58
-"`} ::= \"}\" ws*", // 59
-"`- ::= \"-\" ws*", // 60
-"`- ::= \"-\" ws*", // 61
-"`+ ::= \"+\" ws*", // 62
-"`+ ::= \"+\" ws*", // 63
-"`= ::= \"=\" ws*", // 64
-"`= ::= \"=\" ws*", // 65
-"`[ ::= \"[\" ws*", // 66
-"`[ ::= \"[\" ws*", // 67
-"`] ::= \"]\" ws*", // 68
-"`] ::= \"]\" ws*", // 69
-"`; ::= \";\" ws*", // 70
-"`; ::= \";\" ws*", // 71
-"ID ::= letter128 ws*", // 72
-"ID ::= letter128 ws*", // 73
-"ID ::= letter idChar* idChar128 ws*", // 74
-"ID ::= letter idChar* idChar128 ws*", // 75
-"INTLIT ::= {\"1\"..\"9\"} digit* digit128 ws*", // 76
-"INTLIT ::= {\"1\"..\"9\"} digit* digit128 ws*", // 77
-"INTLIT ::= digit128 ws*", // 78
-"INTLIT ::= digit128 ws*", // 79
-"INTLIT ::= \"0\" hexDigit* hexDigit128 ws*", // 80
-"INTLIT ::= \"0\" hexDigit* hexDigit128 ws*", // 81
-"idChar ::= letter", // 82
-"idChar ::= digit", // 83
-"idChar ::= \"_\"", // 84
-"idChar128 ::= letter128", // 85
-"idChar128 ::= digit128", // 86
-"idChar128 ::= {223}", // 87
-"hexDigit ::= {\"0\"..\"9\" \"A\"..\"Z\" \"a\"..\"z\"}", // 88
-"hexDigit128 ::= {176..185 193..198 225..230}", // 89
-"<stmt>* ::= <stmt>* <stmt>", // 90
-"<stmt>* ::= <stmt>* <stmt>", // 91
-"<decl in class>* ::= <decl in class>* <decl in class>", // 92
-"<decl in class>* ::= <decl in class>* <decl in class>", // 93
-"ws* ::= ws* ws", // 94
-"ws* ::= ws* ws", // 95
-"digit* ::= digit* digit", // 96
-"digit* ::= digit* digit", // 97
-"hexDigit* ::= hexDigit* hexDigit", // 98
-"hexDigit* ::= hexDigit* hexDigit", // 99
-"idChar* ::= idChar* idChar", // 100
-"idChar* ::= idChar* idChar", // 101
-"<class decl>+ ::= <class decl>", // 102
-"<class decl>+ ::= <class decl>+ <class decl>", // 103
-"", // 104
-"", // 105
-"", // 106
-"", // 107
-"", // 108
-"", // 109
+"<exp5> ::= <exp5> # `- <exp6>", // 22
+"<exp5> ::= <exp6>", // 23
+"<exp6> ::= <exp6> # `* <exp7>", // 24
+"<exp6> ::= <exp6> # `/ <exp7>", // 25
+"<exp6> ::= <exp6> # `% <exp7>", // 26
+"<exp6> ::= <exp7>", // 27
+"<exp7> ::= <cast exp>", // 28
+"<exp7> ::= <unary exp>", // 29
+"<cast exp> ::= # `( <type> `) <cast exp>", // 30
+"<cast exp> ::= # `( <type> `) <exp8>", // 31
+"<unary exp> ::= # `- <unary exp>", // 32
+"<unary exp> ::= # `+ <unary exp>", // 33
+"<unary exp> ::= <exp8>", // 34
+"<exp8> ::= # ID", // 35
+"<exp8> ::= <exp8> !<empty bracket pair> # `[ <exp> `]", // 36
+"<exp8> ::= # INTLIT", // 37
+"<exp8> ::= # STRINGLIT", // 38
+"<exp8> ::= # CHARLIT", // 39
+"<exp8> ::= # `false", // 40
+"<exp8> ::= # `this", // 41
+"<exp8> ::= # `true", // 42
+"<exp8> ::= # `null", // 43
+"<exp8> ::= # <exp8> `. ID", // 44
+"letter ::= {\"A\"..\"Z\" \"a\"..\"z\"}", // 45
+"letter128 ::= {193..218 225..250}", // 46
+"digit ::= {\"0\"..\"9\"}", // 47
+"digit128 ::= {176..185}", // 48
+"any ::= {0..127}", // 49
+"any128 ::= {128..255}", // 50
+"ws ::= \" \"", // 51
+"ws ::= {10} registerNewline", // 52
+"`boolean ::= \"#\" \"b\" \"o\" ws*", // 53
+"`boolean ::= \"#\" \"b\" \"o\" ws*", // 54
+"`class ::= \"#\" \"c\" \"l\" ws*", // 55
+"`class ::= \"#\" \"c\" \"l\" ws*", // 56
+"`void ::= \"#\" \"v\" \"o\" ws*", // 57
+"`void ::= \"#\" \"v\" \"o\" ws*", // 58
+"`int ::= \"#\" \"i\" \"t\" ws*", // 59
+"`int ::= \"#\" \"i\" \"t\" ws*", // 60
+"`this ::= \"#\" \"t\" \"h\" ws*", // 61
+"`this ::= \"#\" \"t\" \"h\" ws*", // 62
+"`false ::= \"#\" \"f\" \"a\" ws*", // 63
+"`false ::= \"#\" \"f\" \"a\" ws*", // 64
+"`true ::= \"#\" \"t\" \"r\" ws*", // 65
+"`true ::= \"#\" \"t\" \"r\" ws*", // 66
+"`null ::= \"#\" \"n\" \"u\" ws*", // 67
+"`null ::= \"#\" \"n\" \"u\" ws*", // 68
+"`public ::= \"#\" \"p\" \"u\" ws*", // 69
+"`public ::= \"#\" \"p\" \"u\" ws*", // 70
+"`% ::= \"%\" ws*", // 71
+"`% ::= \"%\" ws*", // 72
+"`* ::= \"*\" ws*", // 73
+"`* ::= \"*\" ws*", // 74
+"`( ::= \"(\" ws*", // 75
+"`( ::= \"(\" ws*", // 76
+"`) ::= \")\" ws*", // 77
+"`) ::= \")\" ws*", // 78
+"`{ ::= \"{\" ws*", // 79
+"`{ ::= \"{\" ws*", // 80
+"`} ::= \"}\" ws*", // 81
+"`} ::= \"}\" ws*", // 82
+"`- ::= \"-\" ws*", // 83
+"`- ::= \"-\" ws*", // 84
+"`+ ::= \"+\" ws*", // 85
+"`+ ::= \"+\" ws*", // 86
+"`= ::= \"=\" ws*", // 87
+"`= ::= \"=\" ws*", // 88
+"`[ ::= \"[\" ws*", // 89
+"`[ ::= \"[\" ws*", // 90
+"`] ::= \"]\" ws*", // 91
+"`] ::= \"]\" ws*", // 92
+"`. ::= \".\" ws*", // 93
+"`. ::= \".\" ws*", // 94
+"`; ::= \";\" ws*", // 95
+"`; ::= \";\" ws*", // 96
+"`/ ::= \"/\" ws*", // 97
+"`/ ::= \"/\" ws*", // 98
+"ID ::= letter128 ws*", // 99
+"ID ::= letter128 ws*", // 100
+"ID ::= letter idChar* idChar128 ws*", // 101
+"ID ::= letter idChar* idChar128 ws*", // 102
+"INTLIT ::= {\"1\"..\"9\"} digit* digit128 ws*", // 103
+"INTLIT ::= {\"1\"..\"9\"} digit* digit128 ws*", // 104
+"INTLIT ::= digit128 ws*", // 105
+"INTLIT ::= digit128 ws*", // 106
+"INTLIT ::= \"0\" hexDigit* hexDigit128 ws*", // 107
+"INTLIT ::= \"0\" hexDigit* hexDigit128 ws*", // 108
+"STRINGLIT ::= \"@\" \'\"\' ws*", // 109
+"STRINGLIT ::= \"@\" \'\"\' ws*", // 110
+"STRINGLIT ::= \'\"\' any* any128 ws*", // 111
+"STRINGLIT ::= \'\"\' any* any128 ws*", // 112
+"CHARLIT ::= \"\'\" any ws*", // 113
+"CHARLIT ::= \"\'\" any ws*", // 114
+"idChar ::= letter", // 115
+"idChar ::= digit", // 116
+"idChar ::= \"_\"", // 117
+"idChar128 ::= letter128", // 118
+"idChar128 ::= digit128", // 119
+"idChar128 ::= {223}", // 120
+"hexDigit ::= {\"0\"..\"9\" \"A\"..\"Z\" \"a\"..\"z\"}", // 121
+"hexDigit128 ::= {176..185 193..198 225..230}", // 122
+"<stmt>* ::= <stmt>* <stmt>", // 123
+"<stmt>* ::= <stmt>* <stmt>", // 124
+"<decl in class>* ::= <decl in class>* <decl in class>", // 125
+"<decl in class>* ::= <decl in class>* <decl in class>", // 126
+"any* ::= any* any", // 127
+"any* ::= any* any", // 128
+"ws* ::= ws* ws", // 129
+"ws* ::= ws* ws", // 130
+"digit* ::= digit* digit", // 131
+"digit* ::= digit* digit", // 132
+"hexDigit* ::= hexDigit* hexDigit", // 133
+"hexDigit* ::= hexDigit* hexDigit", // 134
+"idChar* ::= idChar* idChar", // 135
+"idChar* ::= idChar* idChar", // 136
+"<class decl>+ ::= <class decl>", // 137
+"<class decl>+ ::= <class decl>+ <class decl>", // 138
+"", // 139
+"", // 140
+"", // 141
+"", // 142
+"", // 143
+"", // 144
+"", // 145
+"", // 146
 };
 public int[][] getActionTable() { return actionTable; }
 private int[][] actionTable = {
@@ -2626,13 +4089,13 @@ private int[][] actionTable = {
     { // 2: <start> ::= [ws*] <program> @topLevel(Program)=>
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
       ((0<<5)|0x5)/*methodCall:0*/,
     },
     { // 3: <program> ::= [#] <class decl>+ @createProgram(int,List<ClassDecl>)=>Program
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0x5)/*methodCall:1*/,
     },
     { // 4: <class decl> ::= `class [#] ID `{ <decl in class>* `} @createClassDecl(int,String,List<Decl>)=>ClassDecl
@@ -2642,17 +4105,17 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((2<<5)|0x5)/*methodCall:2*/,
     },
     { // 5: <class decl> ::= `class [#] ID `{ [<decl in class>*] `} @createClassDecl(int,String,List<Decl>)=>ClassDecl
       ((1<<5)|0xe)/*popPos:1*/,
-      ((2<<5)|0x6)/*nullProductionAction:2*/,
+      ((3<<5)|0x6)/*nullProductionAction:3*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((2<<5)|0x5)/*methodCall:2*/,
     },
@@ -2669,7 +4132,7 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((3<<5)|0x5)/*methodCall:3*/,
@@ -2682,25 +4145,25 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((3<<5)|0x5)/*methodCall:3*/,
     },
     { // 9: <type> ::= [#] `int @intType(int)=>Type
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((4<<5)|0x5)/*methodCall:4*/,
     },
     { // 10: <type> ::= [#] `boolean @booleanType(int)=>Type
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((5<<5)|0x5)/*methodCall:5*/,
     },
     { // 11: <type> ::= [#] ID @identifierType(int,String)=>Type
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((6<<5)|0x5)/*methodCall:6*/,
     },
     { // 12: <type> ::= [#] <type> <empty bracket pair> @newArrayType(int,Type,Object)=>Type
@@ -2708,7 +4171,7 @@ private int[][] actionTable = {
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((7<<5)|0x5)/*methodCall:7*/,
     },
     { // 13: <empty bracket pair> ::= `[ `] @null
@@ -2726,14 +4189,14 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((8<<5)|0x5)/*methodCall:8*/,
     },
     { // 16: <stmt> ::= [#] `{ [<stmt>*] `} @newBlock(int,List<Statement>)=>Statement
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x6)/*nullProductionAction:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((8<<5)|0x5)/*methodCall:8*/,
     },
     { // 17: <stmt> ::= <local var decl> `; @pass
@@ -2745,7 +4208,7 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((9<<5)|0x5)/*methodCall:9*/,
@@ -2756,7 +4219,7 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((10<<5)|0x5)/*methodCall:10*/,
@@ -2769,119 +4232,203 @@ private int[][] actionTable = {
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((11<<5)|0x5)/*methodCall:11*/,
     },
-    { // 22: <exp5> ::= <exp6> @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 23: <exp6> ::= <exp6> [#] `* <exp7> @newTimes(Exp,int,Exp)=>Exp
+    { // 22: <exp5> ::= <exp5> [#] `- <exp6> @newMinus(Exp,int,Exp)=>Exp
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((12<<5)|0x5)/*methodCall:12*/,
     },
-    { // 24: <exp6> ::= <exp7> @pass
+    { // 23: <exp5> ::= <exp6> @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 25: <exp7> ::= <cast exp> @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 26: <exp7> ::= <unary exp> @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 27: <cast exp> ::= [#] `( <type> `) <cast exp> @newCast(int,Type,Exp)=>Exp
+    { // 24: <exp6> ::= <exp6> [#] `* <exp7> @newTimes(Exp,int,Exp)=>Exp
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((13<<5)|0x5)/*methodCall:13*/,
-    },
-    { // 28: <cast exp> ::= [#] `( <type> `) <exp8> @newCast(int,Type,Exp)=>Exp
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((13<<5)|0x5)/*methodCall:13*/,
-    },
-    { // 29: <unary exp> ::= [#] `- <unary exp> @newUnaryMinus(int,Exp)=>Exp
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((14<<5)|0x5)/*methodCall:14*/,
-    },
-    { // 30: <unary exp> ::= <exp8> @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 31: <exp8> ::= [#] ID @newIdentfierExp(int,String)=>Exp
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((15<<5)|0x5)/*methodCall:15*/,
-    },
-    { // 32: <exp8> ::= <exp8> !<empty bracket pair> [#] `[ <exp> `] @newArrayLookup(Exp,int,Exp)=>Exp
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((16<<5)|0x5)/*methodCall:16*/,
-    },
-    { // 33: <exp8> ::= [#] INTLIT @newIntegerLiteral(int,int)=>Exp
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((17<<5)|0x5)/*methodCall:17*/,
-    },
-    { // 34: letter ::= {"A".."Z" "a".."z"} @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 35: letter128 ::= {193..218 225..250} @sub128(char)=>char
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((18<<5)|0x5)/*methodCall:18*/,
-    },
-    { // 36: digit ::= {"0".."9"} @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 37: digit128 ::= {176..185} @sub128(char)=>char
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((18<<5)|0x5)/*methodCall:18*/,
-    },
-    { // 38: ws ::= " " @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 39: ws ::= {10} [registerNewline] @void
       ((7<<5)|0x6)/*nullProductionAction:7*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((13<<5)|0x5)/*methodCall:13*/,
+    },
+    { // 25: <exp6> ::= <exp6> [#] `/ <exp7> @newDivide(Exp,int,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((14<<5)|0x5)/*methodCall:14*/,
+    },
+    { // 26: <exp6> ::= <exp6> [#] `% <exp7> @newRemainder(Exp,int,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((15<<5)|0x5)/*methodCall:15*/,
+    },
+    { // 27: <exp6> ::= <exp7> @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 28: <exp7> ::= <cast exp> @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 29: <exp7> ::= <unary exp> @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 30: <cast exp> ::= [#] `( <type> `) <cast exp> @newCast(int,Type,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((16<<5)|0x5)/*methodCall:16*/,
+    },
+    { // 31: <cast exp> ::= [#] `( <type> `) <exp8> @newCast(int,Type,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((16<<5)|0x5)/*methodCall:16*/,
+    },
+    { // 32: <unary exp> ::= [#] `- <unary exp> @newUnaryMinus(int,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((17<<5)|0x5)/*methodCall:17*/,
+    },
+    { // 33: <unary exp> ::= [#] `+ <unary exp> @newUnaryPlus(int,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((18<<5)|0x5)/*methodCall:18*/,
+    },
+    { // 34: <unary exp> ::= <exp8> @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 35: <exp8> ::= [#] ID @newIdentfierExp(int,String)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((19<<5)|0x5)/*methodCall:19*/,
+    },
+    { // 36: <exp8> ::= <exp8> !<empty bracket pair> [#] `[ <exp> `] @newArrayLookup(Exp,int,Exp)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((20<<5)|0x5)/*methodCall:20*/,
+    },
+    { // 37: <exp8> ::= [#] INTLIT @newIntegerLiteral(int,int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((21<<5)|0x5)/*methodCall:21*/,
+    },
+    { // 38: <exp8> ::= [#] STRINGLIT @newStringLiteral(int,String)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((22<<5)|0x5)/*methodCall:22*/,
+    },
+    { // 39: <exp8> ::= [#] CHARLIT @newCharLiteral(int,int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((23<<5)|0x5)/*methodCall:23*/,
+    },
+    { // 40: <exp8> ::= [#] `false @newFalse(int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((24<<5)|0x5)/*methodCall:24*/,
+    },
+    { // 41: <exp8> ::= [#] `this @newThis(int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((25<<5)|0x5)/*methodCall:25*/,
+    },
+    { // 42: <exp8> ::= [#] `true @newTrue(int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((26<<5)|0x5)/*methodCall:26*/,
+    },
+    { // 43: <exp8> ::= [#] `null @newNull(int)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((27<<5)|0x5)/*methodCall:27*/,
+    },
+    { // 44: <exp8> ::= [#] <exp8> `. ID @newInstVarAccess(int,Exp,String)=>Exp
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((28<<5)|0x5)/*methodCall:28*/,
+    },
+    { // 45: letter ::= {"A".."Z" "a".."z"} @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 46: letter128 ::= {193..218 225..250} @sub128(char)=>char
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((29<<5)|0x5)/*methodCall:29*/,
+    },
+    { // 47: digit ::= {"0".."9"} @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 48: digit128 ::= {176..185} @sub128(char)=>char
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((29<<5)|0x5)/*methodCall:29*/,
+    },
+    { // 49: any ::= {0..127} @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 50: any128 ::= {128..255} @sub128(char)=>char
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((29<<5)|0x5)/*methodCall:29*/,
+    },
+    { // 51: ws ::= " " @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0x3)/*popOffPushBack:1*/,
     },
-    { // 40: `boolean ::= "#" "b" "o" ws* @void
+    { // 52: ws ::= {10} [registerNewline] @void
+      ((8<<5)|0x6)/*nullProductionAction:8*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 53: `boolean ::= "#" "b" "o" ws* @void
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
@@ -2891,449 +4438,637 @@ private int[][] actionTable = {
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((3<<5)|0x3)/*popOffPushBack:3*/,
     },
-    { // 41: `boolean ::= "#" "b" "o" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 42: `class ::= "#" "c" "l" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 43: `class ::= "#" "c" "l" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 44: `void ::= "#" "v" "o" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 45: `void ::= "#" "v" "o" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 46: `int ::= "#" "i" "t" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 47: `int ::= "#" "i" "t" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 48: `public ::= "#" "p" "u" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 49: `public ::= "#" "p" "u" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x3)/*popOffPushBack:3*/,
-    },
-    { // 50: `* ::= "*" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 51: `* ::= "*" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 52: `( ::= "(" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 53: `( ::= "(" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 54: `) ::= ")" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 55: `) ::= ")" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 56: `{ ::= "{" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 57: `{ ::= "{" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 58: `} ::= "}" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 59: `} ::= "}" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 60: `- ::= "-" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 61: `- ::= "-" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 62: `+ ::= "+" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 63: `+ ::= "+" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 64: `= ::= "=" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 65: `= ::= "=" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 66: `[ ::= "[" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 67: `[ ::= "[" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 68: `] ::= "]" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 69: `] ::= "]" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 70: `; ::= ";" ws* @void
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 71: `; ::= ";" [ws*] @void
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x3)/*popOffPushBack:1*/,
-    },
-    { // 72: ID ::= letter128 ws* @text
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x4)/*stringConcat:1*/,
-    },
-    { // 73: ID ::= letter128 [ws*] @text
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0x4)/*stringConcat:1*/,
-    },
-    { // 74: ID ::= letter idChar* $$0 @text
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((3<<5)|0x4)/*stringConcat:3*/,
-    },
-    { // 75: ID ::= letter [idChar*] $$0 @text
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
+    { // 54: `boolean ::= "#" "b" "o" [ws*] @void
       ((4<<5)|0x6)/*nullProductionAction:4*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 55: `class ::= "#" "c" "l" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 56: `class ::= "#" "c" "l" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 57: `void ::= "#" "v" "o" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 58: `void ::= "#" "v" "o" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 59: `int ::= "#" "i" "t" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 60: `int ::= "#" "i" "t" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 61: `this ::= "#" "t" "h" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 62: `this ::= "#" "t" "h" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 63: `false ::= "#" "f" "a" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 64: `false ::= "#" "f" "a" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 65: `true ::= "#" "t" "r" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 66: `true ::= "#" "t" "r" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 67: `null ::= "#" "n" "u" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 68: `null ::= "#" "n" "u" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 69: `public ::= "#" "p" "u" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 70: `public ::= "#" "p" "u" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x3)/*popOffPushBack:3*/,
+    },
+    { // 71: `% ::= "%" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 72: `% ::= "%" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 73: `* ::= "*" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 74: `* ::= "*" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 75: `( ::= "(" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 76: `( ::= "(" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 77: `) ::= ")" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 78: `) ::= ")" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 79: `{ ::= "{" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 80: `{ ::= "{" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 81: `} ::= "}" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 82: `} ::= "}" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 83: `- ::= "-" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 84: `- ::= "-" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 85: `+ ::= "+" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 86: `+ ::= "+" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 87: `= ::= "=" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 88: `= ::= "=" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 89: `[ ::= "[" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 90: `[ ::= "[" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 91: `] ::= "]" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 92: `] ::= "]" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 93: `. ::= "." ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 94: `. ::= "." [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 95: `; ::= ";" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 96: `; ::= ";" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 97: `/ ::= "/" ws* @void
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 98: `/ ::= "/" [ws*] @void
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x3)/*popOffPushBack:1*/,
+    },
+    { // 99: ID ::= letter128 ws* @text
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x4)/*stringConcat:1*/,
+    },
+    { // 100: ID ::= letter128 [ws*] @text
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0x4)/*stringConcat:1*/,
+    },
+    { // 101: ID ::= letter idChar* $$0 @text
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
       ((3<<5)|0x4)/*stringConcat:3*/,
     },
-    { // 76: INTLIT ::= {"1".."9"} digit* $$1 @convertToInt(char,List<Character>,char)=>int
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((19<<5)|0x5)/*methodCall:19*/,
-    },
-    { // 77: INTLIT ::= {"1".."9"} [digit*] $$1 @convertToInt(char,List<Character>,char)=>int
+    { // 102: ID ::= letter [idChar*] $$0 @text
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((5<<5)|0x6)/*nullProductionAction:5*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((19<<5)|0x5)/*methodCall:19*/,
+      ((3<<5)|0x4)/*stringConcat:3*/,
     },
-    { // 78: INTLIT ::= digit128 ws* @convertToInt(char)=>int
-      ((1<<5)|0xe)/*popPos:1*/,
+    { // 103: INTLIT ::= {"1".."9"} digit* $$1 @convertToInt(char,List<Character>,char)=>int
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((20<<5)|0x5)/*methodCall:20*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((30<<5)|0x5)/*methodCall:30*/,
     },
-    { // 79: INTLIT ::= digit128 [ws*] @convertToInt(char)=>int
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
+    { // 104: INTLIT ::= {"1".."9"} [digit*] $$1 @convertToInt(char,List<Character>,char)=>int
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((20<<5)|0x5)/*methodCall:20*/,
+      ((6<<5)|0x6)/*nullProductionAction:6*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((30<<5)|0x5)/*methodCall:30*/,
     },
-    { // 80: INTLIT ::= "0" hexDigit* $$2 @convert16ToInt(char,List<Character>,char)=>int
+    { // 105: INTLIT ::= digit128 ws* @convertToInt(char)=>int
+      ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((21<<5)|0x5)/*methodCall:21*/,
+      ((31<<5)|0x5)/*methodCall:31*/,
     },
-    { // 81: INTLIT ::= "0" [hexDigit*] $$2 @convert16ToInt(char,List<Character>,char)=>int
+    { // 106: INTLIT ::= digit128 [ws*] @convertToInt(char)=>int
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((31<<5)|0x5)/*methodCall:31*/,
+    },
+    { // 107: INTLIT ::= "0" hexDigit* $$2 @convert16ToInt(char,List<Character>,char)=>int
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((32<<5)|0x5)/*methodCall:32*/,
+    },
+    { // 108: INTLIT ::= "0" [hexDigit*] $$2 @convert16ToInt(char,List<Character>,char)=>int
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((0<<5)|0x6)/*nullProductionAction:0*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((21<<5)|0x5)/*methodCall:21*/,
+      ((32<<5)|0x5)/*methodCall:32*/,
     },
-    { // 82: idChar ::= letter @pass
+    { // 109: STRINGLIT ::= "@" '"' ws* @emptyString(char,char)=>String
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((33<<5)|0x5)/*methodCall:33*/,
+    },
+    { // 110: STRINGLIT ::= "@" '"' [ws*] @emptyString(char,char)=>String
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((33<<5)|0x5)/*methodCall:33*/,
+    },
+    { // 111: STRINGLIT ::= '"' any* $$3 @string(char,List<Character>,char)=>String
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((34<<5)|0x5)/*methodCall:34*/,
+    },
+    { // 112: STRINGLIT ::= '"' [any*] $$3 @string(char,List<Character>,char)=>String
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((2<<5)|0x6)/*nullProductionAction:2*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((34<<5)|0x5)/*methodCall:34*/,
+    },
+    { // 113: CHARLIT ::= "'" any ws* @charVal(char,char)=>int
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((35<<5)|0x5)/*methodCall:35*/,
+    },
+    { // 114: CHARLIT ::= "'" any [ws*] @charVal(char,char)=>int
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((35<<5)|0x5)/*methodCall:35*/,
+    },
+    { // 115: idChar ::= letter @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 83: idChar ::= digit @pass
+    { // 116: idChar ::= digit @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 84: idChar ::= "_" @pass
+    { // 117: idChar ::= "_" @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 85: idChar128 ::= letter128 @pass
+    { // 118: idChar128 ::= letter128 @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 86: idChar128 ::= digit128 @pass
+    { // 119: idChar128 ::= digit128 @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 87: idChar128 ::= {223} @underscore(char)=>char
+    { // 120: idChar128 ::= {223} @underscore(char)=>char
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((22<<5)|0x5)/*methodCall:22*/,
+      ((36<<5)|0x5)/*methodCall:36*/,
     },
-    { // 88: hexDigit ::= {"0".."9" "A".."Z" "a".."z"} @pass
+    { // 121: hexDigit ::= {"0".."9" "A".."Z" "a".."z"} @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 89: hexDigit128 ::= {176..185 193..198 225..230} @sub128(char)=>char
+    { // 122: hexDigit128 ::= {176..185 193..198 225..230} @sub128(char)=>char
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((18<<5)|0x5)/*methodCall:18*/,
+      ((29<<5)|0x5)/*methodCall:29*/,
     },
-    { // 90: <stmt>* ::= <stmt>* <stmt> @append
+    { // 123: <stmt>* ::= <stmt>* <stmt> @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 91: <stmt>* ::= [<stmt>*] <stmt> @append
+    { // 124: <stmt>* ::= [<stmt>*] <stmt> @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0x6)/*nullProductionAction:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 92: <decl in class>* ::= <decl in class>* <decl in class> @append
+    { // 125: <decl in class>* ::= <decl in class>* <decl in class> @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 93: <decl in class>* ::= [<decl in class>*] <decl in class> @append
+    { // 126: <decl in class>* ::= [<decl in class>*] <decl in class> @append
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((3<<5)|0x6)/*nullProductionAction:3*/,
+      ((1<<5)|0xb)/*append:1*/,
+    },
+    { // 127: any* ::= any* any @append
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+      ((1<<5)|0xb)/*append:1*/,
+    },
+    { // 128: any* ::= [any*] any @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((2<<5)|0x6)/*nullProductionAction:2*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 94: ws* ::= ws* ws @append
+    { // 129: ws* ::= ws* ws @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
     },
-    { // 95: ws* ::= [ws*] ws @append
+    { // 130: ws* ::= [ws*] ws @append
       ((1<<5)|0xe)/*popPos:1*/,
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
     },
-    { // 96: digit* ::= digit* digit @append
+    { // 131: digit* ::= digit* digit @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 97: digit* ::= [digit*] digit @append
+    { // 132: digit* ::= [digit*] digit @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((5<<5)|0x6)/*nullProductionAction:5*/,
+      ((6<<5)|0x6)/*nullProductionAction:6*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 98: hexDigit* ::= hexDigit* hexDigit @append
+    { // 133: hexDigit* ::= hexDigit* hexDigit @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 99: hexDigit* ::= [hexDigit*] hexDigit @append
+    { // 134: hexDigit* ::= [hexDigit*] hexDigit @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((0<<5)|0x6)/*nullProductionAction:0*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 100: idChar* ::= idChar* idChar @append
+    { // 135: idChar* ::= idChar* idChar @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 101: idChar* ::= [idChar*] idChar @append
+    { // 136: idChar* ::= [idChar*] idChar @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
-      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((5<<5)|0x6)/*nullProductionAction:5*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 102: <class decl>+ ::= <class decl> @singleList
+    { // 137: <class decl>+ ::= <class decl> @singleList
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xa)/*singleList:1*/,
     },
-    { // 103: <class decl>+ ::= <class decl>+ <class decl> @append
+    { // 138: <class decl>+ ::= <class decl>+ <class decl> @append
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
       ((1<<5)|0xb)/*append:1*/,
     },
-    { // 104: $$0 ::= idChar128 ws* @pass
+    { // 139: $$0 ::= idChar128 ws* @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 105: $$0 ::= idChar128 [ws*] @pass
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
+    { // 140: $$0 ::= idChar128 [ws*] @pass
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 106: $$1 ::= digit128 ws* @pass
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 107: $$1 ::= digit128 [ws*] @pass
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
-      ((1<<5)|0xe)/*popPos:1*/,
-      ((1<<5)|0x0)/*popToPushBack:1*/,
-    },
-    { // 108: $$2 ::= hexDigit128 ws* @pass
+    { // 141: $$1 ::= digit128 ws* @pass
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
-    { // 109: $$2 ::= hexDigit128 [ws*] @pass
-      ((3<<5)|0x6)/*nullProductionAction:3*/,
+    { // 142: $$1 ::= digit128 [ws*] @pass
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 143: $$2 ::= hexDigit128 ws* @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 144: $$2 ::= hexDigit128 [ws*] @pass
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 145: $$3 ::= any128 ws* @pass
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0xe)/*popPos:1*/,
+      ((1<<5)|0x0)/*popToPushBack:1*/,
+    },
+    { // 146: $$3 ::= any128 [ws*] @pass
+      ((4<<5)|0x6)/*nullProductionAction:4*/,
       ((1<<5)|0xe)/*popPos:1*/,
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
@@ -3342,6 +5077,7 @@ public String[] getNullProdNameTable() { return nullProdNameTable; }
 private String[] nullProdNameTable = {
     "hexDigit* ::=", // hexDigit*
     "<stmt>* ::=", // <stmt>*
+    "any* ::=", // any*
     "<decl in class>* ::=", // <decl in class>*
     "ws* ::=", // ws*
     "idChar* ::=", // idChar*
@@ -3355,6 +5091,9 @@ private int[][] nullActionTable = {
       ((1<<5)|0x9)/*emptyList:1*/,
     },
     { // <stmt>*
+      ((1<<5)|0x9)/*emptyList:1*/,
+    },
+    { // any*
       ((1<<5)|0x9)/*emptyList:1*/,
     },
     { // <decl in class>*
@@ -3373,8 +5112,8 @@ private int[][] nullActionTable = {
       ((1<<5)|0x0)/*popToPushBack:1*/,
     },
     { // registerNewline
-      ((6<<5)|0x6)/*nullProductionAction:6*/,
-      ((23<<5)|0x5)/*methodCall:23*/,
+      ((7<<5)|0x6)/*nullProductionAction:7*/,
+      ((37<<5)|0x5)/*methodCall:37*/,
     },
 };
 public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
@@ -3471,11 +5210,35 @@ public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
       Exp parm0 = (Exp)si.popPb();
       int parm1 = (Integer)si.popPb();
       Exp parm2 = (Exp)si.popPb();
-      Exp result = actionObject.newTimes(parm0,parm1,parm2);
+      Exp result = actionObject.newMinus(parm0,parm1,parm2);
       si.pushPb(result);
     }
     break;
     case 13: {
+      Exp parm0 = (Exp)si.popPb();
+      int parm1 = (Integer)si.popPb();
+      Exp parm2 = (Exp)si.popPb();
+      Exp result = actionObject.newTimes(parm0,parm1,parm2);
+      si.pushPb(result);
+    }
+    break;
+    case 14: {
+      Exp parm0 = (Exp)si.popPb();
+      int parm1 = (Integer)si.popPb();
+      Exp parm2 = (Exp)si.popPb();
+      Exp result = actionObject.newDivide(parm0,parm1,parm2);
+      si.pushPb(result);
+    }
+    break;
+    case 15: {
+      Exp parm0 = (Exp)si.popPb();
+      int parm1 = (Integer)si.popPb();
+      Exp parm2 = (Exp)si.popPb();
+      Exp result = actionObject.newRemainder(parm0,parm1,parm2);
+      si.pushPb(result);
+    }
+    break;
+    case 16: {
       int parm0 = (Integer)si.popPb();
       Type parm1 = (Type)si.popPb();
       Exp parm2 = (Exp)si.popPb();
@@ -3483,21 +5246,28 @@ public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
       si.pushPb(result);
     }
     break;
-    case 14: {
+    case 17: {
       int parm0 = (Integer)si.popPb();
       Exp parm1 = (Exp)si.popPb();
       Exp result = actionObject.newUnaryMinus(parm0,parm1);
       si.pushPb(result);
     }
     break;
-    case 15: {
+    case 18: {
+      int parm0 = (Integer)si.popPb();
+      Exp parm1 = (Exp)si.popPb();
+      Exp result = actionObject.newUnaryPlus(parm0,parm1);
+      si.pushPb(result);
+    }
+    break;
+    case 19: {
       int parm0 = (Integer)si.popPb();
       String parm1 = (String)si.popPb();
       Exp result = actionObject.newIdentfierExp(parm0,parm1);
       si.pushPb(result);
     }
     break;
-    case 16: {
+    case 20: {
       Exp parm0 = (Exp)si.popPb();
       int parm1 = (Integer)si.popPb();
       Exp parm2 = (Exp)si.popPb();
@@ -3505,20 +5275,66 @@ public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
       si.pushPb(result);
     }
     break;
-    case 17: {
+    case 21: {
       int parm0 = (Integer)si.popPb();
       int parm1 = (Integer)si.popPb();
       Exp result = actionObject.newIntegerLiteral(parm0,parm1);
       si.pushPb(result);
     }
     break;
-    case 18: {
+    case 22: {
+      int parm0 = (Integer)si.popPb();
+      String parm1 = (String)si.popPb();
+      Exp result = actionObject.newStringLiteral(parm0,parm1);
+      si.pushPb(result);
+    }
+    break;
+    case 23: {
+      int parm0 = (Integer)si.popPb();
+      int parm1 = (Integer)si.popPb();
+      Exp result = actionObject.newCharLiteral(parm0,parm1);
+      si.pushPb(result);
+    }
+    break;
+    case 24: {
+      int parm0 = (Integer)si.popPb();
+      Exp result = actionObject.newFalse(parm0);
+      si.pushPb(result);
+    }
+    break;
+    case 25: {
+      int parm0 = (Integer)si.popPb();
+      Exp result = actionObject.newThis(parm0);
+      si.pushPb(result);
+    }
+    break;
+    case 26: {
+      int parm0 = (Integer)si.popPb();
+      Exp result = actionObject.newTrue(parm0);
+      si.pushPb(result);
+    }
+    break;
+    case 27: {
+      int parm0 = (Integer)si.popPb();
+      Exp result = actionObject.newNull(parm0);
+      si.pushPb(result);
+    }
+    break;
+    case 28: {
+      int parm0 = (Integer)si.popPb();
+      Exp parm1 = (Exp)si.popPb();
+      String parm2 = (String)si.popPb();
+      Exp result = actionObject.newInstVarAccess(parm0,parm1,parm2);
+      si.pushPb(result);
+    }
+    break;
+    case 29: {
       char parm0 = (Character)si.popPb();
       char result = actionObject.sub128(parm0);
       si.pushPb(result);
     }
     break;
-    case 19: {
+    case 30: {
       char parm0 = (Character)si.popPb();
       List<Character> parm1 = (List<Character>)si.popPb();
       char parm2 = (Character)si.popPb();
@@ -3526,13 +5342,13 @@ public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
       si.pushPb(result);
     }
     break;
-    case 20: {
+    case 31: {
       char parm0 = (Character)si.popPb();
       int result = actionObject.convertToInt(parm0);
       si.pushPb(result);
     }
     break;
-    case 21: {
+    case 32: {
       char parm0 = (Character)si.popPb();
       List<Character> parm1 = (List<Character>)si.popPb();
       char parm2 = (Character)si.popPb();
@@ -3540,13 +5356,35 @@ public void actionCall(int idx, wrangLR.runtime.SemanticInfo si) {
       si.pushPb(result);
     }
     break;
-    case 22: {
+    case 33: {
+      char parm0 = (Character)si.popPb();
+      char parm1 = (Character)si.popPb();
+      String result = actionObject.emptyString(parm0,parm1);
+      si.pushPb(result);
+    }
+    break;
+    case 34: {
+      char parm0 = (Character)si.popPb();
+      List<Character> parm1 = (List<Character>)si.popPb();
+      char parm2 = (Character)si.popPb();
+      String result = actionObject.string(parm0,parm1,parm2);
+      si.pushPb(result);
+    }
+    break;
+    case 35: {
+      char parm0 = (Character)si.popPb();
+      char parm1 = (Character)si.popPb();
+      int result = actionObject.charVal(parm0,parm1);
+      si.pushPb(result);
+    }
+    break;
+    case 36: {
       char parm0 = (Character)si.popPb();
       char result = actionObject.underscore(parm0);
       si.pushPb(result);
     }
     break;
-    case 23: {
+    case 37: {
       int parm0 = (Integer)si.popPb();
       actionObject.registerNewline(parm0);
     }
@@ -3566,16 +5404,30 @@ private String[] saNameSigTable = {
 "Statement assign(Exp,int,Exp)",
 "Statement localVarDecl(Type,int,String,Exp)",
 "Exp newPlus(Exp,int,Exp)",
+"Exp newMinus(Exp,int,Exp)",
 "Exp newTimes(Exp,int,Exp)",
+"Exp newDivide(Exp,int,Exp)",
+"Exp newRemainder(Exp,int,Exp)",
 "Exp newCast(int,Type,Exp)",
 "Exp newUnaryMinus(int,Exp)",
+"Exp newUnaryPlus(int,Exp)",
 "Exp newIdentfierExp(int,String)",
 "Exp newArrayLookup(Exp,int,Exp)",
 "Exp newIntegerLiteral(int,int)",
+"Exp newStringLiteral(int,String)",
+"Exp newCharLiteral(int,int)",
+"Exp newFalse(int)",
+"Exp newThis(int)",
+"Exp newTrue(int)",
+"Exp newNull(int)",
+"Exp newInstVarAccess(int,Exp,String)",
 "char sub128(char)",
 "int convertToInt(char,List<Character>,char)",
 "int convertToInt(char)",
 "int convert16ToInt(char,List<Character>,char)",
+"String emptyString(char,char)",
+"String string(char,List<Character>,char)",
+"int charVal(char,char)",
 "char underscore(char)",
 "void registerNewline(int)",
 };
@@ -3597,14 +5449,28 @@ private int[] sigCountTable = {
 3,1,
 3,1,
 3,1,
+3,1,
+3,1,
+3,1,
+2,1,
 2,1,
 2,1,
 3,1,
 2,1,
+2,1,
+2,1,
+1,1,
+1,1,
+1,1,
 1,1,
 3,1,
 1,1,
 3,1,
+1,1,
+3,1,
+2,1,
+3,1,
+2,1,
 1,1,
 1,0,
 };
@@ -3647,46 +5513,72 @@ private int[] symbolSizeTable = {
     0,
     1,
     0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
     1,
     1,
     1,
     1,
     0,
-    1,
-    1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
+    0,
+    0,
+    0,
+    0,
     1,
     -1,
     -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
     1,
     -1,
     -1,
     1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
     -1,
     0,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
     1,
     1,
     1,
@@ -3694,9 +5586,9 @@ private int[] symbolSizeTable = {
     1,
     1,
     1,
-    -1,
     1,
-    -1,
+    1,
+    1,
     1,
     1,
     -1,

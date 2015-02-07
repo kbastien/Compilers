@@ -128,12 +128,26 @@ public class MJGrammar
 	public Exp newPlus(Exp e1, int pos, Exp e2) {
 		return new Plus(pos, e1, e2);
 	}
+	//: <exp5> ::= <exp5> # `- <exp6> =>
+	public Exp newMinus(Exp e1, int pos, Exp e2){
+		return new Minus(pos, e1, e2);
+	}
+	
 	//: <exp5> ::= <exp6> => pass
 
 	//: <exp6> ::= <exp6> # `* <exp7> =>
 	public Exp newTimes(Exp e1, int pos, Exp e2) {
 		return new Times(pos, e1, e2);
 	}
+	//: <exp6> ::= <exp6> # `/ <exp7> =>
+	public Exp newDivide(Exp e1, int pos, Exp e2) {
+		return new Divide(pos, e1, e2);
+	}
+	//: <exp6> ::= <exp6> # `% <exp7> =>
+	public Exp newRemainder(Exp e1, int pos, Exp e2) {
+		return new Remainder(pos, e1, e2);
+	}
+	
 	//: <exp6> ::= <exp7> => pass
 
 	//: <exp7> ::= <cast exp> => pass
@@ -149,6 +163,11 @@ public class MJGrammar
 	public Exp newUnaryMinus(int pos, Exp e) {
 		return new Minus(pos, new IntegerLiteral(pos, 0), e);
 	}
+	//: <unary exp> ::= # `+ <unary exp> =>
+	public Exp newUnaryPlus(int pos, Exp e) {
+		return new Plus(pos, new IntegerLiteral(pos, 0), e);
+	}
+	
 	//: <unary exp> ::= <exp8> => pass
 
 	//: <exp8> ::= # ID  =>
@@ -163,7 +182,37 @@ public class MJGrammar
 	public Exp newIntegerLiteral(int pos, int n) {
 		return new IntegerLiteral(pos, n);
 	}
-
+	//: <exp8> ::= # STRINGLIT =>
+	public Exp newStringLiteral(int pos, String str) {
+		return new StringLiteral(pos, str);
+	}
+	//: <exp8> ::= # CHARLIT =>
+	public Exp newCharLiteral(int pos, int val){
+		return new IntegerLiteral(pos, val);
+	}
+	//: <exp8> ::= # `false =>
+	public Exp newFalse(int pos){
+		return new False(pos);
+	}
+	//: <exp8> ::= # `this =>
+	public Exp newThis(int pos){
+		return new This(pos);
+	}
+	//: <exp8> ::= # `true =>
+	public Exp newTrue(int pos){
+		return new True(pos);
+	}
+	//: <exp8> ::= # `null =>
+	public Exp newNull(int pos){
+		return new Null(pos);
+	}
+	//: <exp8> ::= # <exp8> `. ID =>
+	public Exp newInstVarAccess(int pos, Exp exp, String str){
+		return new InstVarAccess(pos, exp, str);
+	}
+	
+	
+	
 	//================================================================
 	// Lexical grammar for filtered language begins here: DO NOT MODIFY
 	// ANYTHING BELOW THIS, UNLESS YOU REPLACE IT WITH YOUR ENTIRE
