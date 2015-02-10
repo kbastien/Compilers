@@ -121,8 +121,56 @@ public class MJGrammar
 	//================================================================
 	//expressions
 	//================================================================
+	
+	//: <exp> ::= <exp> # `|| <exp2> =>
+	public Exp newOr(Exp e1, int pos, Exp e2){
+		return new Or(pos, e1, e2);
+	}
+	
+	//: <exp> ::= <exp2> => pass
+	
+	//: <exp2> ::= <exp2> # `&& <exp3> =>
+	public Exp newAnd(Exp e1, int pos, Exp e2){
+		return new And(pos, e1, e2);
+	}
+	//: <exp2> ::= <exp3> => pass
+	
+	//: <exp3> ::= <exp3> # `!= <exp4> =>
+	public Exp newNotEqual(Exp e1, int pos, Exp e2){
+		return new Not(pos, new Equals(pos, e1, e2));
+	}
+	
+	//: <exp3> ::= <exp3> # `== <exp4> =>
+	public Exp newEqualEquals(Exp e1, int pos, Exp e2){
+		return new Equals(pos, e1, e2);
+	}
+	
+	
+	
+	//: <exp3> ::= <exp4> => pass
+	
+	//: <exp4> ::= <exp4> # `< <exp5> =>
+	public Exp newLessThan(Exp e1, int pos, Exp e2){
+		return new LessThan(pos, e1, e2);
+	}
+	//: <exp4> ::= <exp4> # `> <exp5> =>
+	public Exp newGreaterThan(Exp e1, int pos, Exp e2){
+		return new GreaterThan(pos, e1, e2);
+	}
+	//: <exp4> ::= <exp4> # `instanceof ID =>
+	public Exp newInstanceOf(Exp exp, int pos, String str){
+		return new InstanceOf(pos, exp, identifierType(pos, str));
+	}
+	//: <exp4> ::= <exp4> # `<= <exp5> =>
+	public Exp newLessThanOrEqual(Exp e1, int pos, Exp e2){
+		return new Not(pos, new GreaterThan(pos, e1, e2));
+	}
+	//: <exp4> ::= <exp4> # `>= <exp5> =>
+	public Exp newGreaterThanOrEqual(Exp e1, int pos, Exp e2){
+		return new Not(pos, new LessThan(pos, e1, e2));
+	}
 
-	//: <exp> ::= <exp5> => pass
+	//: <exp4> ::= <exp5> => pass
 	
 	//: <exp5> ::= <exp5> # `+ <exp6> =>
 	public Exp newPlus(Exp e1, int pos, Exp e2) {
@@ -167,6 +215,11 @@ public class MJGrammar
 	public Exp newUnaryPlus(int pos, Exp e) {
 		return new Plus(pos, new IntegerLiteral(pos, 0), e);
 	}
+	//: <unary exp> ::= # `! <unary exp> =>
+	public Exp newUnaryNot(int pos, Exp e) {
+		return new Not(pos, e);
+	}
+
 	
 	//: <unary exp> ::= <exp8> => pass
 
@@ -210,7 +263,36 @@ public class MJGrammar
 	public Exp newInstVarAccess(int pos, Exp exp, String str){
 		return new InstVarAccess(pos, exp, str);
 	}
+	//: <exp8> ::= # `new ID `( `) =>
+	public Exp newIdentity(int pos, String str){
+		IdentifierType type = new IdentifierType(pos, str);
+		return new NewObject(pos, type);
+	}
+    
+	//: <exp8> ::= <call exp> => pass
+   
 	
+	//: <call exp> ::= # <exp8> `. ID `( <exp list> `) =>
+    public Exp newCallExp(int pos, Exp exp, String str, ExpList expList) {
+        return new Call(pos, exp, str, expList);
+    }
+	
+    //: <recurse> ::= `, <exp8> => pass
+    //: <exp list> ::= <exp8> <recurse>* =>
+    public ExpList newExpList(Exp e1, List<Exp> e2) {
+        e2.add(e1);
+        return new ExpList(e2);
+    }
+    
+    //: <call exp> ::= # `super `. ID `( <exp list>? `) =>
+    public Exp newSuperMethod(int pos, String str, ExpList expList) {
+        return new Call(pos, new Super(pos), str, expList);
+    }
+    
+    //: <call exp> ::= # ID `( <exp list>? `) => 
+	public Exp newThisMethod(int pos, String str, ExpList expList){
+		return new Call(pos, new This(pos), str, expList);
+	}
 	
 	
 	//================================================================

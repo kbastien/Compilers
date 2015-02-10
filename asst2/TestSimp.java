@@ -12,5 +12,10 @@ class Main {
 		boolean x = false;
 		int x = null;
 		int x = this;
+		int x = 5 <= 4;
+		int y = x == k;
+		
+		kevin x = new kevin();
+		
 	}
 }
