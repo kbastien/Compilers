@@ -1414,3 +1414,32 @@ org.eclipse.core.runtime.CoreException: No property tester contributes a propert
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
 !SUBENTRY 1 org.eclipse.core.expressions 4 201 2015-02-09 18:15:13.331
 !MESSAGE No property tester contributes a property org.python.pydev.debug.ui.python_type to type class org.eclipse.jdt.internal.core.CompilationUnit
+
+!ENTRY org.eclipse.jface 2 0 2015-02-09 19:21:33.841
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2015-02-09 19:21:33.841
+!MESSAGE A conflict occurred for F3:
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.open.editor,Open Declaration,
+		Open an editor on the selected element,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.MakeHandlersGo@13c4925,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(F3,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.findbar.findNextOrPrev,Find Next or Previous (depends on search backward configuration),
+		,
+		Category(org.eclipse.ui.category.edit,Edit,null,true),
+		org.eclipse.ui.internal.MakeHandlersGo@e6594b,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.textEditorScope.findbar,,,system)
+Binding(F3,
+	ParameterizedCommand(Command(com.aptana.editor.js.openDeclaration,Open Declaration,
+		Open a selected JS element's declaration,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.MakeHandlersGo@f056ab,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.aptana.scripting.context,,,system)

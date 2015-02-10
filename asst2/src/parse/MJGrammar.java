@@ -64,19 +64,50 @@ public class MJGrammar
 		return new Program(pos, new ClassDeclList(vec));
 	}
 
-	//: <class decl> ::= `class # ID `{ <decl in class>* `} =>
-	public ClassDecl createClassDecl(int pos, String name, List<Decl> vec) {
-		return new ClassDecl(pos, name, "Object", new DeclList(vec));
+	//: <extendsID> ::= `extends ID => pass
+	//: <class decl> ::= `class # ID <extendsID>? `{ <decl in class>* `} =>
+	public ClassDecl createClassDecl(int pos, String name, String str, List<Decl> vec) {
+		
+		if(str == null){
+			return new ClassDecl(pos, name, "Object", new DeclList(vec));
+		}
+		
+		return new ClassDecl(pos, name, str, new DeclList(vec));
 	}
+	
+	
 
 	//: <decl in class> ::= <method decl> => pass
+	//: <decl in class> ::= <instVarDecl> => pass
 
+	
+    //: <instVarDecl> ::= <type> # ID `; =>
+    public Decl newInstVarDecl(Type type, int pos, String str) {
+        return new InstVarDecl(pos, type, str);
+    }
+	
 	//: <method decl> ::= `public `void # ID `( `) `{ <stmt>* `} =>
 	public Decl createMethodDeclVoid(int pos, String name, List<Statement> stmts) {
 		return new MethodDeclVoid(pos, name, new VarDeclList(new VarDeclList()),
 				new StatementList(stmts));
 	}
+	
+	//: <method decl> ::= `public `void # ID `( <formal list> `) `{ <stmt>* `} =>
+	public Decl createMethodDeclVoidFormal(int pos, String str, VarDeclList list, List<Statement> stmts) {
+		return new MethodDeclVoid(pos, str, list, new StatementList(stmts));
+	}
+	
+	//: <method decl> ::= `public <type> # ID `( `) `{ <stmt>* `return <exp> `; `} =>
+	public Decl createMethodDeclNonVoid(Type type, int pos, String str, List<Statement> stmts, Exp exp) {
+		return new MethodDeclNonVoid(pos, type, str, new VarDeclList(new VarDeclList()), new StatementList(stmts), exp);
+	}
 
+	//: <method decl> ::= `public <type> # ID `( <formal list> `) `{ <stmt>* `return <exp> `; `} =>
+	public Decl createMethodDeclNonVoidWithElements(Type type, int pos, String str, VarDeclList list, List<Statement> stmts, Exp exp){
+		return new MethodDeclNonVoid(pos, type, str, list, new StatementList(stmts), exp);
+	}
+	
+	
 	//: <type> ::= # `int =>
 	public Type intType(int pos) {
 		return new IntegerType(pos);
@@ -93,21 +124,56 @@ public class MJGrammar
 	public Type newArrayType(int pos, Type t, Object dummy) {
 		return new ArrayType(pos, t);
 	}
+	
+    //: <listElm> ::= `, <type> # ID => 
+    public VarDecl newListElement(Type type, int pos, String str){
+    	return new FormalDecl(pos, type, str);
+    }
+    
+    //: <formal list> ::= `( <type> # ID <listElm>* `) =>
+    public VarDeclList newVarDeclList(Type type, int pos, String str, List<VarDecl> elements){
+    	VarDecl firstElm = new FormalDecl(pos, type, str);
+    	elements.add(firstElm);
+    	return new VarDeclList(elements);
+    }
+    
 
 	//: <empty bracket pair> ::= `[ `] => null
 
 	//================================================================
 	//statement-level program constructs
 	//================================================================
-
+	
 	//: <stmt> ::= <assign> `; => pass
+	
+	//: <stmt> ::= # <call exp> `; => 
+	public Statement newCall(int pos, Exp exp){
+		return new ExpStatement(pos, exp);
+	}
 	
 	//: <stmt> ::= # `{ <stmt>* `} =>
 	public Statement newBlock(int pos, List<Statement> sl) {
 		return new Block(pos, new StatementList(sl));
 	}
+	
 	//: <stmt> ::= <local var decl> `; => pass
-
+	
+    //: <stmt> ::= # `while `( <exp> `) <stmt> =>
+    public Statement newWhile(int pos, Exp exp, Statement stmt) {
+        return new While(pos, exp, stmt);
+    }
+    
+    //if needs to be in two methods
+    //: <stmt> ::= # `if `( <exp> `) <stmt> `else <stmt> =>
+    public Statement newIfElse(int pos, Exp exp, Statement stmt1, Statement stmt2){
+    	return new If(pos, exp, stmt1, stmt2);
+    }
+    
+    //: <stmt> ::= # `if `( <exp> `) <stmt> !`else <stmt> =>
+    public Statement newIf(int pos, Exp exp, Statement stmt1, Statement stmt2){
+    	return new If(pos, exp, stmt1, stmt2);
+    }    
+	
 	//: <assign> ::= <exp> # `= <exp> =>
 	public Statement assign(Exp lhs, int pos, Exp rhs) {
 		return new Assign(pos, lhs, rhs);
@@ -117,7 +183,39 @@ public class MJGrammar
 	public Statement localVarDecl(Type t, int pos, String name, Exp init) {
 		return new LocalVarDecl(pos, t, name, init);
 	}
+	
+    //: <stmt> ::= # `break `; =>
+    public Statement newBreak(int pos) {
+        return new Break(pos);
+    }
+    //: <stmt> ::= # `; =>
+    public Statement newEmptyStatement(int pos) {
+        return new Block(pos, new StatementList());
+    }
+	
+	//================================================================
+	//assign
+	//================================================================
+	
+	//: assign ::= # `++ ID =>
+	public Statement newPlusPlusAssign(int pos, String str){
+		return new Assign(pos, new IdentifierExp(pos, str), new IdentifierExp(pos, str));
+	}
+	
+	//: assign ::= # `-- ID =>
+	public Statement newMinusMinusAssign(int pos, String str){
+		return new Assign(pos, new IdentifierExp(pos, str), new IdentifierExp(pos, str));
+	}
 
+	//: assign ::= # ID `++ =>
+	public Statement newAssignPlusPlus(int pos, String str){
+		return new Assign(pos, new IdentifierExp(pos, str), new IdentifierExp(pos, str));
+	}
+	
+	//: assign ::= # ID `-- =>
+	public Statement newAssignMinusMinus(int pos, String str){
+		return new Assign(pos, new IdentifierExp(pos, str), new IdentifierExp(pos, str));
+	}
 	//================================================================
 	//expressions
 	//================================================================
@@ -144,8 +242,6 @@ public class MJGrammar
 	public Exp newEqualEquals(Exp e1, int pos, Exp e2){
 		return new Equals(pos, e1, e2);
 	}
-	
-	
 	
 	//: <exp3> ::= <exp4> => pass
 	
@@ -220,7 +316,6 @@ public class MJGrammar
 		return new Not(pos, e);
 	}
 
-	
 	//: <unary exp> ::= <exp8> => pass
 
 	//: <exp8> ::= # ID  =>
@@ -268,9 +363,9 @@ public class MJGrammar
 		IdentifierType type = new IdentifierType(pos, str);
 		return new NewObject(pos, type);
 	}
+	//: <exp8> ::= !<cast exp> `( <exp> `) => pass
     
 	//: <exp8> ::= <call exp> => pass
-   
 	
 	//: <call exp> ::= # <exp8> `. ID `( <exp list> `) =>
     public Exp newCallExp(int pos, Exp exp, String str, ExpList expList) {
