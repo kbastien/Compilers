@@ -68,7 +68,7 @@
           <tags>persp.showIn:org.eclipse.team.ui.GenericHistoryView</tags>
           <tags>persp.showIn:org.eclipse.ui.views.ResourceNavigator</tags>
           <tags>persp.showIn:org.eclipse.ui.navigator.ProjectExplorer</tags>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_oOTAYa_NEeSoDcp0CwQ3Bw" selectedElement="_oOUOga_NEeSoDcp0CwQ3Bw" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_oOTAYa_NEeSoDcp0CwQ3Bw" selectedElement="_oOTncK_NEeSoDcp0CwQ3Bw" horizontal="true">
             <children xsi:type="basic:PartStack" xmi:id="_oOTncK_NEeSoDcp0CwQ3Bw" elementId="left" containerData="2099" selectedElement="_oOTnca_NEeSoDcp0CwQ3Bw">
               <tags>newtablook</tags>
               <tags>org.eclipse.e4.primaryNavigationStack</tags>
@@ -78,7 +78,7 @@
               <children xsi:type="advanced:Placeholder" xmi:id="_oOTndK_NEeSoDcp0CwQ3Bw" elementId="org.eclipse.ui.navigator.ProjectExplorer" toBeRendered="false" ref="_oBZz4K_NEeSoDcp0CwQ3Bw"/>
               <children xsi:type="advanced:Placeholder" xmi:id="_oOUOgK_NEeSoDcp0CwQ3Bw" elementId="org.eclipse.jdt.junit.ResultView" toBeRendered="false" ref="_oORyQK_NEeSoDcp0CwQ3Bw"/>
             </children>
-            <children xsi:type="basic:PartSashContainer" xmi:id="_oOUOga_NEeSoDcp0CwQ3Bw" containerData="7901" selectedElement="_oOU1kK_NEeSoDcp0CwQ3Bw">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_oOUOga_NEeSoDcp0CwQ3Bw" containerData="7901" selectedElement="_oOUOgq_NEeSoDcp0CwQ3Bw">
               <children xsi:type="basic:PartSashContainer" xmi:id="_oOUOgq_NEeSoDcp0CwQ3Bw" containerData="7493" selectedElement="_oOUOg6_NEeSoDcp0CwQ3Bw" horizontal="true">
                 <children xsi:type="advanced:Placeholder" xmi:id="_oOUOg6_NEeSoDcp0CwQ3Bw" elementId="org.eclipse.ui.editorss" containerData="7500" ref="_n9jOoK_NEeSoDcp0CwQ3Bw"/>
                 <children xsi:type="basic:PartStack" xmi:id="_oOUOhK_NEeSoDcp0CwQ3Bw" elementId="right" toBeRendered="false" containerData="2500">
@@ -128,7 +128,7 @@
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>EditorStack</tags>
         <children xsi:type="basic:Part" xmi:id="_yT8asK_NEeSoDcp0CwQ3Bw" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="MJGrammar.java" iconURI="platform:/plugin/org.eclipse.jdt.ui//icons/full/obj16/jcu_obj.gif" tooltip="asst2/src/parse/MJGrammar.java" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/asst2/src/parse/MJGrammar.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;3136&quot; selectionTopPixel=&quot;0&quot;/>&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/asst2/src/parse/MJGrammar.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;10625&quot; selectionOffset=&quot;1278&quot; selectionTopPixel=&quot;5630&quot;/>&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>removeOnHide</tags>
         </children>
