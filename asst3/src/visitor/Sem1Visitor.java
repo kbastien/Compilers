@@ -1,6 +1,7 @@
 package visitor;
 
 import syntaxtree.*;
+
 import java.util.*;
 import errorMsg.*;
 // The purpose of the Sem1Visitor class is to:
@@ -119,6 +120,34 @@ public class Sem1Visitor extends ASTvisitor {
 	private void initInstanceVars() {
 		globalSymTab = new Hashtable<String,ClassDecl>();
 		currentClass = null;
+	}
+	
+	@Override
+	public Object visitClassDecl(ClassDecl n) {
+		if(globalSymTab.containsKey(n.name)){
+			errorMsg.error(n.pos,"Error: Duplicate class declaration");
+		}
+		currentClass = n;
+		globalSymTab.put(n.name, n);
+		return super.visitClassDecl(n);
+	}
+	
+	@Override
+	public Object visitInstVarDecl(InstVarDecl n) {
+		if(currentClass.instVarTable.containsKey(n.name)){
+			errorMsg.error(n.pos,"Error: Duplicate instance variable declaration");
+		}
+		currentClass.instVarTable.put(n.name, n);
+		return super.visitInstVarDecl(n);
+	}
+	
+	@Override
+	public Object visitMethodDecl(MethodDecl n) {
+		if(currentClass.methodTable.containsKey(n.name)){
+			errorMsg.error(n.pos,"Error: Duplicate method declaration");
+		}
+		currentClass.methodTable.put(n.name, n);
+		return super.visitMethodDecl(n);
 	}
 	
 }
