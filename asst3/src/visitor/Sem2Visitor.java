@@ -1,6 +1,7 @@
 package visitor;
 
 import syntaxtree.*;
+
 import java.util.*;
 import errorMsg.*;
 
@@ -15,6 +16,7 @@ public class Sem2Visitor extends ASTvisitor {
 	
 	Hashtable<String,ClassDecl> globalSymTab;
 	ErrorMsg errorMsg;
+	int counter;
 	
 	public Sem2Visitor(Hashtable<String,ClassDecl> globalSymTb, ErrorMsg e) {
 		errorMsg = e;
@@ -23,6 +25,74 @@ public class Sem2Visitor extends ASTvisitor {
 
 	private void initInstanceVars(Hashtable<String,ClassDecl> globalTab) {
 		globalSymTab = globalTab;
+	}
+	
+	public Object visitProgram(Program n) {
+		// traversal of subnodes
+		super.visitProgram(n);
+		
+		// going through each class declaration in program
+		for(ClassDecl classDecl : n.classDecls){
+			counter = 0;
+			if(classDecl.superName.equals("String")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of String");
+				return null;
+			}
+			if(classDecl.superName.equals("RunMain")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of RunMain");
+				return null;
+			}
+			if(isCycle(classDecl)){
+				errorMsg.error(n.pos, "Error: Class is part of a cycle");
+			}
+		}
+		
+		
+		return null;
+	}
+	
+	public boolean isCycle(ClassDecl n){
+		counter++;
+		// hit the end of the superclass
+		if(n == null){
+			return false;
+		}
+
+		// returns true if its superclass link hits itself, therefore extending itself
+		if(n.superName.equals(n.name)){
+			return true;
+		}
+		
+		// iterated more than number of classes
+		if(globalSymTab.size() < counter){
+			return true;
+		}
+		
+		//recursive call to isCycle because we need to go backwards thru each parent class
+		return isCycle(n.superLink);
+
+	}
+	
+	public Object visitClassDecl(ClassDecl n) {
+		if(n.superName == null){
+			errorMsg.error(n.pos,"Error: undefined super class name");
+		}
+		
+		//looking up the superclass in the global symbol table
+		if(globalSymTab.containsKey(n.superName)){
+			// set the ÒsuperclassÓ link in the current class
+			// looking up the superclass by name in the global sym table
+			n.superLink = globalSymTab.get(n.superName);
+			
+			//add the current class to the list of subclasses of the looked-up class
+			n.superLink.subclasses.addElement(n);
+		}
+		else {
+			errorMsg.error(n.pos,"Error: undefined class name: " + n.superName);
+		}
+
+		
+		return null;
 	}
 	
 }

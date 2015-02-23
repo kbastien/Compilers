@@ -1,0 +1,80 @@
+package visitor;
+
+import syntaxtree.*;
+
+import java.util.*;
+import errorMsg.*;
+
+// the purpose of this class is to
+// - link each ClassDecl to the ClassDecl for its superclass (via
+//   its 'superLink'
+// - link each ClassDecl to each of its subclasses (via the
+//   'subclasses' instance variable
+// - ensure that there are no cycles in the inheritance hierarchy
+// - ensure that no class has 'String' or 'RunMain' as its superclass
+public class Sem2Visitor extends ASTvisitor {
+	
+	Hashtable<String,ClassDecl> globalSymTab;
+	ErrorMsg errorMsg;
+	
+	public Sem2Visitor(Hashtable<String,ClassDecl> globalSymTb, ErrorMsg e) {
+		errorMsg = e;
+		initInstanceVars(globalSymTb);
+	}
+
+	private void initInstanceVars(Hashtable<String,ClassDecl> globalTab) {
+		globalSymTab = globalTab;
+	}
+	
+	public Object visitProgram(Program n) {
+		// traversal of subnodes
+		super.visitProgram(n);
+		
+		
+		// check no class decl contain String or RunMain as a superclass
+		for(ClassDecl classDecl : n.classDecls){
+			if(classDecl.name.equals("String")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of String");
+				return null;
+			}
+			if(classDecl.name.equals("RunMain")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of RunMain");
+				return null;
+			}
+		}
+		
+		
+		
+		return null;
+	}
+	
+    public Object visitProgram(Program n) {
+        // Visit all of our subnodes.
+        super.visitProgram(n);
+
+        // Look through all of the classes
+        for(ClassDecl c : n.classDecls) {
+            // Make sure no class is a child of String or RunMain
+            if(c.superName.equals("String")) {
+                errorMsg.error(c.pos, "Error: cannot extend String: " + c.name);
+                return null;
+            }
+            else if(c.superName.equals("RunMain")) {
+                errorMsg.error(c.pos, "Error: cannot extend RunMain: " + c.name);
+                return null;
+            }
+
+            // Make sure there is no cycle of classes
+            if(DEBUG) System.out.println("isClassCycle(" + c.name  + ")");
+            if(isClassCycle(c, globalSymTab.size())) {
+                errorMsg.error(c.pos, "Error: cyclical class definition: " + c.name);
+                return null;
+            }
+        }
+
+        return null;
+    }
+	
+}
+
+	

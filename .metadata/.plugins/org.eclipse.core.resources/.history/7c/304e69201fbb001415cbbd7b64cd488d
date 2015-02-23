@@ -1,0 +1,76 @@
+package visitor;
+
+import syntaxtree.*;
+
+import java.util.*;
+import errorMsg.*;
+
+// the purpose of this class is to
+// - link each ClassDecl to the ClassDecl for its superclass (via
+//   its 'superLink'
+// - link each ClassDecl to each of its subclasses (via the
+//   'subclasses' instance variable
+// - ensure that there are no cycles in the inheritance hierarchy
+// - ensure that no class has 'String' or 'RunMain' as its superclass
+public class Sem2Visitor extends ASTvisitor {
+	
+	Hashtable<String,ClassDecl> globalSymTab;
+	ErrorMsg errorMsg;
+	int counter;
+	
+	public Sem2Visitor(Hashtable<String,ClassDecl> globalSymTb, ErrorMsg e) {
+		errorMsg = e;
+		initInstanceVars(globalSymTb);
+	}
+
+	private void initInstanceVars(Hashtable<String,ClassDecl> globalTab) {
+		globalSymTab = globalTab;
+	}
+	
+	public Object visitProgram(Program n) {
+		// traversal of subnodes
+		super.visitProgram(n);
+		
+		// going through each class declaration in program
+		for(ClassDecl classDecl : n.classDecls){
+			counter = 0;
+			if(classDecl.superName.equals("String")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of String");
+				return null;
+			}
+			if(classDecl.superName.equals("RunMain")){
+				errorMsg.error(n.pos,"Error:  Class has a superclass of RunMain");
+				return null;
+			}
+			if(isCycle(classDecl)){
+				errorMsg.error(n.pos, "Error: Class is part of a cycle");
+			}
+		}
+		
+		
+		return null;
+	}
+	
+	public boolean isCycle(ClassDecl n){
+		counter++;
+		// hit the end of the superclass
+		if(n == null){
+			return false;
+		}
+
+		// returns true if its superclass link hits itself, therefore extending itself
+		if(n.superName.equals(n.name)){
+			return true;
+		}
+		
+		if(globalSymTab.size() < counter){
+			return true;
+		}
+		
+		return isCycle(n.superLink);
+
+	}
+	
+}
+
+	
