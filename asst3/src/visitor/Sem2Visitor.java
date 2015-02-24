@@ -27,6 +27,7 @@ public class Sem2Visitor extends ASTvisitor {
 		globalSymTab = globalTab;
 	}
 	
+	@Override
 	public Object visitProgram(Program n) {
 		// traversal of subnodes
 		super.visitProgram(n);
@@ -44,6 +45,7 @@ public class Sem2Visitor extends ASTvisitor {
 			}
 			if(isCycle(classDecl)){
 				errorMsg.error(n.pos, "Error: Class is part of a cycle");
+				return null;
 			}
 		}
 		
@@ -67,15 +69,16 @@ public class Sem2Visitor extends ASTvisitor {
 		if(globalSymTab.size() < counter){
 			return true;
 		}
-		
 		//recursive call to isCycle because we need to go backwards thru each parent class
 		return isCycle(n.superLink);
 
 	}
 	
+	@Override
 	public Object visitClassDecl(ClassDecl n) {
 		if(n.superName == null){
 			errorMsg.error(n.pos,"Error: undefined super class name");
+			return null;
 		}
 		
 		//looking up the superclass in the global symbol table
@@ -89,6 +92,7 @@ public class Sem2Visitor extends ASTvisitor {
 		}
 		else {
 			errorMsg.error(n.pos,"Error: undefined class name: " + n.superName);
+			return null;
 		}
 
 		

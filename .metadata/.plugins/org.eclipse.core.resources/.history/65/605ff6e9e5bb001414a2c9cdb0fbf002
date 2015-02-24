@@ -1,0 +1,133 @@
+package visitor;
+
+import syntaxtree.*;
+
+import java.util.*;
+import errorMsg.*;
+// The purpose of this class is to:
+// - link each variable reference to its corresponding VarDecl
+//   (via its 'link' instance variable)
+//   - undefined variable names are reported
+// - link each type reference to its corresponding ClassDecl
+//   - undefined type names are reported
+// - link each Break expression to its enclosing While
+//   statement
+//   - a break that is not inside any while loop is reported
+// - report conflicting local variable names (including formal
+//   parameter names)
+// - ensure that no instance variable has the name 'length'
+public class Sem3Visitor extends ASTvisitor {
+	
+	Hashtable<String, ClassDecl> globalSymTab;
+	ClassDecl currentClass;
+	Hashtable<String, VarDecl> localSymTab;
+	ErrorMsg errorMsg;
+	Stack<While> loopStack;
+	LocalVarDecl currentLocalDecl;
+	
+	public Sem3Visitor(Hashtable globalSymTb, ErrorMsg e) {
+		errorMsg = e;
+		initInstanceVars(globalSymTb);	
+	}
+
+	private void initInstanceVars(Hashtable<String,ClassDecl> globalTab) {
+		loopStack = new Stack<While>();
+		globalSymTab = globalTab;
+		localSymTab = new Hashtable<String,VarDecl>();
+		currentClass = null;
+		currentLocalDecl = null;
+	}
+	
+	@Override
+	public Object visitClassDecl(ClassDecl n) {
+		currentClass = n;
+		return super.visitClassDecl(n);
+	}
+	
+	@Override
+	public Object visitMethodDecl(MethodDecl n){
+		localSymTab = new Hashtable<String, VarDecl>();
+		return super.visitMethodDecl(n);
+	}
+	
+	@Override
+	public Object visitVarDecl(VarDecl n){
+		if(n instanceof LocalVarDecl){
+			currentLocalDecl = (LocalVarDecl) n;	
+		}
+		if(localSymTab.containsKey(n.name)){
+			errorMsg.error(n.pos,"Error: Duplicate name");
+		}
+		else{
+			localSymTab.put(n.name, n);
+		}
+		currentLocalDecl = null;
+		return super.visitVarDecl(n);
+	}
+	
+	@Override
+	public Object visitInstVarDecl(InstVarDecl n){
+		if(n.name.equals("length")){
+			errorMsg.error(n.pos, "Error: name of the variable is length" );
+		}
+		return super.visitInstVarDecl(n);
+	}
+	
+	public Object visitBlock(Block n){
+		for(Statement s : n.stmts){
+			localSymTab.remove(s);
+		}
+		return super.visitBlock(n);
+	}
+	
+	public Object visitIdentifierExp(IdentifierExp n){
+		if(n.name.equals(currentLocalDecl.name)){
+			errorMsg.error(n.pos, "Error: Variable's name is that of currentLocalDecl");
+		}
+		
+		if(localSymTab.containsKey(n.name)){
+			n.link = localSymTab.get(n);
+		}
+		else{
+			if(currentClass.instVarTable.containsKey(n.name)){
+				n.link = currentClass.instVarTable.get(n.name);
+			}
+			else if(currentClass.superLink.instVarTable.containsKey(n.name)){
+				n.link = currentClass.superLink.instVarTable.get(n.name);
+			}
+			else {
+				errorMsg.error(n.pos, "Error: undefined name " + n.name);
+			}
+		}
+		return null;
+	}
+	
+	public Object visitIdentifierType(IdentifierType n){
+		if(globalSymTab.containsKey(n.name)){
+			n.link = globalSymTab.get(n.name);
+		}
+		else{
+			errorMsg.error(n.pos, "Error: undefined name " + n.name);
+		}
+		return null;
+	}
+	
+	public Object visitWhile(While n){
+		loopStack.push(n);
+		loopStack.pop();
+		return super.visitWhile(n);
+	}
+	
+	public Object visitBreak(Break n){
+		if(loopStack.isEmpty()){
+			errorMsg.error(n.pos, "Error: break statement outside of loop");
+		}
+		else{
+			n.loopLink = loopStack.peek();
+		}
+		return null;
+	}
+
+}
+
+	
