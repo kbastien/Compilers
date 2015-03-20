@@ -65,5 +65,55 @@ public class Sem4Visitor extends ASTvisitor {
 			theStringType.link = globalSymTab.get("String");
 		}
 	}
+	
+	public boolean matchTypesExact(Type have, Type need, int pos){
+		if(have == null || need == null){
+			return false;
+		}
+		else if(have.equals(need)){
+			return true;
+		}
+		
+		if(pos >= 0){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		return false;	
+	}
+	
+	public boolean matchTypesAssign(Type src, Type target, int pos){
+		if(src == null || target == null){
+			return false;
+		}
+		else if((src instanceof VoidType) || (target instanceof VoidType)){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		else if(src.equals(target)){
+			return true;
+		}
+		
+		if(src instanceof NullType){
+			return true;
+		}
+		
+		if((target instanceof IdentifierType) || (target instanceof ArrayType)){
+			return true;
+		}
+		
+		if((src instanceof ArrayType) && (target instanceof IdentifierType) && (((IdentifierType)target).name.equals("Object"))){
+			return true;
+		}
+		
+//		TODO: Check with nick on this one
+		if(src instanceof IdentifierType){
+			if(((IdentifierType)target).link.subclasses.contains(((IdentifierType) src).link)){
+				return true;
+			}
+		}
+		else if(pos >= 0){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		
+		return false;
+	}
 }
 	
