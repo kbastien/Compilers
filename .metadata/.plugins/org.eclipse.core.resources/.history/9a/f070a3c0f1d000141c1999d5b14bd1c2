@@ -1,0 +1,506 @@
+package visitor;
+
+import syntaxtree.*;
+
+import java.util.*;
+
+import errorMsg.*;
+// The purpose of this class is to do type-checking and related
+// actions.  These include:
+// - evaluate the type for each expression, filling in the 'type'
+//   link for each
+// - ensure that each expression follows MiniJava's type rules (e.g.,
+//   that the arguments to '*' are both integer, the argument to
+//   '.length' is an array, etc.)
+// - ensure that each method-call follows Java's type rules:
+//   - there exists a method for the given class (or a superclass)
+//     for the receiver's object type
+//   - the method has the correct number of parameters
+//   - the types of each actual parameter is compatible with that
+//     of its corresponding formal parameter
+// - ensure that for each instance variable access (e.g., abc.foo),
+//   there is an instance variable defined for the given class (or
+//   in a superclass
+//   - sets the 'varDec' link in the InstVarAccess to refer to the
+//     method
+// - ensure that the RHS expression in each assignment statement is
+//   type-compatible with its corresponding LHS
+//   - also checks that the LHS an lvalue
+// - ensure that if a method with a given name is defined in both
+//   a subclass and a superclass, that they have the same parameters
+//   (with identical types) and the same return type
+// - ensure that the declared return-type of a method is compatible
+//   with its "return" expression
+// - ensuring that the type of the control expression for an if- or
+//   while-statement is boolean
+public class Sem4Visitor extends ASTvisitor {
+	
+	ClassDecl currentClass;
+	IdentifierType currentClassType;
+	IdentifierType currentSuperclassType;
+	ErrorMsg errorMsg;
+	Hashtable<String,ClassDecl> globalSymTab;
+	
+	BooleanType theBoolType;
+	IntegerType theIntType;
+	NullType theNullType;
+	VoidType theVoidType;
+	IdentifierType theStringType;
+	
+	public Sem4Visitor(Hashtable<String,ClassDecl> globalSymTb, ErrorMsg e) {
+		globalSymTab = globalSymTb;
+		errorMsg = e;
+		initInstanceVars();
+	}
+
+	private void initInstanceVars() {
+		currentClass = null;
+		
+		theBoolType = new BooleanType(-1);
+		theIntType = new IntegerType(-1);
+		theNullType = new NullType(-1);
+		theVoidType = new VoidType(-1);
+		if (globalSymTab != null) {
+			theStringType = new IdentifierType(-1, "String");
+			theStringType.link = globalSymTab.get("String");
+		}
+	}
+	
+	public boolean matchTypesExact(Type have, Type need, int pos){
+		if(have == null || need == null){
+			return false;
+		}
+		else if(have.equals(need)){
+			return true;
+		}
+		
+		if(pos >= 0){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		return false;	
+	}
+	
+	public boolean matchTypesAssign(Type src, Type target, int pos){
+		if(src == null || target == null){
+			return false;
+		}
+		else if((src instanceof VoidType) || (target instanceof VoidType)){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		else if(src.equals(target)){
+			return true;
+		}
+		
+		if(src instanceof NullType){
+			return true;
+		}
+		
+		if((target instanceof IdentifierType) || (target instanceof ArrayType)){
+			return true;
+		}
+		
+		if((src instanceof ArrayType) && (target instanceof IdentifierType) && (((IdentifierType)target).name.equals("Object"))){
+			return true;
+		}
+		//traversing thru all the superclasses to see if srs and target match
+		else if(src instanceof IdentifierType) {
+			if(!(target instanceof IdentifierType)) {
+				return false;
+			}
+			
+			IdentifierType s = (IdentifierType)src;
+			IdentifierType t = (IdentifierType)target;
+			ClassDecl cd = s.link;
+
+			while(cd.superLink != null) {
+			if(cd.name == t.name) {
+			return true;
+			}
+
+			cd = cd.superLink;
+			}
+
+		}
+		else if(pos >= 0){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}
+		
+		return false;
+	}
+	
+	public boolean matchTypesEqCompare(Type t1, Type t2, int pos){
+		if(t1 == null || t2 == null){
+			return false;
+		}
+		else if(matchTypesAssign(t1, t2, -1)){
+			return true;
+		}
+		else if(matchTypesAssign(t2, t1, -1)){
+			return true;
+		}
+		if(pos >= 0){
+			errorMsg.error(pos,"Error: Incompatible types");
+		}	
+		return false;
+	}
+	
+	public InstVarDecl instVarLookup(String name, ClassDecl clas, int pos, String msg){
+		if(clas.instVarTable.containsKey(name)){
+			return clas.instVarTable.get(clas);
+		}
+		//need to recurse thru looking in the instance variable
+		//symbol table of the superclass, then the super-super-class, etc
+		else if(instVarLookupHelp(name, clas) != null){
+			return instVarLookupHelp(name, clas);
+		}
+		else{
+			errorMsg.error(pos,msg);
+			return null;
+		}
+	}
+	
+	//helper method for the instVarLookup
+	public InstVarDecl instVarLookupHelp(String name, ClassDecl sup){
+		if(sup.instVarTable.containsKey(name)){
+			return sup.instVarTable.get(sup);
+		}
+		else if(sup.superLink == null){
+			return null;
+		}
+		
+		return instVarLookupHelp(name, sup.superLink);
+	}
+	
+	public InstVarDecl instVarLookup(String name, Type t, int pos, String msg){
+		if(t == null){
+			return null;
+		}
+		else if(!(t instanceof IdentifierType)){
+			errorMsg.error(pos,msg);
+			return null;
+		}
+		else{
+			return instVarLookup(name, ((IdentifierType) t), pos, msg);
+		}
+	}
+	
+	public MethodDecl methodLookup(String name, ClassDecl clas, int pos, String msg){
+		if(clas.methodTable.containsKey(name)){
+			return clas.methodTable.get(clas);
+		}
+		//need to recurse thru looking in the method
+		//symbol table of the superclass, then the super-super-class, etc
+		else if(methodLookupHelp(name, clas) != null){
+			return methodLookupHelp(name, clas);
+		}
+		else{
+			errorMsg.error(pos,msg);
+			return null;
+		}
+	}
+	
+	public MethodDecl methodLookupHelp(String name, ClassDecl sup){
+		if(sup.instVarTable.containsKey(name)){
+			return sup.methodTable.get(sup);
+		}
+		else if(sup.superLink == null){
+			return null;
+		}
+		
+		return methodLookupHelp(name, sup.superLink);
+	}
+	
+	public MethodDecl methodLookup(String name, Type t, int pos, String msg){
+		if(t == null){
+			return null;
+		}
+		else if(!(t instanceof IdentifierType)){
+			errorMsg.error(pos,msg);
+			return null;
+		}
+		else{
+			return methodLookup(name, ((IdentifierType) t), pos, msg);
+		}
+	}
+	
+	public Type returnTypeFor(MethodDecl md){
+		if(md instanceof MethodDeclVoid){
+			return theVoidType;
+		}
+		else{
+			return ((MethodDeclNonVoid) md).rtnType;
+		}
+	}
+	
+	public Object visitIntegerLiteral(IntegerLiteral n){
+		super.visitIntegerLiteral(n);
+		n.type = theIntType;
+		return null;
+	}
+	
+	public Object visitStringLiteral(StringLiteral n){
+		super.visitStringLiteral(n);
+		n.type = theStringType;
+		return null;
+	}
+	
+	
+	public Object visitIdentifierExp(IdentifierExp n){
+		super.visitIdentifierExp(n);
+		n.type = n.link.type;
+		return null;
+	}
+	
+	public Object visitNull(Null n){
+		super.visitNull(n);
+		n.type = theNullType;
+		return null;
+	}
+	
+	public Object visitTrue(True n){
+		super.visitTrue(n);
+		n.type = theBoolType;
+		return null;
+	}
+	
+	public Object visitFalse(False n){
+		super.visitFalse(n);
+		n.type = theBoolType;
+		return null;
+	}
+	
+	public Object visitThis(This n){
+		super.visitThis(n);
+		n.type = currentClassType;
+		return null;
+	}
+	
+	public Object visitSuper(Super n){
+		super.visitSuper(n);
+		n.type = currentSuperclassType;
+		return null;
+	}
+	
+	
+	public boolean isBothMatch(Type lhs, Type rhs, int pos){
+		if(matchTypesExact(lhs, theIntType, pos) && matchTypesExact(rhs, theIntType, pos)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public Object visitPlus(Plus n){
+		super.visitPlus(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't exactly match");
+			return null;
+		}
+	}
+	
+	public Object visitMinus(Minus n){
+		super.visitMinus(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't exactly match");
+			return null;
+		}
+	}
+	
+	public Object visitTimes(Times n){
+		super.visitTimes(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't exactly match");
+			return null;
+		}
+	}
+	
+	public Object visitDivide(Divide n){
+		super.visitDivide(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't exactly match");
+			return null;
+		}
+	}
+
+	public Object visitRemainder(Remainder n){
+		super.visitRemainder(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't exactly match");
+			return null;
+		}
+	}
+	
+	public Object visitGreaterThan(GreaterThan n){
+		super.visitGreaterThan(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't both exactly match theIntType");
+			return null;
+		}
+	}
+	
+	public Object visitLessThan(LessThan n){
+		super.visitLessThan(n);
+		if(isBothMatch(n.left.type, n.right.type, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Both operands types don't both exactly match theIntType");
+			return null;
+		}
+	}
+	
+	public Object visitEquals(Equals n){
+		super.visitEquals(n);
+		if(matchTypesEqCompare(n.left.type, n.right.type, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Operand types don't match each other for equality");
+			return null;	
+		}
+	}
+	
+	public Object visitNot(Not n){
+		super.visitNot(n);
+		if(matchTypesExact(n.type, theBoolType, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: The operand type doesn't exactly match theBoolType");
+			return null;
+		}
+	}
+	
+	public Object visitAnd(And n){
+		super.visitAnd(n);
+		if(matchTypesExact(n.left.type, theBoolType, n.pos) && matchTypesExact(n.right.type, theBoolType, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: The operands types doesn't exactly match theBoolType");
+			return null;
+		}
+	}
+	
+	public Object visitOr(Or n){
+		super.visitOr(n);
+		if(matchTypesExact(n.left.type, theBoolType, n.pos) && matchTypesExact(n.right.type, theBoolType, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: The operands types doesn't exactly match theBoolType");
+			return null;
+		}
+	}
+	
+	public Object visitArrayLength(ArrayLength n){
+		super.visitArrayLength(n);
+		if((n.exp.type != null) && matchTypesExact(n.exp.type, theBoolType, n.pos)){
+			n.type = theIntType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: The operand type doesn't exactly match theBoolType");
+			return null;
+		}
+
+	}
+	
+	public Object visitArrayLookup(ArrayLookup n){
+		super.visitArrayLookup(n);
+		if(matchTypesExact(n.idxExp.type, theIntType, n.pos) && (n.arrExp.type instanceof ArrayType) && (n.arrExp != null)){
+			n.type = n.arrExp.type;
+			return null;
+		}
+		return null;
+	}
+	
+	public Object visitInstVarAccess(InstVarAccess n){
+		super.visitInstVarAccess(n);
+		if(n.exp.type == null){
+			return null;
+		}
+		if(instVarLookup(n.varName, n.type, n.pos, "Instance Variable") != null){
+			n.varDec = instVarLookup(n.varName, n.type, n.pos, "Instance Variable");
+			n.type = n.varDec.type;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Instance variable is not defined");
+			return null;
+		}
+	}
+	
+	public Object visitCast(Cast n){
+		super.visitCast(n);
+		if(matchTypesAssign(n.castType, n.exp.type, n.pos) && matchTypesAssign(n.exp.type, n.castType, n.pos)){
+			n.type = n.castType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Types are not assignment-compatible");
+			return null;
+		}
+	}
+	
+	public Object visitInstanceOf(InstanceOf n){
+		super.visitInstanceOf(n);
+		if(matchTypesAssign(n.checkType, n.exp.type, n.pos) && matchTypesAssign(n.exp.type, n.checkType, n.pos)){
+			n.type = theBoolType;
+			return null;
+		}
+		else{
+			errorMsg.error(n.pos, "Error: Incompatible types");
+			return null;
+		}
+	}
+	
+	public Object visitNewObject(NewObject n){
+		super.visitNewObject(n);
+		n.type = n.objType;
+		return null;
+	}
+	
+	public Object visitNewArray(NewArray n){
+		super.visitNewArray(n);
+		if(matchTypesExact(n.sizeExp.type, theIntType, n.pos)){
+			n.type = n.sizeExp.type;
+			return null;
+		}
+		else{
+			return null;	
+		}
+	}
+	
+	
+}
