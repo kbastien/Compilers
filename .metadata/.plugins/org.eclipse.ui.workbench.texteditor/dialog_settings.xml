@@ -3,26 +3,26 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="245" key="DIALOG_WIDTH"/>
 		<item value="135" key="DIALOG_Y_ORIGIN"/>
+		<item value="395" key="DIALOG_X_ORIGIN"/>
 		<item value="379" key="DIALOG_HEIGHT"/>
-		<item value="955" key="DIALOG_X_ORIGIN"/>
 		<item value="1|.Helvetica Neue DeskInterface|11.0|0|COCOA|1|.HelveticaNeueDeskInterface-Regular" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="false" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="Program" key="selection"/>
+		<item value="types" key="selection"/>
 		<list key="findhistory">
-			<item value="program"/>
-			<item value="get"/>
-			<item value="MethodDecl"/>
-			<item value="InstVar"/>
-			<item value="inst"/>
-			<item value="Method"/>
-			<item value="error"/>
-			<item value="visit"/>
+			<item value="types of"/>
+			<item value="types"/>
+			<item value="30"/>
+			<item value="Incompatible"/>
+			<item value="sInco"/>
+			<item value=" Types are not assignment-compatible"/>
+			<item value="incompatible"/>
+			<item value="Incompatible types"/>
 		</list>
 		<list key="replacehistory">
 		</list>

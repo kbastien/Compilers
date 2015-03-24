@@ -84,43 +84,41 @@ public class Sem4Visitor extends ASTvisitor {
 		if(src == null || target == null){
 			return false;
 		}
-		else if((src instanceof VoidType) || (target instanceof VoidType)){
+		else if(((src instanceof VoidType) || (target instanceof VoidType)) && (pos >= 0)){
 			errorMsg.error(pos,"Error: Incompatible types");
+			return false;
 		}
 		else if(src.equals(target)){
 			return true;
 		}
-		
-		if(src instanceof NullType){
+		else if(src instanceof NullType && ((target instanceof IdentifierType) || (target instanceof ArrayType))){
 			return true;
 		}
-		
-		if((target instanceof IdentifierType) || (target instanceof ArrayType)){
-			return true;
-		}
-		
-		if((src instanceof ArrayType) && (target instanceof IdentifierType) && (((IdentifierType)target).name.equals("Object"))){
-			return true;
+		else if(src instanceof ArrayType){
+			if(target instanceof IdentifierType){
+				if(((IdentifierType)target).name.equals("Object")){
+					return true;
+				}
+			}
 		}
 		//traversing thru all the superclasses to see if srs and target match
-		else if(src instanceof IdentifierType) {
-			if(!(target instanceof IdentifierType)) {
-				return false;
-			}
-			
+		else if((src instanceof IdentifierType) && (target instanceof IdentifierType)) {
 			IdentifierType s = (IdentifierType) src;
 			IdentifierType t = (IdentifierType) target;
 			ClassDecl cd = s.link;
-
+			
+			if(((IdentifierType) t).name.equals("Object")){
+				return true;
+			}
 			while(cd.superLink != null) {
-				if(cd.name == t.name) {
+				if(cd.name.equals(t.name)) {
 					return true;
 				}
 				cd = cd.superLink;
 			}
-
 		}
-		else if(pos >= 0){
+		
+		if(pos >= 0){
 			errorMsg.error(pos,"Error: Incompatible types");
 		}
 		
@@ -145,7 +143,7 @@ public class Sem4Visitor extends ASTvisitor {
 	
 	public InstVarDecl instVarLookup(String name, ClassDecl clas, int pos, String msg){
 		if(clas.instVarTable.containsKey(name)){
-			return clas.instVarTable.get(clas);
+			return clas.instVarTable.get(name);
 		}
 		//need to recurse thru looking in the instance variable
 		//symbol table of the superclass, then the super-super-class, etc
@@ -159,9 +157,9 @@ public class Sem4Visitor extends ASTvisitor {
 	}
 	
 	//helper method for the instVarLookup
-	public InstVarDecl instVarLookupHelp(String name, ClassDecl sup){
+	private InstVarDecl instVarLookupHelp(String name, ClassDecl sup){
 		if(sup.instVarTable.containsKey(name)){
-			return sup.instVarTable.get(sup);
+			return sup.instVarTable.get(name);
 		}
 		else if(sup.superLink == null){
 			return null;
@@ -185,7 +183,7 @@ public class Sem4Visitor extends ASTvisitor {
 	
 	public MethodDecl methodLookup(String name, ClassDecl clas, int pos, String msg){
 		if(clas.methodTable.containsKey(name)){
-			return clas.methodTable.get(clas);
+			return clas.methodTable.get(name);
 		}
 		//need to recurse thru looking in the method
 		//symbol table of the superclass, then the super-super-class, etc
@@ -198,15 +196,18 @@ public class Sem4Visitor extends ASTvisitor {
 		}
 	}
 	
-	public MethodDecl methodLookupHelp(String name, ClassDecl sup){
-		if(sup.instVarTable.containsKey(name)){
-			return sup.methodTable.get(sup);
-		}
-		else if(sup.superLink == null){
-			return null;
+	private MethodDecl methodLookupHelp(String name, ClassDecl sup){
+		if(sup.methodTable.containsKey(name)){
+			return sup.methodTable.get(name);
 		}
 		
-		return methodLookupHelp(name, sup.superLink);
+		if(sup.superLink == null){
+			return null;
+		}
+		else{
+			return methodLookupHelp(name, sup.superLink);	
+		}
+		
 	}
 	
 	public MethodDecl methodLookup(String name, Type t, int pos, String msg){
@@ -218,7 +219,7 @@ public class Sem4Visitor extends ASTvisitor {
 			return null;
 		}
 		else{
-			return methodLookup(name, ((IdentifierType) t), pos, msg);
+			return methodLookup(name, ((IdentifierType) t).link, pos, msg);
 		}
 	}
 	
@@ -441,7 +442,10 @@ public class Sem4Visitor extends ASTvisitor {
 			n.type = n.arrExp.type;
 			return null;
 		}
-		return null;
+		else{
+			errorMsg.error(n.pos, "Error: Incompatible types ");
+			return null;
+		}
 	}
 	
 	public Object visitInstVarAccess(InstVarAccess n){
@@ -449,7 +453,7 @@ public class Sem4Visitor extends ASTvisitor {
 		if(n.exp.type == null){
 			return null;
 		}
-		if(instVarLookup(n.varName, n.type, n.pos, "Instance Variable") != null){
+		if(instVarLookup(n.varName, n.type, n.pos, "Error: Instance Variable not defined") != null){
 			n.varDec = instVarLookup(n.varName, n.type, n.pos, "Instance Variable");
 			n.type = n.varDec.type;
 			return null;
@@ -462,26 +466,20 @@ public class Sem4Visitor extends ASTvisitor {
 	
 	public Object visitCast(Cast n){
 		super.visitCast(n);
-		if(matchTypesAssign(n.castType, n.exp.type, n.pos) && matchTypesAssign(n.exp.type, n.castType, n.pos)){
-			n.type = n.castType;
-			return null;
-		}
-		else{
+		if(!(matchTypesAssign(n.castType, n.exp.type, n.pos) && matchTypesAssign(n.exp.type, n.castType, n.pos))){
 			errorMsg.error(n.pos, "Error: Types are not assignment-compatible");
-			return null;
 		}
+		n.type = n.castType;
+		return null;
 	}
 	
 	public Object visitInstanceOf(InstanceOf n){
 		super.visitInstanceOf(n);
-		if(matchTypesAssign(n.checkType, n.exp.type, n.pos) && matchTypesAssign(n.exp.type, n.checkType, n.pos)){
-			n.type = theBoolType;
-			return null;
-		}
-		else{
+		if(!(matchTypesAssign(n.checkType, n.exp.type, n.pos) || matchTypesAssign(n.exp.type, n.checkType, n.pos))){
 			errorMsg.error(n.pos, "Error: Incompatible types");
-			return null;
 		}
+		n.type = theBoolType;
+		return null;
 	}
 	
 	public Object visitNewObject(NewObject n){
@@ -500,6 +498,182 @@ public class Sem4Visitor extends ASTvisitor {
 			return null;	
 		}
 	}
+	
+	public Object visitCall(Call n){
+		super.visitCall(n);
+		if(n.obj.type == null){
+			return null;
+		}
+		n.methodLink = methodLookup(n.methName, n.obj.type, n.pos, "Error: Method does not exist");
+		if(n.methodLink == null){
+			return null;
+		}
+		//check that the number of actual parameters (in the call)
+		//matches the number of formal parameters in the method declaration
+		if(n.parms.size() != n.methodLink.formals.size()){
+			errorMsg.error(n.pos, "Error: Incorrect number of parameters in the method declaration");
+			return null;
+		}
+		else{
+			for(int i=0; i < n.parms.size(); i++){
+				matchTypesAssign(n.parms.elementAt(i).type, n.methodLink.formals.elementAt(i).type, n.parms.elementAt(i).pos);
+			}
+		}
+		//sets the type field to be the methodÕs declared return-type
+		n.type = this.returnTypeFor(n.methodLink);
+		return null;
+	}
+	
+	public Object visitAssign(Assign n){
+		super.visitAssign(n);
+		if(n.lhs.type == null || n.rhs.type == null){
+			return null;
+		}
+		
+		if(n.lhs instanceof IdentifierExp || n.lhs instanceof ArrayLookup || n.lhs instanceof InstVarAccess){
+			if(matchTypesAssign(n.rhs.type, n.lhs.type, -1)){
+				return null;
+			}
+			else{
+				errorMsg.error(n.pos, "Error: Incompatible types, LHS and RHS don't match");
+			}
+		}
+		else{
+			errorMsg.error(n.pos, "Error: LHS is not a l-value");
+		}
+		return null;
+	}
+	
+	public Object visitLocalVarDecl(LocalVarDecl n){
+		super.visitLocalVarDecl(n);
+        if(matchTypesAssign(n.initExp.type, n.type, -1)){
+        	return null;
+        }
+        else{
+        	errorMsg.error(n.initExp.pos, "Error: the type of the initialization-expression isn't assignment-compatible with the declared type of the variable");
+        }
+		return null;
+	}
+	
+//	check that the type of the condition-expression exactly matches theBoolType
+	public Object visitIf(If n){
+		super.visitIf(n);
+		if(matchTypesExact(n.exp.type, theBoolType, -1)){
+        	return null;
+        }
+        else{
+        	errorMsg.error(n.pos, "Error: the type of the if expression doesn't exactly matches");
+        }
+		return null;
+	}
+	
+	public Object visitWhile(While n){
+		super.visitWhile(n);
+		if(matchTypesExact(n.exp.type, theBoolType, -1)){
+        	return null;
+        }
+        else{
+        	errorMsg.error(n.pos, "Error: the type of the while expression doesn't exactly matches");
+        }
+		return null;
+	}
+	
+	public Object visitMethodDeclVoid(MethodDeclVoid n){
+		super.visitMethodDeclVoid(n);
+		while(currentClass.superLink != null){
+			//if a superclass defines a method by the same name
+			if(this.currentClass.superLink.methodTable.containsKey(n.name)){
+				MethodDecl meth = currentClass.superLink.methodTable.get(n.name);
+				//check: the superclass method is also a MethodDeclVoid
+				if(!(meth instanceof MethodDeclNonVoid)){
+					errorMsg.error(n.pos, "Error: Superclass method isn't a MethodDeclNonVoid");
+					return null;
+				}
+				//check: the number of parameters for the two methods match exactly
+				if(meth.formals.size() != n.formals.size()){
+					errorMsg.error(n.pos, "Error: number of parameters don't match exactly");
+					return null;
+				}
+				//check: the types of parameters for the two methods match exactly
+				for(int i = 0; i < n.formals.size(); i++){
+					matchTypesExact(n.formals.elementAt(i).type, meth.formals.elementAt(i).type, n.pos);
+				}
+				//set our superMethod field to that of the superclass method declaration
+				n.superMethod = meth;
+			}
+			if(currentClass.superLink != null){
+				currentClass = currentClass.superLink;
+			}		
+			else{
+				break;
+			}
+		}
+		return null;
+	}
+	
+	public Object visitMethodDeclNonVoid(MethodDeclNonVoid n){
+		super.visitMethodDeclNonVoid(n);
+		if(!matchTypesAssign(n.rtnExp.type, n.rtnType, -1)){
+        	errorMsg.error(n.rtnExp.pos, "Error: type of the return expression isn't assignment-compatible w/ declared return-type of the method");
+        }
+		
+		while(currentClass.superLink != null){
+			//if a superclass defines a method by the same name
+			if(this.currentClass.superLink.methodTable.containsKey(n.name)){
+				MethodDecl meth = currentClass.superLink.methodTable.get(n.name);
+				//check: the superclass method is also a MethodDeclNonVoid
+				if(!(meth instanceof MethodDeclNonVoid)){
+					errorMsg.error(n.pos, "Error: Superclass method isn't a MethodDeclNonVoid");
+					return null;
+				}
+				//check: number of parameters match exactly
+				if(meth.formals.size() != n.formals.size()){
+					errorMsg.error(n.pos, "Error: number of parameters don't match exactly");
+					return null;
+				}
+				
+				//check: types of parameters match exactly
+				for(int i = 0; i < n.formals.size(); i++){
+					matchTypesExact(n.formals.elementAt(i).type, meth.formals.elementAt(i).type, n.pos);
+				}
+				
+				//check: the return types for the two methods match exactly
+				//set set our superMethod field to that of the superclass method declaration
+				if(matchTypesExact(n.rtnType, ((MethodDeclNonVoid) meth).rtnType , -1)){
+					n.superMethod = meth;
+					return null;
+		        }
+		        else{
+		        	errorMsg.error(n.rtnType.pos, "Error: return types for the two methods don't match exactly");
+		        }
+			}
+			if(currentClass.superLink != null){
+				currentClass = currentClass.superLink;
+			}		
+			else{
+				break;
+			}
+		}
+		return null;
+	}
+	
+	public Object visitClassDecl(ClassDecl n){
+		//set currentClass to refer to this class declaration
+		currentClass = n;
+		//set currentClassType to refer to a new IdentifierTyp object that refers to this class
+		IdentifierType id = new IdentifierType(n.pos, n.name);
+		id.link = currentClass;
+		currentClassType = id;
+		
+		//set currentSuperclassType to refer to a new IdentifierType object that refers to the ClassDecl that is this classÕ superclass
+		IdentifierType sup = new IdentifierType(n.superLink.pos, n.superName);
+		sup.link = n.superLink;
+		currentSuperclassType = sup;
+		
+		super.visitClassDecl(n);
+		return null;
+	}
+	
 	
 	
 }
