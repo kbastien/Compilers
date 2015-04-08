@@ -80,11 +80,10 @@ public class CG3Visitor extends ASTvisitor {
 		return null;
 	}
 	
-	public Object visitThis(This n){
+	public Object visitThis(Object n){
 		code.emit(n, "subu $sp,$sp,4");
 		stackHeight = stackHeight - 4;
 		code.emit(n, "sw $s2,($sp)");
-		return null;
 	}
 }
 

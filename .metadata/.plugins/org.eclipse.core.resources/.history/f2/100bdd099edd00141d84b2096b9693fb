@@ -84,7 +84,6 @@ public class CG3Visitor extends ASTvisitor {
 		code.emit(n, "subu $sp,$sp,4");
 		stackHeight = stackHeight - 4;
 		code.emit(n, "sw $s2,($sp)");
-		return null;
 	}
 }
 

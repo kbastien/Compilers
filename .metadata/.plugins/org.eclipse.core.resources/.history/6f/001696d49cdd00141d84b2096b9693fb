@@ -64,26 +64,10 @@ public class CG3Visitor extends ASTvisitor {
 	}
 	
 	public Object visitIntegerLiteral(IntegerLiteral n){
-		code.emit(n, "subu $sp,$sp,8");
-		stackHeight = stackHeight - 8;
+		code.emit(n, "subu $sp,$sp,8***");
 		code.emit(n, "sw $s5,4($sp)");
 		code.emit(n, "li $t0," + n.val);
 		code.emit(n, "sw $t0,($sp)");
-		return null;
-	}
-	
-	public Object visitStringLiteral(Null n){
-		code.emit(n, "subu $sp,$sp,4");
-		stackHeight = stackHeight - 4;
-		code.emit(n, "la $t0," + n.uniqueId);
-		code.emit(n, "sw $t0,($sp)");
-		return null;
-	}
-	
-	public Object visitThis(This n){
-		code.emit(n, "subu $sp,$sp,4");
-		stackHeight = stackHeight - 4;
-		code.emit(n, "sw $s2,($sp)");
 		return null;
 	}
 }
