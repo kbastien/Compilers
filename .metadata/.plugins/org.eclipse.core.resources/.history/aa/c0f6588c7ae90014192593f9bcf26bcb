@@ -42,19 +42,19 @@ public class CG3Visitor extends ASTvisitor {
 	}
 	
 	public Object visitStringLiteral(StringLiteral n){
-		code.emit(n, "subu $sp, $sp, 4");
+		code.emit(n, "subu $sp,$sp,4");
 		stackHeight += 4;
-		code.emit(n, "la $t0, strLit_" + n.uniqueCgRep.uniqueId);
-		code.emit(n, "sw $t0, ($sp)");
+		code.emit(n, "la $t0," + n.uniqueCgRep.uniqueId);
+		code.emit(n, "sw $t0,($sp)");
 		return null;
 	}
 	
 	public Object visitIntegerLiteral(IntegerLiteral n){
-		code.emit(n, "subu $sp, $sp, 8");
+		code.emit(n, "subu $sp,$sp,8");
 		stackHeight += 8;
-		code.emit(n, "sw $s5, 4($sp)");
-		code.emit(n, "li $t0, " + n.val);
-		code.emit(n, "sw $t0, ($sp)");
+		code.emit(n, "sw $s5,4($sp)");
+		code.emit(n, "li $t0," + n.val);
+		code.emit(n, "sw $t0,($sp)");
 		return null;
 	}
 	
@@ -62,12 +62,12 @@ public class CG3Visitor extends ASTvisitor {
 		n.left.accept(this);
 		n.right.accept(this);
 		
-		code.emit(n, "lw $t0, ($sp)");
-		code.emit(n, "lw $t1, 8($sp)");
-		code.emit(n, "addu $t0, $t0, $t1");
-		code.emit(n, "addu $sp, $sp, 8");
+		code.emit(n, "lw $t0,($sp)");
+		code.emit(n, "lw $t1,8($sp)");
+		code.emit(n, "addu $t0,$t0,$t1");
+		code.emit(n, "addu $sp,$sp,8");
 		stackHeight -= 8;
-		code.emit(n, "sw $t0, ($sp)");
+		code.emit(n, "sw $t0,($sp)");
 		return null;
 	}
 	
@@ -75,33 +75,33 @@ public class CG3Visitor extends ASTvisitor {
 		n.left.accept(this);
 		n.right.accept(this);
 		
-		code.emit(n, "lw $t0, ($sp)");
-		code.emit(n, "lw $t1, 8($sp)");
+		code.emit(n, "lw $t0,($sp)");
+		code.emit(n, "lw $t1,8($sp)");
 		code.emit(n, "subu $t0, $t1, $t0");
 		code.emit(n, "addu $sp, $sp, 8");
 		stackHeight -= 8;
-		code.emit(n, "sw $t0, ($sp)");
+		code.emit(n, "sw $t0,($sp)");
 		return null;
 	}
 	
 	public Object visitThis(This n){
-		code.emit(n, "subu $sp, $sp, 4");
+		code.emit(n, "subu $sp,$sp,4");
 		stackHeight += 4;
-		code.emit(n, "sw $s2, ($sp)");
+		code.emit(n, "sw $s2,($sp)");
 		return null;
 	}
 	
 	public Object visitSuper(Super n){
-		code.emit(n, "subu $sp, $sp, 4");
+		code.emit(n, "subu $sp,$sp,4");
 		stackHeight += 4;
-		code.emit(n, "sw $s2, ($sp)");
+		code.emit(n, "sw $s2,($sp)");
 		return null;
 	}
 	
 	public Object visitNewObject(NewObject n){
-		code.emit(n, "subu $sp, $sp, 4");
+		code.emit(n, "subu $sp,$sp,4");
 		stackHeight += 4;
-		code.emit(n, "sw $zero, ($sp)");
+		code.emit(n, "sw $zero,($sp)");
 		return null;
 	}
 	
@@ -133,22 +133,22 @@ public class CG3Visitor extends ASTvisitor {
 	
 	public Object visitIdentifierExp(IdentifierExp n){
 		if(n.link instanceof InstVarDecl){
-			code.emit(n, "lw $t0, " + n.link.offset + "($s2)");
+			code.emit(n, "lw $t0," + n.link.offset + "($s2)");
 		}
 		else {
 			int stackDepth = stackHeight + n.link.offset;
-			code.emit(n, "lw $t0, " + stackDepth + "($sp)");
+			code.emit(n, "lw $t0," + stackDepth + "($sp)");
 		}
 		if(n.type instanceof IntegerType){
-			code.emit(n, "subu $sp, $sp, 8");
+			code.emit(n, "subu $sp,$sp,8");
 			stackHeight += 8;
-			code.emit(n, "sw $s5, 4($sp)");
-			code.emit(n, "sw $t0, ($sp)");
+			code.emit(n, "sw $s5,4($sp)");
+			code.emit(n, "sw $t0,($sp)");
 		}
 		else {
-			code.emit(n, "subu $sp, $sp, 4");
+			code.emit(n, "subu $sp,$sp,4");
 			stackHeight += 4;
-			code.emit(n, "sw $t0, ($sp)");
+			code.emit(n, "sw $t0,($sp)");
 		}
 		return null;
 	}
@@ -162,7 +162,7 @@ public class CG3Visitor extends ASTvisitor {
 		stackHeight = 0;
 		n.mainStatement.accept(this);
 		code.emit(n, "# exit program");
-		code.emit(n, "li $v0, 10");
+		code.emit(n, "li $v0,10");
 		code.emit(n, "syscall");
 		
 		//emit dummy labels for part A
@@ -176,29 +176,28 @@ public class CG3Visitor extends ASTvisitor {
 	public Object visitMethodDeclVoid(MethodDeclVoid n){
 		code.emit(n, ".globl fcn_" + n.uniqueId + "_" + n.name);
 		code.emit(n, "fcn_" + n.uniqueId + "_" + n.name + ":");
-		code.emit(n, "subu $sp, $sp, 8");
-		code.emit(n, "sw $ra, 4($sp)");	
-		code.emit(n, "sw $s2, ($sp)");
-		
+		code.emit(n, "subu $sp,$sp,8");
+		code.emit(n, "sw $ra,4($sp)");
+		code.emit(n, "sw $s2,($sp)");
 		stackHeight = 4;
 		
 		//determine stack-top-relative location of method’s
 		//this-pointer: 4 + object’s thisPointerOffset
 		int location = 4 + n.thisPtrOffset;
-		code.emit(n, "lw $s2, " + location + "($sp)");
+		code.emit(n, "lw $s2," + location + "($sp)");
 		
 		n.stmts.accept(this);
 		
 		//determine offset of saved return address and
 		//saved this-pointer relative to current stack height
 		int offsetSavedReturnAddress = stackHeight;
-		code.emit(n, "lw $ra, " + offsetSavedReturnAddress + "($sp)");
+		code.emit(n, "lw $ra," + offsetSavedReturnAddress + "($sp)");
 		
 		int savedThisPtr = stackHeight - 4;
 		code.emit(n, "lw $s2, " + savedThisPtr + "($sp)");
 		
 		int amount = stackHeight + 8;
-		code.emit(n, "addu $sp, $sp," + amount);
+		code.emit(n, "addu $sp,$sp," + amount);
 		code.emit(n, "jr $ra");
 		return null;
 	}

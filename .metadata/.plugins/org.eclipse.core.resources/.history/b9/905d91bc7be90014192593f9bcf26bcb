@@ -44,7 +44,7 @@ public class CG3Visitor extends ASTvisitor {
 	public Object visitStringLiteral(StringLiteral n){
 		code.emit(n, "subu $sp, $sp, 4");
 		stackHeight += 4;
-		code.emit(n, "la $t0, strLit_" + n.uniqueCgRep.uniqueId);
+		code.emit(n, "la $t0," + n.uniqueCgRep.uniqueId);
 		code.emit(n, "sw $t0, ($sp)");
 		return null;
 	}
@@ -179,7 +179,6 @@ public class CG3Visitor extends ASTvisitor {
 		code.emit(n, "subu $sp, $sp, 8");
 		code.emit(n, "sw $ra, 4($sp)");	
 		code.emit(n, "sw $s2, ($sp)");
-		
 		stackHeight = 4;
 		
 		//determine stack-top-relative location of method’s
@@ -192,13 +191,13 @@ public class CG3Visitor extends ASTvisitor {
 		//determine offset of saved return address and
 		//saved this-pointer relative to current stack height
 		int offsetSavedReturnAddress = stackHeight;
-		code.emit(n, "lw $ra, " + offsetSavedReturnAddress + "($sp)");
+		code.emit(n, "lw $ra," + offsetSavedReturnAddress + "($sp)");
 		
 		int savedThisPtr = stackHeight - 4;
 		code.emit(n, "lw $s2, " + savedThisPtr + "($sp)");
 		
 		int amount = stackHeight + 8;
-		code.emit(n, "addu $sp, $sp," + amount);
+		code.emit(n, "addu $sp,$sp," + amount);
 		code.emit(n, "jr $ra");
 		return null;
 	}

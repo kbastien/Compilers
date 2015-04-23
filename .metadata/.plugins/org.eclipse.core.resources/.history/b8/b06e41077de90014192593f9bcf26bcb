@@ -179,7 +179,6 @@ public class CG3Visitor extends ASTvisitor {
 		code.emit(n, "subu $sp, $sp, 8");
 		code.emit(n, "sw $ra, 4($sp)");	
 		code.emit(n, "sw $s2, ($sp)");
-		
 		stackHeight = 4;
 		
 		//determine stack-top-relative location of method’s
