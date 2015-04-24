@@ -52,6 +52,159 @@ public class CG1Visitor extends ASTvisitor {
 		superclassMethodTables.addElement(new Vector<String>());
 	}
 	
+	public Object visitProgram(Program n){
+		code.emit(n, ".data");
 
+		ClassDecl cd = n.classDecls.elementAt(0);
+		while(cd.superLink != null){
+			cd = cd.superLink;
+		}
+		cd.accept(this);
+		code.flush();
+		return null;
+	}
+	
+	public Object visitClassDecl(ClassDecl n){
+		currentMethodTable = (Vector<String>) superclassMethodTables.peek().clone();
+		//TODO: possible error
+		if(n.superLink != null){
+			//# of data instance variables in superclass
+			//# of object instance variables in superclass
+			int numDataInstVars = n.superLink.numDataInstVars;
+			int numObjInstVars = n.superLink.numObjInstVars;
+			currentMethodOffset = 1 + superclassMethodTables.size();
+	
+			//-16 if superlink is null
+			currentDataInstVarOffset = -16 - 4 * numDataInstVars;
+			
+			//zero if superlink is null
+			currentObjInstVarOffset = 4 * numObjInstVars;
+		}
+		else{
+			currentMethodOffset = 1;
+			currentDataInstVarOffset = -16;
+			currentObjInstVarOffset = 0;
+		}
+		
+		super.visitClassDecl(n);
+		
+		n.numDataInstVars = (-16-currentDataInstVarOffset)/4;
+		n.numObjInstVars = currentObjInstVarOffset/4;
+		
+		code.emit(n, "CLASS_" + n.name + ":");
+		
+		//emit superclass’ vtable address
+		if(n.superLink == null){
+			code.emit(n, ".word 0");
+		}
+		else{
+			code.emit(n, ".word CLASS_" + n.name);
+		}
+		
+		for(int i = 0; i <= currentMethodTable.size(); i++){
+			if(currentMethodTable.elementAt(i) == null){
+				//don't do anything cuz swag
+			}
+			else{
+				code.emit(n, ".word " + currentMethodTable.elementAt(i));
+			}
+		}
+		
+		superclassMethodTables.push(currentMethodTable);
+		n.subclasses.accept(this);
+		superclassMethodTables.pop();
+		code.emit(n, "CLASS_END_" + n.name + ":");
+		
+		return null;
+	}
+		
+	public Object visitMethodDecl(MethodDecl n){
+		n.thisPtrOffset = 4 * (1 + wordsOnStackFrame(n.formals));
+		currentFormalVarOffset = n.thisPtrOffset;
+		super.visitMethodDecl(n);
+		
+		//set MethodDecl's vtableOffset
+		if(n.superMethod != null){
+			n.vtableOffset = n.superMethod.vtableOffset;
+		}
+		else{
+			n.vtableOffset = currentMethodOffset;
+			currentMethodOffset++;
+		}
+		
+		registerMethodInTable(n);
+		return null;
+	}
+	
+	public Object visitInstVarDecl(InstVarDecl n){
+		super.visitInstVarDecl(n);
+		if(n.type instanceof IntegerType || n.type instanceof BooleanType){
+			n.offset = currentDataInstVarOffset;
+			currentDataInstVarOffset -= 4;
+		}
+		//TODO: May need to change this else to an else if
+		else{
+			n.offset = currentObjInstVarOffset;
+			currentObjInstVarOffset += 4;
+		}
+		return null;
+	}
+	
+	public Object visitFormalDecl(FormalDecl n){
+		super.visitFormalDecl(n);
+		if(n.type instanceof IntegerType){
+			currentFormalVarOffset -= 8;
+		}
+		else{
+			currentFormalVarOffset -= 4;
+		}
+		n.offset = currentFormalVarOffset;
+		return null;
+	}
+	
+	//computes the number of words that vdl’s variable declarations would place on the stack frame
+	public int wordsOnStackFrame(VarDeclList vdl){
+		int numWords = 0;
+		for(int i=0; i <= vdl.size(); i++){
+			if(vdl.elementAt(i).type instanceof VoidType){
+				//do nothing
+			}
+			else if(vdl.elementAt(i).type instanceof IntegerType){
+				numWords += 2;
+			}
+			else{
+				numWords += 1;
+			}
+		}
+		return numWords;
+	}
+	
+	public int wordsOnStackFrame(Type t){
+		int numWords = 0;
+		if(t instanceof VoidType){
+			//do nothing
+		}
+		else if(t instanceof IntegerType){
+			numWords += 2;
+		}
+		else{
+			numWords += 1;
+		}
+		return numWords;
+	}
+	
+	public void registerMethodInTable(MethodDecl md){
+		if(md.pos < 0){
+			currentMethodTable.insertElementAt(md.name, md.vtableOffset);
+		}
+		else if(md.superMethod != null){
+			currentMethodTable.remove(md.vtableOffset);
+			currentMethodTable.insertElementAt("fcn_" + md.uniqueId + "_" + md.name, md.vtableOffset);
+		}
+		else{
+			currentMethodTable.insertElementAt("fcn_" + md.uniqueId + "_" + md.name, md.vtableOffset);
+		}
+	}
+	
 }
 	

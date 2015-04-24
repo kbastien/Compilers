@@ -58,6 +58,27 @@ public class CG3Visitor extends ASTvisitor {
 		return null;
 	}
 	
+	public Object visitNull(Null n){
+		code.emit(n, "subu $sp, $sp, 4");
+		stackHeight += 4;
+		code.emit(n, "sw $zero,($sp)");
+		return null;
+	}
+	
+	public Object visitTrue(True n){
+		code.emit(n, "subu $sp, $sp, 4");
+		stackHeight += 4;
+		code.emit(n, "sw $one,($sp)");
+		return null;
+	}
+	
+	public Object visitFalse(False n){
+		code.emit(n, "subu $sp, $sp, 4");
+		stackHeight += 4;
+		code.emit(n, "sw $zero,($sp)");
+		return null;
+	}
+	
 	public Object visitPlus(Plus n){
 		n.left.accept(this);
 		n.right.accept(this);
@@ -150,6 +171,113 @@ public class CG3Visitor extends ASTvisitor {
 			stackHeight += 4;
 			code.emit(n, "sw $t0, ($sp)");
 		}
+		return null;
+	}
+	
+	public Object visitNot(Not n){
+		n.exp.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "xor $t0, $t0, 1");
+		code.emit(n, "sw $t0, ($sp)");
+		return null;
+	}
+	
+	public Object visitTime(Times n){
+		n.left.accept(this);
+		n.right.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "lw $t1,8($sp)");
+		code.emit(n, "mult $t0, $t1");
+		code.emit(n, "mflo $t0");
+		code.emit(n, "addu $sp, $sp, 8");
+		stackHeight -= 8;
+		code.emit(n, "sw $t0, ($sp)");
+		return null;
+	}
+	
+	public Object visitDivide(Divide n){
+		n.left.accept(this);
+		n.right.accept(this);
+		code.emit(n, "jal divide");
+		stackHeight -= 8;
+		return null;
+	}
+	
+	public Object visitRemainder(Remainder n){
+		n.left.accept(this);
+		n.right.accept(this);
+		code.emit(n, "jal remainder");
+		stackHeight -= 8;
+		return null;
+	}
+	
+	public Object visitEquals(Equals n){
+		n.left.accept(this);
+		n.right.accept(this);
+		
+		if(n.type instanceof IntegerType){
+			code.emit(n, "lw $t0, ($sp)");
+			code.emit(n, "lw $t1, 8($sp)");
+			code.emit(n, "seq $t0, $t0, $t1");
+			code.emit(n, "addu $sp, $sp, 12");
+			stackHeight -= 12;
+			code.emit(n, "sw $t0, ($sp)");
+		}
+		else{
+			code.emit(n, "lw $t0, ($sp)");
+			code.emit(n, "lw $t1, 4($sp)");
+			code.emit(n, "seq $t0, $t0, $t1");
+			code.emit(n, "addu $sp, $sp, 4");
+			stackHeight -= 4;
+			code.emit(n, "sw $t0, ($sp)");
+		}
+		return null;
+	}
+	
+	public Object visitGreaterThan(GreaterThan n){
+		n.left.accept(this);
+		n.right.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "lw $t1, 8($sp)");
+		code.emit(n, "sgt $t0, $t1, $t0");
+		code.emit(n, "addu $sp, $sp, 12");
+		stackHeight -= 12;
+		code.emit(n, "sw $t0,($sp)");
+		return null;
+	}
+	
+	public Object visitLessThan(LessThan n){
+		n.left.accept(this);
+		n.right.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "lw $t1, 8($sp)");
+		code.emit(n, "sgt $t0, $t1, $t0");
+		code.emit(n, "addu $sp, $sp, 12");
+		stackHeight -= 12;
+		code.emit(n, "sw $t0,($sp)");
+		return null;
+	}
+	
+	public Object visitAnd(And n){
+		n.left.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "beq $t0,$zero, skip_" + n.uniqueId);
+		code.emit(n, "addu $sp, $sp, 4");
+		stackHeight -= 4;
+		n.right.accept(this);
+		code.emit(n, "skip_" + n.uniqueId + ":");
+		return null;
+	}
+	
+	public Object visitArrayLength(ArrayLength n){
+		n.exp.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "beq $t0, $zero, nullPtrException");
+		code.emit(n, "lw $t0, -4($t0)");
+		code.emit(n, "sw $s5, ($sp)");
+		code.emit(n, "subu $sp, 4");
+		stackHeight += 4;
+		code.emit(n, "sw $t0,($sp)");
 		return null;
 	}
 	
