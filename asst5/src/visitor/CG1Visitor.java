@@ -65,7 +65,7 @@ public class CG1Visitor extends ASTvisitor {
 	}
 	
 	public Object visitClassDecl(ClassDecl n){
-		currentMethodTable = (Vector<String>) superclassMethodTables.peek().clone();
+		currentMethodTable = superclassMethodTables.peek();
 		//TODO: possible error
 		if(n.superLink != null){
 			//# of data instance variables in superclass
@@ -98,10 +98,10 @@ public class CG1Visitor extends ASTvisitor {
 			code.emit(n, ".word 0");
 		}
 		else{
-			code.emit(n, ".word CLASS_" + n.name);
+			code.emit(n, ".word CLASS_" + n.superName);
 		}
 		
-		for(int i = 0; i <= currentMethodTable.size(); i++){
+		for(int i = 1; i < currentMethodTable.size(); i++){
 			if(currentMethodTable.elementAt(i) == null){
 				//don't do anything cuz swag
 			}
@@ -165,7 +165,7 @@ public class CG1Visitor extends ASTvisitor {
 	//computes the number of words that vdlÕs variable declarations would place on the stack frame
 	public int wordsOnStackFrame(VarDeclList vdl){
 		int numWords = 0;
-		for(int i=0; i <= vdl.size(); i++){
+		for(int i=0; i < vdl.size(); i++){
 			if(vdl.elementAt(i).type instanceof VoidType){
 				//do nothing
 			}
@@ -194,16 +194,12 @@ public class CG1Visitor extends ASTvisitor {
 	}
 	
 	public void registerMethodInTable(MethodDecl md){
-		if(md.pos < 0){
-			currentMethodTable.insertElementAt(md.name, md.vtableOffset);
-		}
-		else if(md.superMethod != null){
-			currentMethodTable.remove(md.vtableOffset);
-			currentMethodTable.insertElementAt("fcn_" + md.uniqueId + "_" + md.name, md.vtableOffset);
-		}
-		else{
-			currentMethodTable.insertElementAt("fcn_" + md.uniqueId + "_" + md.name, md.vtableOffset);
-		}
+        if (md.pos < 0) {
+        	this.currentMethodTable.addElement(md.name);
+        }
+        else if (md.pos > 0) {
+        	this.currentMethodTable.addElement("fcn_" + md.uniqueId + "_" + md.name);
+        }
 	}
 	
 }

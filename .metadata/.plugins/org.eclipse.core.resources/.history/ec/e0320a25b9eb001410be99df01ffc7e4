@@ -1,0 +1,675 @@
+package visitor;
+
+import syntaxtree.*;
+import errorMsg.*;
+
+import java.io.*;
+
+public class CG3Visitor extends ASTvisitor {
+
+	// the purpose here is to annotate things with their offsets:
+	// - formal parameters, with respect to the (callee) frame
+	// - local variables, with respect to the frame
+	// - instance variables, with respect to their slot in the object
+	// - methods, with respect to their slot in the v-table
+	// - while statements, with respect to the stack-size at the time
+	//   of loop-exit
+	
+	// IO stream to which we will emit code
+	CodeStream code;
+
+	// current stack height
+	int stackHeight;
+	
+	// error-message object
+	ErrorMsg errorMsg;
+	
+	public CG3Visitor(ErrorMsg e, PrintStream out) {
+		initInstanceVars(e, out);
+	}
+	
+	private void initInstanceVars(ErrorMsg e, PrintStream out) {
+		errorMsg = e;
+		code = new CodeStream(out, errorMsg);
+		stackHeight = 0;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitIntegerLiteral(IntegerLiteral intLit) {
+		code.emit(intLit, "subu $sp,$sp,8");		
+		stackHeight += 8;		
+		code.emit(intLit, "sw $s5,4($sp)");
+		code.emit(intLit, "li $t0," + intLit.val);
+		code.emit(intLit, "sw $t0,($sp)");		
+		return null;
+	}	
+	
+	//FULLY IMPLEMENTED
+	public Object visitNull(Null nullNode) {
+		code.emit(nullNode, "subu $sp,$sp,4");
+		stackHeight += 4;
+		code.emit(nullNode, "sw $zero,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitTrue(True trueNode) {
+		code.emit(trueNode, "subu $sp,$sp,4");
+		stackHeight += 4;
+		code.emit(trueNode, "li $t0, 1");
+		code.emit(trueNode, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitFalse(False falseNode) {
+		code.emit(falseNode, "subu $sp,$sp,4");
+		stackHeight += 4;
+		code.emit(falseNode, "sw $zero,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitStringLiteral(StringLiteral stringLit) {
+		code.emit(stringLit, "subu $sp,$sp,4");		
+		stackHeight += 4;		
+		code.emit(stringLit, "la $t0,strLit_" + stringLit.uniqueCgRep.uniqueId);
+		code.emit(stringLit, "sw $t0,($sp)");		
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitThis(This thisNode) {
+		code.emit(thisNode, "subu $sp,$sp,4");
+		stackHeight += 4;
+		code.emit(thisNode, "sw $s2,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitSuper(Super supNode) {
+		code.emit(supNode, "subu $sp,$sp,4");
+		stackHeight += 4;
+		code.emit(supNode, "sw $s2,($sp)");
+		return null;
+	}
+
+	//FULLY IMPLEMENTED
+	public Object visitIdentifierExp(IdentifierExp exp){
+		if (exp.link instanceof InstVarDecl) {
+			int NNN = exp.link.offset;
+			code.emit(exp, "lw $t0," + NNN + "($s2)");
+		}
+		else {// if (exp.link instanceof LocalVarDecl || exp.link instanceof FormalDecl) {
+			int NNN = stackHeight + exp.link.offset;
+			code.emit(exp, "lw $t0," + NNN + "($sp)");
+		}
+		if (exp.type instanceof IntegerType) {
+			code.emit(exp, "subu $sp,$sp,8");
+			stackHeight += 8;
+			code.emit(exp, "sw $s5,4($sp)");
+			code.emit(exp, "sw $t0,($sp)");
+		}
+		else {
+			code.emit(exp, "subu $sp,$sp,4");
+			stackHeight += 4;
+			code.emit(exp, "sw $t0,($sp)");
+		}
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitNot(Not not) {
+		not.exp.accept(this);
+		code.emit(not, "lw $t0,($sp)");
+		code.emit(not, "xor $t0,$t0,1");
+		code.emit(not, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitPlus(Plus plus) {
+		plus.left.accept(this);
+		plus.right.accept(this);
+		code.emit(plus, "lw $t0,($sp)");
+		code.emit(plus, "lw $t1,8($sp)");
+		code.emit(plus, "addu $t0,$t0,$t1");
+		code.emit(plus, "addu $sp,$sp,8");		
+		stackHeight -= 8;		
+		code.emit(plus, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitMinus(Minus minus) {
+		minus.left.accept(this);
+		minus.right.accept(this);
+		code.emit(minus, "lw $t0,($sp)");
+		code.emit(minus, "lw $t1,8($sp)");
+		code.emit(minus, "subu $t0,$t1,$t0");
+		code.emit(minus, "addu $sp,$sp,8");				
+		stackHeight -= 8;				
+		code.emit(minus, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitTimes(Times times) {
+		times.left.accept(this);
+		times.right.accept(this);
+		code.emit(times, "lw $t0,($sp)");
+		code.emit(times, "lw $t1,8($sp)");
+		code.emit(times, "mult $t0,$t1");
+		code.emit(times, "mflo $t0");
+		code.emit(times, "addu $sp,$sp,8");				
+		stackHeight -= 8;				
+		code.emit(times, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitDivide(Divide div) {
+		div.left.accept(this);
+		div.right.accept(this);
+		code.emit(div, "jal divide");
+		stackHeight -= 8;
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitRemainder(Remainder rem) {
+		rem.left.accept(this);
+		rem.right.accept(this);
+		code.emit(rem, "jal remainder");
+		stackHeight -= 8;
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitEquals(Equals eq) {
+		eq.left.accept(this);
+		eq.right.accept(this);
+		if (eq.left.type instanceof IntegerType && eq.right.type instanceof IntegerType) {
+			code.emit(eq, "lw $t0,($sp)");
+			code.emit(eq, "lw $t1,8($sp)");
+			code.emit(eq, "seq $t0,$t0,$t1");
+			code.emit(eq, "addu $sp,$sp,12");
+			stackHeight -= 12;
+			code.emit(eq, "sw $t0,($sp)");
+		}
+		else {
+			code.emit(eq, "lw $t0,($sp)");
+			code.emit(eq, "lw $t1,4($sp)");
+			code.emit(eq, "seq $t0,$t0,$t1");
+			code.emit(eq, "addu $sp,$sp,4");
+			stackHeight -= 4;
+			code.emit(eq, "sw $t0,($sp)");
+		}
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitGreaterThan(GreaterThan gt) {
+		gt.left.accept(this);
+		gt.right.accept(this);
+		code.emit(gt, "lw $t0,($sp)");
+		code.emit(gt, "lw $t1,8($sp)");
+		code.emit(gt, "sgt $t0,$t1,$t0");
+		code.emit(gt, "addu $sp,$sp,12");
+		stackHeight -= 12;
+		code.emit(gt, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitLessThan(LessThan lt) {
+		lt.left.accept(this);
+		lt.right.accept(this);
+		code.emit(lt, "lw $t0,($sp)");
+		code.emit(lt, "lw $t1,8($sp)");
+		code.emit(lt, "slt $t0,$t1,$t0");
+		code.emit(lt, "addu $sp,$sp,12");
+		stackHeight -= 12;
+		code.emit(lt, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitAnd(And and) {
+		and.left.accept(this);
+		code.emit(and, "lw $t0,($sp)");
+		code.emit(and, "beq $t0,$zero, skip_" + and.uniqueId);
+		code.emit(and, "addu $sp,$sp,4");
+		stackHeight -= 4;
+		and.right.accept(this);
+		code.emit(and, "skip_" + and.uniqueId + ":");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitOr(Or or) {
+		or.left.accept(this);
+		code.emit(or, "lw $t0,($sp)");
+		code.emit(or, "beq $t0,$zero, skip_" + or.uniqueId);
+		code.emit(or, "addu $sp,$sp,4");
+		stackHeight -= 4;
+		or.right.accept(this);
+		code.emit(or, "skip_" + or.uniqueId + ":");
+		return null;
+	}
+
+	//FULLY IMPLEMENTED
+	public Object visitArrayLength(ArrayLength arrLen) {
+		arrLen.exp.accept(this);
+		code.emit(arrLen, "lw $t0,($sp)");
+		code.emit(arrLen, "beq $t0,$zero,nullPtrException");
+		code.emit(arrLen, "lw $t0,-4($t0)");
+		code.emit(arrLen, "sw $s5,($sp)");
+		code.emit(arrLen, "subu $sp,4");
+		stackHeight += 4;
+		code.emit(arrLen, "sw $t0,($sp)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitArrayLookup(ArrayLookup arrLook) {
+		arrLook.arrExp.accept(this);
+		arrLook.idxExp.accept(this);
+		code.emit(arrLook, "lw $t0,8($sp)");
+		code.emit(arrLook, "beq $t0,$zero,nullPtrException");
+		code.emit(arrLook, "lw $t1,-4($t0)");
+		code.emit(arrLook, "lw $t2,($sp)");
+		code.emit(arrLook, "bgeu $t2,$t1,arrayIndexOutOfBounds");
+		code.emit(arrLook, "sll $t2,$t2,2");
+		code.emit(arrLook, "addu $t2,$t2,$t0");
+		code.emit(arrLook, "lw $t0,($t2)");
+		if (arrLook.arrExp.type instanceof IntegerType) {
+			code.emit(arrLook, "sw $t0,4($sp)");
+			code.emit(arrLook, "sw $s5,8($sp)");
+			code.emit(arrLook, "addu $sp,$sp,4");
+			stackHeight -= 4;
+		}
+		else {
+			code.emit(arrLook, "sw $t0,8($sp)");
+			code.emit(arrLook, "addu $sp,$sp,8");
+			stackHeight -= 8;
+		}
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitInstVarAccess(InstVarAccess instVarAcc) {
+		instVarAcc.exp.accept(this);
+		int NNN = instVarAcc.varDec.offset;
+		code.emit(instVarAcc, "lw $t0,($sp)");
+		code.emit(instVarAcc, "beq $t0,$zero,nullPtrException");
+		code.emit(instVarAcc, "lw $t0," + NNN + "($t0)");
+		if (instVarAcc.varDec.type instanceof IntegerType) {
+			code.emit(instVarAcc, "subu $sp,$sp,4");
+			code.emit(instVarAcc, "sw $s5,4($sp)");
+			code.emit(instVarAcc, "sw $t0,($sp)");
+			stackHeight += 4;
+		}
+		else {
+			code.emit(instVarAcc, "sw $t0,($sp)");
+		}
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitInstanceOf(InstanceOf instOf) {
+		instOf.exp.accept(this);
+		String ABC = instOf.checkType.toString2();
+		code.emit(instOf, "la $t0,CLASS_" + ABC);
+		code.emit(instOf, "la $t1,CLASS_END_" + ABC);
+		code.emit(instOf, "jal instanceOf");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitCast(Cast cast) {
+		cast.exp.accept(this);
+		String ABC = cast.castType.toString2();
+		code.emit(cast, "la $t0,CLASS_" + ABC);
+		code.emit(cast, "la $t1,CLASS_END_" + ABC);
+		code.emit(cast, "jal checkCast");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitNewObject(NewObject obj) {
+		int NNN = obj.objType.link.numObjInstVars;
+		int MMM = obj.objType.link.numDataInstVars + 1;
+		String ABC = obj.objType.name;		
+		code.emit(obj, "li $s6," + MMM);
+		code.emit(obj, "li $s7," + NNN);
+		code.emit(obj, "jal newObject");
+		stackHeight += 4;
+		code.emit(obj, "la $t0,CLASS_" + ABC);
+		code.emit(obj, "sw $t0,-12($s7)");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitNewArray(NewArray newArr) {
+		newArr.sizeExp.accept(this);
+		code.emit(newArr, "lw $s7,($sp)");
+		code.emit(newArr, "addu $sp,$sp,8");
+		stackHeight -= 8;
+		if (newArr.type instanceof IntegerType || newArr.type instanceof BooleanType) {
+			code.emit(newArr, "li $s6,-1");
+		}
+		else {
+			code.emit(newArr, "li $s6,0");
+		}
+		code.emit(newArr, "jal newObject");
+		stackHeight += 4;
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitCall(Call call){
+		if (call.obj instanceof Super) {
+			int currHeight = stackHeight;
+			call.obj.accept(this);
+			call.parms.accept(this);
+			
+			if (call.methodLink.pos < 0) {
+				code.emit(call, "jal " + call.methName);
+			}
+			else if (call.methodLink.pos > 0) {
+				code.emit(call, "jal fcn_" + call.uniqueId + "_" + call.methName);
+			}
+			
+			if (call.type instanceof IntegerType) stackHeight = currHeight + 8;
+			else if (call.type instanceof VoidType) stackHeight = currHeight; // + 0;
+			else stackHeight = currHeight + 4;
+			
+		}
+
+		else { 
+			int currHeight = stackHeight;
+			call.obj.accept(this);
+			call.parms.accept(this);
+			
+			int MMM = call.methodLink.thisPtrOffset - 4;
+			int NNN = call.methodLink.vtableOffset * 4;
+			
+			code.emit(call, "lw $t0," + MMM + "($sp)");
+			code.emit(call, "beq $t0,$zero,nullPtrException");
+			code.emit(call, "lw $t0,-12($t0)");
+			code.emit(call, "lw $t0," + NNN + "($t0)");
+			code.emit(call, "jalr $t0");
+			
+			if (call.type instanceof IntegerType) stackHeight = currHeight + 8;
+			else if (call.type instanceof VoidType) stackHeight = currHeight; // + 0;
+			else stackHeight = currHeight + 4;
+		}
+		
+		return null;
+	}
+	
+	
+	//FULLY IMPLEMENTED
+	public Object visitLocalVarDecl(LocalVarDecl localVarDecl) {
+		localVarDecl.initExp.accept(this);
+		localVarDecl.offset = -stackHeight;
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitExpStatement(ExpStatement expStmt) {
+		expStmt.exp.accept(this);
+		
+		if (expStmt.exp.type instanceof IntegerType) {
+			code.emit(expStmt, "addu $sp,$sp,8");
+			stackHeight -= 8;
+		}
+		else if (!(expStmt.exp.type instanceof VoidType)) {
+			code.emit(expStmt, "addu $sp,$sp,4");
+			stackHeight -= 4;
+		}
+		
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitBlock(Block block) {
+		int currHeight = stackHeight;
+		block.stmts.accept(this);
+		if (currHeight != stackHeight) {
+			int DDD = stackHeight - currHeight;
+			code.emit(block, "addu $sp,$sp," + DDD);
+		}
+		stackHeight = currHeight;
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitIf(If ifNode) {
+		ifNode.exp.accept(this);
+		code.emit(ifNode, "lw $t0,($sp)");
+		code.emit(ifNode, "addu $sp,$sp,4");
+		stackHeight -= 4;
+		code.emit(ifNode, "beq $t0,$zero,if_else_" + ifNode.uniqueId);
+		
+		ifNode.trueStmt.accept(this);
+		code.emit(ifNode, "j if_done_" + ifNode.uniqueId);
+		code.emit(ifNode, "if_else_" + ifNode.uniqueId + ":");
+		
+		ifNode.falseStmt.accept(this);
+		code.emit(ifNode, "if_done_" + ifNode.uniqueId + ":");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitWhile(While whileNode) {
+		whileNode.stackHeight = stackHeight;
+		code.emit(whileNode, "j while_enter_" + whileNode.uniqueId);
+		code.emit(whileNode, "while_top_" + whileNode.uniqueId + ":");
+		
+		whileNode.body.accept(this);
+		code.emit(whileNode, "while_enter_" + whileNode.uniqueId + ":");
+		
+		whileNode.exp.accept(this);
+		code.emit(whileNode, "lw $t0,($sp)");
+		code.emit(whileNode, "addu $sp,$sp,4");
+		stackHeight -= 4;
+		code.emit(whileNode, "bne $t0,$zero,while_top_" + whileNode.uniqueId);
+		code.emit(whileNode, "while_exit_" + whileNode.uniqueId + ":");
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitBreak(Break breakNode) {
+		int NNN = stackHeight - breakNode.breakLink.stackHeight;		
+		if (NNN != 0) {
+			code.emit(breakNode, "addu $sp,$sp," + NNN);
+		}
+		code.emit(breakNode, "j while_exit_" + breakNode.breakLink.uniqueId);
+		
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitAssign(Assign assign) {
+		if (assign.lhs instanceof IdentifierExp) {
+			IdentifierExp target = (IdentifierExp)assign.lhs;
+			assign.lhs.accept(this);
+			code.emit(assign, "lw $t0,($sp)");
+			
+			if (assign.lhs instanceof InstVarAccess) {
+				InstVarAccess acc = (InstVarAccess)assign.lhs;
+				
+				if (acc.varDec instanceof InstVarDecl) {
+					InstVarDecl decl = acc.varDec;
+					int NNN = decl.offset;
+					code.emit(assign, "sw $t0," + NNN + "($s2");
+				}
+
+				else {
+					int MMM = stackHeight + acc.varDec.offset;
+					code.emit(assign, "sw $t0," + MMM + "($sp)");
+				}
+			}
+			if (target.type instanceof IntegerType) {
+				code.emit(assign, "addu $sp,$sp,8");
+				stackHeight -= 8;
+			}
+			else {
+				code.emit(assign, "addu $sp,$sp,4");
+				stackHeight -= 4;
+			}
+		}
+		else if (assign.lhs instanceof InstVarAccess) {
+			InstVarAccess target = (InstVarAccess)assign.lhs;
+			target.exp.accept(this);
+			assign.rhs.accept(this);
+			
+			code.emit(assign, "lw $t0,($sp)");
+			
+			int SSS = 4;
+			if (assign.lhs.type instanceof IntegerType) {
+				SSS = 8;
+			}
+			code.emit(assign, "lw $t1," + SSS + "($sp)");
+			code.emit(assign, "beq $t1,$zero,nullPtrException");
+			
+			int NNN = target.varDec.offset;
+			code.emit(assign, "sw $t0," + NNN + "($t1)");
+			
+			if (assign.lhs.type instanceof IntegerType) {
+				code.emit(assign, "addu $sp,$sp,12");
+				stackHeight -= 12;
+			}
+			else {
+				code.emit(assign, "addu $sp,$sp,8");
+				stackHeight -= 8;
+			}
+		}
+		else if (assign.lhs instanceof ArrayLookup) {
+			ArrayLookup target = (ArrayLookup)assign.lhs;
+			target.arrExp.accept(this);
+			target.idxExp.accept(this);
+			assign.rhs.accept(this);
+			code.emit(assign, "lw $t0,($sp)");
+			code.emit(assign, "lw $t1,12($sp)");
+			code.emit(assign, "beq $t1,$zero,nullPtrException");
+			code.emit(assign, "lw $t2,4($sp)");
+			code.emit(assign, "lw $t3,-4($t1)");
+			code.emit(assign, "bgeu $t2,$t3,arrayIndexOutOfBounds");
+			code.emit(assign, "sll $t2,$t2,2");
+			code.emit(assign, "addu $t2,$t2,$t1");
+			code.emit(assign, "sw $t0,($t2)");
+			code.emit(assign, "addu $sp,$sp,16");
+			stackHeight -= 16;
+		}
+		return null;
+	}
+	
+	//(CHECK) FULLY IMPLEMENTED
+	public Object visitMethodDeclVoid(MethodDeclVoid meth) {
+		code.emit(meth, ".globl fcn_" + meth.uniqueId + "_" + meth.name);
+		code.emit(meth, "fcn_" + meth.uniqueId + "_" + meth.name + ":");
+		code.emit(meth, "subu $sp,$sp,8");
+		code.emit(meth, "sw $ra,4($sp)");
+		code.emit(meth, "sw $s2,($sp)");
+		
+		stackHeight = 4;
+		int NNN = 4 + meth.thisPtrOffset;
+		code.emit(meth, "lw $s2," + NNN + "($sp)");
+		
+		meth.stmts.accept(this);
+		
+		int formalSpace = 0;
+		for (VarDecl formal : meth.formals){
+			if (formal.type instanceof IntegerType) {
+				formalSpace += 8;
+			}
+			else if (!(formal.type instanceof VoidType)) {
+				formalSpace += 4;
+			}
+		}
+		
+		
+		int JJJ = stackHeight; //?
+		int KKK = stackHeight + meth.thisPtrOffset; //?
+		code.emit(meth, "lw $ra," + JJJ + "($sp)");
+		code.emit(meth, "lw $s2," + KKK + "($sp)");
+		
+		int MMM = stackHeight + 8 + formalSpace; //?
+		code.emit(meth, "addu $sp,$sp," + MMM);
+		code.emit(meth, "jr $ra");
+		
+		return null;
+	}
+	
+	//(CHECK) FULLY IMPLEMENTED
+	public Object visitMethodDeclNonVoid(MethodDeclNonVoid methNon) {
+		code.emit(methNon, ".globl fcn_" + methNon.uniqueId + "_" + methNon.name);
+		code.emit(methNon, "fcn_" + methNon.uniqueId + "_" + methNon.name + ":");
+		code.emit(methNon, "subu $sp,$sp,8");
+		code.emit(methNon, "sw $ra,4($sp)");
+		code.emit(methNon, "sw $s2,($sp)");
+		
+		stackHeight = 4;
+		int NNN = 4 + methNon.thisPtrOffset;
+		code.emit(methNon, "lw $s2," + NNN + "($sp)");
+		
+		methNon.stmts.accept(this);
+		methNon.rtnExp.accept(this);
+		
+		int formalSpace = 0;
+		for (VarDecl formal : methNon.formals){
+			if (formal.type instanceof IntegerType) {
+				formalSpace += 8;
+			}
+			else if (!(formal.type instanceof VoidType)) {
+				formalSpace += 4;
+			}
+		}
+		
+		int JJJ = stackHeight; //?
+		int KKK = stackHeight + methNon.thisPtrOffset; //?
+		code.emit(methNon, "lw $ra," + JJJ + "($sp)");
+		code.emit(methNon, "lw $s2," + KKK + "($sp)");
+		
+		int YYY = KKK - formalSpace; //?
+		int ZZZ = YYY + 4; //?
+		code.emit(methNon, "lw $t0,($sp)");
+		code.emit(methNon, "sw $t0," + YYY + "($sp)");
+		
+		int minusVal = 4;
+		if (methNon.rtnType instanceof IntegerType) {
+			code.emit(methNon, "sw $s5," + ZZZ + "($sp)");
+			minusVal = 8;
+		}
+		
+		int MMM = stackHeight + 8 + formalSpace - minusVal; //?
+		code.emit(methNon, "addu $sp,$sp," + MMM);
+		code.emit(methNon, "jr $ra");
+		
+		return null;
+	}
+	
+	//FULLY IMPLEMENTED
+	public Object visitProgram(Program program) {
+		code.emit(program, ".text");
+		code.emit(program, ".globl main");
+		code.emit(program, "main:");
+		code.emit(program, "# initialize registers, etc.");
+		code.emit(program, "jal vm_init");
+		
+		stackHeight = 0;
+		program.mainStatement.accept(this);
+		
+		code.emit(program, "# exit program");
+		code.emit(program, "li $v0,10");
+		code.emit(program, "syscall");
+		
+		program.classDecls.accept(this);
+		
+		code.flush();
+		return null;
+	}
+}
