@@ -45,10 +45,10 @@ class Main extends Lib {
 	printBoolVal(true&&false);
 	printBoolVal(false&&true);
 	printBoolVal(false&&false);
-	printBoolVal(true||true);
-	printBoolVal(true||false);
-	printBoolVal(false||true);
-	printBoolVal(false||false);
+//	printBoolVal(true||true);
+//	printBoolVal(true||false);
+//	printBoolVal(false||true);
+//	printBoolVal(false||false);
 	printStr("\n");
     }
 

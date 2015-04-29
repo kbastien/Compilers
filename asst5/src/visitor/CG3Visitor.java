@@ -51,8 +51,8 @@ public class CG3Visitor extends ASTvisitor {
 	}
 	
 	public Object visitIntegerLiteral(IntegerLiteral n){
+		code.emit(n, "subu $sp, $sp, 8");
 		stackHeight += 8;
-		code.emit(n, "subu $sp, $sp, " + 8);
 		code.emit(n, "sw $s5, 4($sp)");
 		code.emit(n, "li $t0, " + n.val);
 		code.emit(n, "sw $t0, ($sp)");
@@ -156,38 +156,51 @@ public class CG3Visitor extends ASTvisitor {
 	}
 	
 	public Object visitCall(Call n){
-		int saveStackHeight = stackHeight;
-		n.obj.accept(this);
-		n.parms.accept(this);
 		if (n.obj instanceof Super) {
+			int saveStackHeight = stackHeight;
+			n.obj.accept(this);
+			n.parms.accept(this);
 			if(n.methodLink.pos < 0){
 				code.emit(n, "jal " + n.methName);
 			}
 			else{
 				code.emit(n, "jal fcn_" + n.methodLink.uniqueId + "_" + n.methName);
 			}
+			// set stackHeight to saved one plus 0, 4, or 8, depending on
+			// the expressionÕs type
+			
+			if (n.type instanceof VoidType) {
+				stackHeight = saveStackHeight + 0;
+			}
+			else if(n.type instanceof IntegerType) {
+				stackHeight = saveStackHeight + 8;
+			}
+			else {
+				stackHeight = saveStackHeight + 4;
+			}
 		}
 		else{
+			int saveStackHeight = stackHeight;
+			n.obj.accept(this);
+			n.parms.accept(this);
 			int MMM = n.methodLink.thisPtrOffset - 4;
 			int NNN = n.methodLink.vtableOffset * 4;
-			code.emit(n, "lw $t0," + MMM + "($sp)");
+			code.emit(n, "lw $t0, " + MMM + "($sp)");
 			code.emit(n, "beq $t0, $zero, nullPtrException");
 			code.emit(n, "lw $t0, -12($t0)");
 			code.emit(n, "lw $t0, "+ NNN + "($t0)");
 			code.emit(n, "jalr $t0");
-		}
-		
-		// set stackHeight to saved one plus 0, 4, or 8, depending on
-		// the expressionÕs type
-		
-		if (n.type instanceof VoidType) {
-			stackHeight = saveStackHeight + 0;
-		}
-		else if(n.type instanceof IntegerType) {
-			stackHeight = saveStackHeight + 8;
-		}
-		else {
-			stackHeight = saveStackHeight + 4;
+			// set stackHeight to saved one plus 0, 4, or 8, depending on
+			// the expressionÕs type
+			if (n.type instanceof VoidType) {
+				stackHeight = saveStackHeight + 0;
+			}
+			else if(n.type instanceof IntegerType) {
+				stackHeight = saveStackHeight + 8;
+			}
+			else {
+				stackHeight = saveStackHeight + 4;
+			}
 		}
 		return null;
 	}
@@ -285,7 +298,7 @@ public class CG3Visitor extends ASTvisitor {
 		return null;
 	}
 	
-	public Object visitTime(Times n){
+	public Object visitTimes(Times n){
 		n.left.accept(this);
 		n.right.accept(this);
 		code.emit(n, "lw $t0, ($sp)");
@@ -318,7 +331,7 @@ public class CG3Visitor extends ASTvisitor {
 		n.left.accept(this);
 		n.right.accept(this);
 		
-		if(n.type instanceof IntegerType && n.left.type instanceof IntegerType){
+		if(n.left.type instanceof IntegerType && n.left.type instanceof IntegerType){
 			code.emit(n, "lw $t0, ($sp)");
 			code.emit(n, "lw $t1, 8($sp)");
 			code.emit(n, "seq $t0, $t0, $t1");
@@ -364,7 +377,18 @@ public class CG3Visitor extends ASTvisitor {
 	public Object visitAnd(And n){
 		n.left.accept(this);
 		code.emit(n, "lw $t0, ($sp)");
-		code.emit(n, "beq $t0,$zero, skip_" + n.uniqueId);
+		code.emit(n, "beq $t0, $zero, skip_" + n.uniqueId);
+		code.emit(n, "addu $sp, $sp, 4");
+		stackHeight -= 4;
+		n.right.accept(this);
+		code.emit(n, "skip_" + n.uniqueId + ":");
+		return null;
+	}
+	
+	public Object visitOr(Or n){
+		n.left.accept(this);
+		code.emit(n, "lw $t0, ($sp)");
+		code.emit(n, "beq $t0, $zero, skip_" + n.uniqueId);
 		code.emit(n, "addu $sp, $sp, 4");
 		stackHeight -= 4;
 		n.right.accept(this);
@@ -445,6 +469,7 @@ public class CG3Visitor extends ASTvisitor {
 	}
 		
 	public Object visitProgram(Program n){
+		code.indent(n);
 		code.emit(n, ".text");
 		code.emit(n, ".globl main");
 		code.emit(n, "main:");
@@ -556,7 +581,8 @@ public class CG3Visitor extends ASTvisitor {
 		int savedThisPtr = stackHeight - 4;
 		code.emit(n, "lw $s2, " + savedThisPtr + "($sp)");
 		
-		int amount = stackHeight + 8;
+		//this pointer offset + stackheight + 4
+		int amount = stackHeight + n.thisPtrOffset + 4;
 		code.emit(n, "addu $sp, $sp," + amount);
 		code.emit(n, "jr $ra");
 		return null;

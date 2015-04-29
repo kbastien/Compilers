@@ -3,6 +3,7 @@
   <tags>activeSchemeId:org.eclipse.ui.defaultAcceleratorConfiguration</tags>
   <children xsi:type="basic:TrimmedWindow" xmi:id="_jjOYYq_NEeSoDcp0CwQ3Bw" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.platform" selectedElement="_mK2h8K_NEeSoDcp0CwQ3Bw" label="%trimmedwindow.label.eclipseSDK" x="640" y="23" width="640" height="777">
     <tags>topLevel</tags>
+    <tags>shellMaximized</tags>
     <children xsi:type="basic:PartSashContainer" xmi:id="_mK2h8K_NEeSoDcp0CwQ3Bw" selectedElement="_mK2h8a_NEeSoDcp0CwQ3Bw" horizontal="true">
       <children xsi:type="advanced:PerspectiveStack" xmi:id="_mK2h8a_NEeSoDcp0CwQ3Bw" containerData="7500" selectedElement="_oOTAYK_NEeSoDcp0CwQ3Bw">
         <children xsi:type="advanced:Perspective" xmi:id="_oOTAYK_NEeSoDcp0CwQ3Bw" elementId="org.eclipse.jdt.ui.JavaPerspective" selectedElement="_oOTAYa_NEeSoDcp0CwQ3Bw" label="Java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/eview16/jperspective.gif">
@@ -67,7 +68,7 @@
           <tags>persp.showIn:org.eclipse.team.ui.GenericHistoryView</tags>
           <tags>persp.showIn:org.eclipse.ui.views.ResourceNavigator</tags>
           <tags>persp.showIn:org.eclipse.ui.navigator.ProjectExplorer</tags>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_oOTAYa_NEeSoDcp0CwQ3Bw" selectedElement="_oOUOga_NEeSoDcp0CwQ3Bw" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_oOTAYa_NEeSoDcp0CwQ3Bw" selectedElement="_oOTncK_NEeSoDcp0CwQ3Bw" horizontal="true">
             <children xsi:type="basic:PartStack" xmi:id="_oOTncK_NEeSoDcp0CwQ3Bw" elementId="left" containerData="2153" selectedElement="_oOTnca_NEeSoDcp0CwQ3Bw">
               <tags>newtablook</tags>
               <tags>org.eclipse.e4.primaryNavigationStack</tags>
@@ -127,7 +128,12 @@
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>EditorStack</tags>
         <children xsi:type="basic:Part" xmi:id="_3bqu8OsUEeS9no_snWIQmQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="CG3Visitor.java" iconURI="platform:/plugin/org.eclipse.jdt.ui//icons/full/obj16/jcu_obj.gif" tooltip="asst5/src/visitor/CG3Visitor.java" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/asst5/src/visitor/CG3Visitor.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;22&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;15591&quot; selectionTopPixel=&quot;8292&quot;/>&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/asst5/src/visitor/CG3Visitor.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;876&quot; selectionTopPixel=&quot;20&quot;/>&#xA;&lt;/editor>"/>
+          <tags>Editor</tags>
+          <tags>removeOnHide</tags>
+        </children>
+        <children xsi:type="basic:Part" xmi:id="_MbXxsO33EeSVXdvFQZdSkQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="CG1Visitor.java" iconURI="platform:/plugin/org.eclipse.jdt.ui//icons/full/obj16/jcu_obj.gif" tooltip="asst5/src/visitor/CG1Visitor.java" closeable="true">
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/asst5/src/visitor/CG1Visitor.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;335&quot; selectionTopPixel=&quot;0&quot;/>&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>removeOnHide</tags>
         </children>

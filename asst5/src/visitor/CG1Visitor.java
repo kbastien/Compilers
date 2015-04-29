@@ -65,14 +65,14 @@ public class CG1Visitor extends ASTvisitor {
 	}
 	
 	public Object visitClassDecl(ClassDecl n){
-		currentMethodTable = superclassMethodTables.peek();
+		currentMethodTable = (Vector<String>)superclassMethodTables.peek().clone();
 		//TODO: possible error
 		if(n.superLink != null){
 			//# of data instance variables in superclass
 			//# of object instance variables in superclass
 			int numDataInstVars = n.superLink.numDataInstVars;
 			int numObjInstVars = n.superLink.numObjInstVars;
-			currentMethodOffset = 1 + superclassMethodTables.size();
+			currentMethodOffset = 1 + currentMethodTable.size();
 	
 			//-16 if superlink is null
 			currentDataInstVarOffset = -16 - 4 * numDataInstVars;
@@ -80,7 +80,7 @@ public class CG1Visitor extends ASTvisitor {
 			//zero if superlink is null
 			currentObjInstVarOffset = 4 * numObjInstVars;
 		}
-		else{
+		else {
 			currentMethodOffset = 1;
 			currentDataInstVarOffset = -16;
 			currentObjInstVarOffset = 0;
@@ -101,9 +101,9 @@ public class CG1Visitor extends ASTvisitor {
 			code.emit(n, ".word CLASS_" + n.superName);
 		}
 		
-		for(int i = 1; i < currentMethodTable.size(); i++){
+		for(int i = 0; i < currentMethodTable.size(); i++){
 			if(currentMethodTable.elementAt(i) == null){
-				//don't do anything cuz swag
+				//don't do anything
 			}
 			else{
 				code.emit(n, ".word " + currentMethodTable.elementAt(i));
