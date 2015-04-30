@@ -262,7 +262,7 @@ public class CG3Visitor extends ASTvisitor {
 	public Object visitBreak(Break n){
 		int NNN = stackHeight - n.breakLink.stackHeight;
 		if (NNN != 0) {
-			code.emit(n, "addu $sp, $sp" + NNN);
+			code.emit(n, "addu $sp, " + NNN);
 		}
 		code.emit(n, "j while_exit_" + n.breakLink.uniqueId);
 		return null;
@@ -495,17 +495,13 @@ public class CG3Visitor extends ASTvisitor {
 			IdentifierExp id = (IdentifierExp)n.lhs;
 			n.rhs.accept(this);
 			code.emit(n, "lw $t0, ($sp)");
-			if(n.lhs instanceof InstVarAccess){
-				InstVarAccess var = (InstVarAccess)n.lhs;
-				if(var.varDec instanceof InstVarDecl){
-					InstVarDecl decl = var.varDec;
-					int NNN = decl.offset;
-					code.emit(n, "sw $t0, " + NNN + "($s2");
-				}
-				else{
-					int MMM = stackHeight + var.varDec.offset;
-					code.emit(n, "sw $t0, " + MMM + "($sp)");
-				}
+			if(id.link instanceof InstVarDecl){
+				int NNN = id.link.offset;
+				code.emit(n, "sw $t0, " + NNN + "($s2)");
+			}
+			else{
+				int MMM = stackHeight + id.link.offset;
+				code.emit(n, "sw $t0, " + MMM + "($sp)");
 			}
 			if(id.type instanceof IntegerType){
 				code.emit(n, "addu $sp, $sp, 8");
@@ -575,15 +571,27 @@ public class CG3Visitor extends ASTvisitor {
 		
 		//determine offset of saved return address and
 		//saved this-pointer relative to current stack height
-		int offsetSavedReturnAddress = stackHeight;
-		code.emit(n, "lw $ra, " + offsetSavedReturnAddress + "($sp)");
+//		int formSpace = 0;
+//		for(int i = 0; i < n.formals.size(); i++){
+//			if (n.formals.elementAt(i) instanceof LocalVarDecl) {
+//				if(n.formals.elementAt(i).type instanceof IntegerType){
+//					formSpace += 8;
+//				}
+//				else if(!(n.formals.elementAt(i).type instanceof VoidType)){
+//					formSpace += 4;
+//				}
+//			}
+//		}
 		
-		int savedThisPtr = stackHeight - 4;
-		code.emit(n, "lw $s2, " + savedThisPtr + "($sp)");
+		int JJJ = stackHeight;
+		code.emit(n, "lw $ra, " + JJJ + "($sp)");
 		
-		//this pointer offset + stackheight + 4
-		int amount = stackHeight + n.thisPtrOffset + 4;
-		code.emit(n, "addu $sp, $sp," + amount);
+		//saved this pointer
+		int KKK = stackHeight - 4;
+		code.emit(n, "lw $s2, " + KKK + "($sp)");
+		//this pointer offset + stackheight + 4, this pointer takes account for formal params
+		int MMM = stackHeight + n.thisPtrOffset + 4;
+		code.emit(n, "addu $sp, $sp, " + MMM);
 		code.emit(n, "jr $ra");
 		return null;
 	}
@@ -604,52 +612,47 @@ public class CG3Visitor extends ASTvisitor {
 		
 //		determine offset of saved return address (say, JJJ) and
 //		saved this-pointer (say, KKK) relative to current stack height
-		int formSpace = 0;
-		for(int i = 0; i < n.stmts.size(); i++){
-			if (n.stmts.elementAt(i) instanceof LocalVarDecl) {
-				LocalVarDecl varDecl = (LocalVarDecl) n.stmts.elementAt(i);
-				if(varDecl.type instanceof IntegerType){
-					formSpace += 8;
-				}
-				else{
-					formSpace += 4;
-				}
-			}
-		}
+//		int formSpace = 0;
+//		for(int i = 0; i < n.formals.size(); i++){
+//			if (n.formals.elementAt(i) instanceof LocalVarDecl) {
+//				if(n.formals.elementAt(i).type instanceof IntegerType){
+//					formSpace += 8;
+//				}
+//				else if(!(n.formals.elementAt(i).type instanceof VoidType)){
+//					formSpace += 4;
+//				}
+//			}
+//		}
 		
-		int JJJ = 4 + formSpace;
-		int KKK = formSpace;
+		//TODO: Stack is off for deep break
+		//saved return address offset
+		int JJJ = stackHeight;
+		//saved this pointer
+		int KKK = stackHeight - 4;
 		code.emit(n, "lw $ra, " + JJJ + "($sp)");
 		code.emit(n, "lw $s2, " + KKK + "($sp)");
 		
-		int YYY = 4 + formSpace;
-		int ZZZ = 8 + formSpace;
+		//offset on stack for return-value
+		int YYY = stackHeight + n.thisPtrOffset;
+		if(n.rtnType instanceof IntegerType){
+			YYY -= 4;
+		}
+		
+		int ZZZ = YYY + 4;
 		code.emit(n, "lw $t0, ($sp)");
 		code.emit(n, "sw $t0, " + YYY + "($sp)");
-		
 		if (n.rtnType instanceof IntegerType) {
 			code.emit(n, "sw $s5, " + ZZZ + "($sp)");
 		}
-		
-		for(int i = 0; i < n.formals.size(); i++){
-			if (n.stmts.elementAt(i) instanceof LocalVarDecl) {
-				LocalVarDecl varDecl = (LocalVarDecl) n.stmts.elementAt(i);
-				if(varDecl.type instanceof IntegerType){
-					formSpace += 8;
-				}
-				else{
-					formSpace += 4;
-				}
-			}
+		//amount to pop stack
+		int rtnValue = 0;
+		if(n.rtnType instanceof IntegerType){
+			rtnValue = 8;
 		}
-		if (n.rtnType instanceof IntegerType) {
-			formSpace -= 8;
+		else{
+			rtnValue = 4;
 		}
-		else {
-			formSpace -= 4;
-		}
-		
-		int MMM = 12 + formSpace;
+		int MMM = (stackHeight + n.thisPtrOffset + 4) - rtnValue;
 		code.emit(n, "addu $sp, $sp," + MMM);
 		code.emit(n, "jr $ra");
 		return null;

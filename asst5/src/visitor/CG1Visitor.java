@@ -66,7 +66,6 @@ public class CG1Visitor extends ASTvisitor {
 	
 	public Object visitClassDecl(ClassDecl n){
 		currentMethodTable = (Vector<String>)superclassMethodTables.peek().clone();
-		//TODO: possible error
 		if(n.superLink != null){
 			//# of data instance variables in superclass
 			//# of object instance variables in superclass
@@ -194,12 +193,23 @@ public class CG1Visitor extends ASTvisitor {
 	}
 	
 	public void registerMethodInTable(MethodDecl md){
-        if (md.pos < 0) {
-        	this.currentMethodTable.addElement(md.name);
-        }
-        else if (md.pos > 0) {
-        	this.currentMethodTable.addElement("fcn_" + md.uniqueId + "_" + md.name);
-        }
+			if (md.pos < 0) {
+		        if(md.superMethod != null){
+		        	this.currentMethodTable.setElementAt(md.name, md.superMethod.vtableOffset - 1);
+		        }
+		        else{
+		        	this.currentMethodTable.add(md.name);
+		        }
+	        }
+	        else {
+		        if(md.superMethod != null){
+		        	this.currentMethodTable.setElementAt("fcn_" + md.uniqueId + "_" + md.name, md.superMethod.vtableOffset - 1);
+		        }
+		        else{
+		        	this.currentMethodTable.add("fcn_" + md.uniqueId + "_" + md.name);
+		        }
+	        }
+
 	}
 	
 }
